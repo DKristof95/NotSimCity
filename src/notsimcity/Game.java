@@ -3,8 +3,8 @@ package notsimcity;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 import javax.swing.*;
-import javax.swing.border.Border;
 
 public class Game extends JPanel {
     private final int CELL_SIZE = 50;
@@ -46,6 +46,8 @@ public class Game extends JPanel {
     private final Image House = new ImageIcon("house.png").getImage();
     private final Image Office = new ImageIcon("office.png").getImage();
     private final Image Factory = new ImageIcon("factory.png").getImage();
+    private int starter;
+    private String semmi;
 
     public Game() {
         super();
@@ -64,8 +66,10 @@ public class Game extends JPanel {
             }
             Grid.add(rows);
         }
-        addSpriteComponent(new Sprite(CELL_SIZE, CELL_SIZE, 0, 50, new ImageIcon("ut_viz.png").getImage()));
-        Grid.get(1).get(0).setIsRoad(true);
+        int randomNum = ThreadLocalRandom.current().nextInt(1, a-1);
+        starter = randomNum;
+        addSpriteComponent(new Sprite(CELL_SIZE, CELL_SIZE, 0, randomNum * CELL_SIZE, new ImageIcon("ut_viz.png").getImage()));
+        Grid.get(randomNum).get(0).setIsRoad(true);
     }
 
     public void loadSave(int saveID) {
@@ -107,7 +111,7 @@ public class Game extends JPanel {
         return this.gameSpeed;
     }
 
-    public void clickOnFieldOld(int building) {
+    /*public void clickOnFieldOld(int building) {
 
         try {
 
@@ -131,7 +135,7 @@ public class Game extends JPanel {
                                 || ((Grid.get(i-1).get(j).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad() || Grid.get(i+1).get(j).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad()))) {
 
                             switch (building) {
-                                case 1:
+                                case 1 -> {
                                     if (scrolled) {
                                         addSpriteComponent(new Sprite(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), Ut2));
                                     } else {
@@ -139,33 +143,27 @@ public class Game extends JPanel {
                                     }
                                     Grid.get(i).get(j).setIsRoad(scrolled);
                                     repaint();
-
-                                    break;
-                                case 2:
+                                }
+                                case 2 -> {
                                     addSpriteComponent(new Sprite(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), Police));
                                     repaint();
-
-                                    break;
-                                case 3:
+                                }
+                                case 3 -> {
                                     addSpriteComponent(new Sprite(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), School));
                                     repaint();
-
-                                    break;
-                                case 4:
+                                }
+                                case 4 -> {
                                     addSpriteComponent(new Sprite(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), University));
                                     repaint();
-
-                                    break;
-                                case 5:
+                                }
+                                case 5 -> {
                                     addSpriteComponent(new Sprite(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), Stadium));
                                     repaint();
-
-                                    break;
-                                case 6:
+                                }
+                                case 6 -> {
                                     addSpriteComponent(new Sprite(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), PowerPlant));
                                     repaint();
-
-                                    break;
+                                }
                             }
                         }
                     }
@@ -177,6 +175,7 @@ public class Game extends JPanel {
         }
 
     }
+    */
 
     public void clickOnField(int building) {
 
@@ -539,10 +538,10 @@ public class Game extends JPanel {
                 Pos_x = MouseInfo.getPointerInfo().getLocation().x - getLocationOnScreen().x;
                 Pos_y = MouseInfo.getPointerInfo().getLocation().y - getLocationOnScreen().y;
 
-                for (int i = 0; i < Grid.size(); i++) {
-                    for (int j = 0; j < Grid.get(i).size(); j++) {
-                        if (Grid.get(i).get(j).getPosX() < Pos_x && Pos_x < (Grid.get(i).get(j).getPosX() + CELL_SIZE) && Grid.get(i).get(j).getPosY() < Pos_y && Pos_y < (Grid.get(i).get(j).getPosY() + CELL_SIZE)) {
-                            addSpriteComponent(new Sprite(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), Border));
+                for (ArrayList<Field> fields : Grid) {
+                    for (Field field : fields) {
+                        if (field.getPosX() < Pos_x && Pos_x < (field.getPosX() + CELL_SIZE) && field.getPosY() < Pos_y && Pos_y < (field.getPosY() + CELL_SIZE)) {
+                            addSpriteComponent(new Sprite(CELL_SIZE, CELL_SIZE, field.getPosX(), field.getPosY(), Border));
                             repaint();
                         }
                     }
@@ -610,12 +609,14 @@ public class Game extends JPanel {
         for (int i = 0; i < Grid.size(); i++) {
             for (int j = 0; j < Grid.get(i).size(); j++) {
                 if (Grid.get(i).get(j).getPosX() < Pos_x && Pos_x < (Grid.get(i).get(j).getPosX() + CELL_SIZE) && Grid.get(i).get(j).getPosY() < Pos_y && Pos_y < (Grid.get(i).get(j).getPosY() + CELL_SIZE)) {
-                    spriteComponents.remove(Grid.get(i).get(j));
-                    if(Grid.get(i).get(j).isFieldRoad()) {
-                        Grid.get(i).get(j).setIsRoad(false);
+                    if(i != starter || j != 0) {
+                        spriteComponents.remove(Grid.get(i).get(j));
+                        if (Grid.get(i).get(j).isFieldRoad()) {
+                            Grid.get(i).get(j).setIsRoad(false);
+                        }
+                        helper = true;
+                        break;
                     }
-                    helper = true;
-                    break;
                 }
             }
             if(helper) {
@@ -720,16 +721,16 @@ public class Game extends JPanel {
 
     public void aDayPassed() {
         if (day % 2 == 0) {
-            for (int i = 0; i < Grid.size(); i++) {
-                for (int j = 0; j < Grid.get(i).size(); j++) {
-                    if (Grid.get(i).get(j).getImage().equals(GBorder)) {
-                        Grid.get(i).get(j).setImage(House);
+            for (ArrayList<Field> fields : Grid) {
+                for (Field field : fields) {
+                    if (field.getImage().equals(GBorder)) {
+                        field.setImage(House);
                         repaint();
-                    } else if (Grid.get(i).get(j).getImage().equals(OBorder)) {
-                        Grid.get(i).get(j).setImage(Factory);
+                    } else if (field.getImage().equals(OBorder)) {
+                        field.setImage(Factory);
                         repaint();
-                    } else if (Grid.get(i).get(j).getImage().equals(BBorder)) {
-                        Grid.get(i).get(j).setImage(Office);
+                    } else if (field.getImage().equals(BBorder)) {
+                        field.setImage(Office);
                         repaint();
                     }
                 }
@@ -907,19 +908,9 @@ public class Game extends JPanel {
             }
         }
 
-        /*grphcs.setColor(Color.BLACK);
-        int gridSize = 25;
-        for (int x = 0; x < this.getWidth(); x += gridSize) {
-            grphcs.drawLine(x, 0, x, getHeight());
-        }
-        for (int y = 0; y < this.getHeight(); y += gridSize) {
-            grphcs.drawLine(0, y, getWidth(), y);
-        }*/
-
         for (Sprite sprite : spriteComponents) {
             grphcs.drawImage(sprite.getImage(),sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight(), null);
         }
 
     }
-    
 }
