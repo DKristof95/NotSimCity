@@ -4,24 +4,21 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.MouseListener;
+import javax.swing.event.ChangeEvent;
 
 import static javax.swing.JOptionPane.showMessageDialog;
 
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicArrowButton;
 
 public class NotSimCityGUI {
-    private JFrame frame;
-    private JFrame frame2;
-    private JFrame frame3;
+    private JFrame frame, frame2, frame3, frame4;
     private Game gameArea;
-
-    private JLabel timetext;
-
-    private JLabel money;
-    private JLabel satisfaction;
-    private JLabel population;
+    private JPanel panel;
+    private JSlider slider;
+    private JLabel timetext, money, satisfaction, population, sliderLabel;
 
     private Menu menuArea;
     private MapSelect mapSelectArea;
@@ -331,13 +328,70 @@ public class NotSimCityGUI {
                 JButton moneyButton = new JButton(icon);
                 moneyButton.setHorizontalAlignment(SwingConstants.LEFT);
                 moneyButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                moneyButton.setBorderPainted(false);
+                moneyButton.setContentAreaFilled(false);
+                moneyButton.setFocusPainted(false);
                 moneyButton.addActionListener(e2 -> {
-
+                    frame4 = new JFrame("Adók");
+                    frame4.setResizable(false);
+                    panel = new JPanel();
+                    panel.setPreferredSize(new Dimension(400,150));
+                    panel.setLayout(new BoxLayout(panel,BoxLayout.PAGE_AXIS));
+                    JButton halfButton = new JButton("0.5x");
+                    JButton oneButton = new JButton("1x");
+                    JButton onehalfButton = new JButton("1.5x");
+                    switch((int)(gameArea.getTaxMultiplier()*2)){
+                        case 1:
+                            halfButton.setForeground(new Color(112,78,148));
+                            break;
+                        case 2:
+                            oneButton.setForeground(new Color(112,78,148));
+                            break;
+                        case 3:
+                            onehalfButton.setForeground(new Color(112,78,148));
+                            break;
+                        default:
+                            break;
+                    }
+                    halfButton.setMaximumSize(new Dimension(400,50));
+                    halfButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                    halfButton.setBorderPainted(false);
+                    halfButton.setContentAreaFilled(false);
+                    halfButton.setFocusPainted(false);
+                    halfButton.addActionListener(e21 -> {
+                        gameArea.setTaxMultiplier(1);
+                        frame4.dispose();
+                    });
+                    panel.add(halfButton);
+                    oneButton.setMaximumSize(new Dimension(400,50));
+                    oneButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                    oneButton.setBorderPainted(false);
+                    oneButton.setContentAreaFilled(false);
+                    oneButton.setFocusPainted(false);
+                    oneButton.addActionListener(e21 -> {
+                        gameArea.setTaxMultiplier(2);
+                        frame4.dispose();
+                    });
+                    panel.add(oneButton);
+                    onehalfButton.setMaximumSize(new Dimension(400,50));
+                    onehalfButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                    onehalfButton.setBorderPainted(false);
+                    onehalfButton.setContentAreaFilled(false);
+                    onehalfButton.setFocusPainted(false);
+                    onehalfButton.addActionListener(e21 -> {
+                        gameArea.setTaxMultiplier(3);
+                        frame4.dispose();
+                    });
+                    panel.add(onehalfButton);
+                    frame4.getContentPane().add(panel);
+                    frame4.setSize(new Dimension(400, 150));
+                    frame4.pack();
+                    frame4.setLocationRelativeTo(null);
+                    frame4.setVisible(true);
                 });
                 money = new JLabel("50000");
                 money.setBorder(new EmptyBorder(25, 100, 25, 0));
                 moneyButton.add(money);
-                //moneyButton.setText("50000");
                 menuBar2.add(moneyButton);
 
                 icon = new ImageIcon("smile.png");
@@ -353,7 +407,6 @@ public class NotSimCityGUI {
                 population.setBorder(new EmptyBorder(25, 100, 25, 0));
                 menuItem.add(population);
                 menuBar2.add(menuItem);
-
 
                 frame3.add(menuBar2,BorderLayout.SOUTH);
             });
@@ -397,7 +450,5 @@ public class NotSimCityGUI {
         frame.setSize(new Dimension(700, 600));
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-
-
     }
 }

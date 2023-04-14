@@ -721,18 +721,22 @@ public class Game extends JPanel {
 
     public void setTaxMultiplier(int type) {
         switch(type) {
-            case 0:
+            case 1:
                 this.taxMultiplier = 0.5f;
                 break;
-            case 1:
+            case 2:
                 this.taxMultiplier = 1.0f;
                 break;
-            case 2:
+            case 3:
                 this.taxMultiplier = 1.5f;
                 break;
             default:
                 break;
         }
+    }
+
+    public float getTaxMultiplier() {
+        return this.taxMultiplier;
     }
 
     public void aDayPassed() {
