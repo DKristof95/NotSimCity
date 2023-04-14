@@ -19,9 +19,13 @@ public class NotSimCityGUI {
 
     private JLabel timetext;
 
+    private JLabel money;
+    private JLabel satisfaction;
+    private JLabel population;
+
     private Menu menuArea;
     private MapSelect mapSelectArea;
-    private JMenuBar menuBar;
+    private JMenuBar menuBar, menuBar2;
     private JMenu menu, subMenu;
     private JMenuItem menuItem;
 
@@ -320,6 +324,38 @@ public class NotSimCityGUI {
                 menuBar.add(fasterForwardButton);
 
                 frame3.setJMenuBar(menuBar);
+
+                menuBar2 = new JMenuBar();
+                menuBar2.setPreferredSize(new Dimension(1616,50));
+                ImageIcon icon = new ImageIcon("money.png");
+                JButton moneyButton = new JButton(icon);
+                moneyButton.setHorizontalAlignment(SwingConstants.LEFT);
+                moneyButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                moneyButton.addActionListener(e2 -> {
+
+                });
+                money = new JLabel("50000");
+                money.setBorder(new EmptyBorder(25, 100, 25, 0));
+                moneyButton.add(money);
+                //moneyButton.setText("50000");
+                menuBar2.add(moneyButton);
+
+                icon = new ImageIcon("smile.png");
+                menuItem = new JMenuItem(icon);
+                satisfaction = new JLabel("100%");
+                satisfaction.setBorder(new EmptyBorder(25, 100, 25, 0));
+                menuItem.add(satisfaction);
+                menuBar2.add(menuItem);
+
+                icon = new ImageIcon("village.png");
+                menuItem = new JMenuItem(icon);
+                population = new JLabel("100");
+                population.setBorder(new EmptyBorder(25, 100, 25, 0));
+                menuItem.add(population);
+                menuBar2.add(menuItem);
+
+
+                frame3.add(menuBar2,BorderLayout.SOUTH);
             });
             JobbB.setBorder(BorderFactory.createEmptyBorder());
             JobbB.setOpaque(false);
