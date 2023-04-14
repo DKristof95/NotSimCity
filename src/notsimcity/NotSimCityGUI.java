@@ -335,31 +335,39 @@ public class NotSimCityGUI {
                     frame4 = new JFrame("Adók");
                     frame4.setResizable(false);
                     panel = new JPanel();
-                    panel.setPreferredSize(new Dimension(400,150));
+                    panel.setPreferredSize(new Dimension(400,250));
                     panel.setLayout(new BoxLayout(panel,BoxLayout.PAGE_AXIS));
-                    JButton halfButton = new JButton("0.5x");
-                    JButton oneButton = new JButton("1x");
-                    JButton onehalfButton = new JButton("1.5x");
-                    switch((int)(gameArea.getTaxMultiplier()*2)){
-                        case 1:
-                            halfButton.setForeground(new Color(112,78,148));
-                            break;
-                        case 2:
-                            oneButton.setForeground(new Color(112,78,148));
-                            break;
-                        case 3:
-                            onehalfButton.setForeground(new Color(112,78,148));
-                            break;
-                        default:
-                            break;
+                    JButton zeroButton = new JButton("0%    ++Elégedettség");
+                    JButton halfButton = new JButton("25%    +Elégedettség");
+                    JButton oneButton = new JButton("50%");
+                    JButton onehalfButton = new JButton("75%    -Elégedettség");
+                    JButton twoButton = new JButton("100%  --Elégedettség");
+                    switch ((int)(gameArea.getTaxMultiplier() * 2)) {
+                        case 0 -> zeroButton.setForeground(new Color(112, 78, 148));
+                        case 1 -> halfButton.setForeground(new Color(112, 78, 148));
+                        case 2 -> oneButton.setForeground(new Color(112, 78, 148));
+                        case 3 -> onehalfButton.setForeground(new Color(112, 78, 148));
+                        case 4 -> twoButton.setForeground(new Color(112, 78, 148));
+                        default -> {
+                        }
                     }
+                    zeroButton.setMaximumSize(new Dimension(400,50));
+                    zeroButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                    zeroButton.setBorderPainted(false);
+                    zeroButton.setContentAreaFilled(false);
+                    zeroButton.setFocusPainted(false);
+                    zeroButton.addActionListener(e21 -> {
+                        gameArea.setTaxMultiplier(1);
+                        frame4.dispose();
+                    });
+                    panel.add(zeroButton);
                     halfButton.setMaximumSize(new Dimension(400,50));
                     halfButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                     halfButton.setBorderPainted(false);
                     halfButton.setContentAreaFilled(false);
                     halfButton.setFocusPainted(false);
                     halfButton.addActionListener(e21 -> {
-                        gameArea.setTaxMultiplier(1);
+                        gameArea.setTaxMultiplier(2);
                         frame4.dispose();
                     });
                     panel.add(halfButton);
@@ -369,7 +377,7 @@ public class NotSimCityGUI {
                     oneButton.setContentAreaFilled(false);
                     oneButton.setFocusPainted(false);
                     oneButton.addActionListener(e21 -> {
-                        gameArea.setTaxMultiplier(2);
+                        gameArea.setTaxMultiplier(3);
                         frame4.dispose();
                     });
                     panel.add(oneButton);
@@ -379,12 +387,22 @@ public class NotSimCityGUI {
                     onehalfButton.setContentAreaFilled(false);
                     onehalfButton.setFocusPainted(false);
                     onehalfButton.addActionListener(e21 -> {
-                        gameArea.setTaxMultiplier(3);
+                        gameArea.setTaxMultiplier(4);
                         frame4.dispose();
                     });
                     panel.add(onehalfButton);
+                    twoButton.setMaximumSize(new Dimension(400,50));
+                    twoButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                    twoButton.setBorderPainted(false);
+                    twoButton.setContentAreaFilled(false);
+                    twoButton.setFocusPainted(false);
+                    twoButton.addActionListener(e21 -> {
+                        gameArea.setTaxMultiplier(5);
+                        frame4.dispose();
+                    });
+                    panel.add(twoButton);
                     frame4.getContentPane().add(panel);
-                    frame4.setSize(new Dimension(400, 150));
+                    frame4.setSize(new Dimension(400, 250));
                     frame4.pack();
                     frame4.setLocationRelativeTo(null);
                     frame4.setVisible(true);
