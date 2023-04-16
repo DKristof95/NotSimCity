@@ -720,24 +720,14 @@ public class Game extends JPanel {
     }
 
     public void setTaxMultiplier(int type) {
-        switch(type) {
-            case 1:
-                this.taxMultiplier = 0.0f;
-                break;
-            case 2:
-                this.taxMultiplier = 0.5f;
-                break;
-            case 3:
-                this.taxMultiplier = 1.0f;
-                break;
-            case 4:
-                this.taxMultiplier = 1.5f;
-                break;
-            case 5:
-                this.taxMultiplier = 2.0f;
-                break;
-            default:
-                break;
+        switch (type) {
+            case 1 -> this.taxMultiplier = 0.0f;
+            case 2 -> this.taxMultiplier = 0.5f;
+            case 3 -> this.taxMultiplier = 1.0f;
+            case 4 -> this.taxMultiplier = 1.5f;
+            case 5 -> this.taxMultiplier = 2.0f;
+            default -> {
+            }
         }
     }
 
@@ -852,7 +842,7 @@ public class Game extends JPanel {
         else {
             day++;
             if(day < 10) {
-                s_day = "0" + String.valueOf(day);
+                s_day = "0" + day;
             }
             else {
                 s_day = String.valueOf(day);

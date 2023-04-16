@@ -4,28 +4,21 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.MouseListener;
-import javax.swing.event.ChangeEvent;
-
 import static javax.swing.JOptionPane.showMessageDialog;
-
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicArrowButton;
 
 public class NotSimCityGUI {
     private JFrame frame, frame2, frame3, frame4;
     private Game gameArea;
     private JPanel panel;
-    private JSlider slider;
-    private JLabel timetext, money, satisfaction, population, sliderLabel;
-
+    private JLabel timetext, money, satisfaction, population;
     private Menu menuArea;
     private MapSelect mapSelectArea;
     private JMenuBar menuBar, menuBar2;
     private JMenu menu, subMenu;
     private JMenuItem menuItem;
-
     private JTextField cityNameField;
     private String cityName;
     public NotSimCityGUI() {
@@ -48,7 +41,7 @@ public class NotSimCityGUI {
             cityNameField.setBounds(275,50,200,30);
             frame2.add(cityNameField);
 
-
+            Border redBorder = BorderFactory.createLineBorder(Color.RED, 2, true);
             ButtonGroup buttonGroup = new ButtonGroup();
             JRadioButton radio1 = new JRadioButton("Véletlenszerű pálya",true);
             radio1.setBounds(100,110,20,20);
@@ -57,16 +50,62 @@ public class NotSimCityGUI {
             buttonGroup.add(radio1);
             JRadioButton radio2 = new JRadioButton("Előre megadott pálya választása");
             radio2.setBounds(100,150,20,20);
-            JLabel radio2_label = new JLabel("Előre megadott pálya választása( Nem működik )");
+            JLabel radio2_label = new JLabel("Előre megadott pálya választása");
             radio2_label.setBounds(120,150,300,20);
             buttonGroup.add(radio2);
+            JButton option1 = new JButton("1");
+            option1.setBounds(50,220,160,160);
+            option1.setVisible(false);
+            option1.setFocusPainted(false);
+            option1.setBorder(redBorder);
+            option1.setBorderPainted(true);
+            JButton option2 = new JButton("2");
+            option2.setBounds(260,220,160,160);
+            option2.setVisible(false);
+            option2.setFocusPainted(false);
+            option2.setBorder(redBorder);
+            option2.setBorderPainted(false);
+            JButton option3 = new JButton("3");
+            option3.setBounds(470,220,160,160);
+            option3.setVisible(false);
+            option3.setFocusPainted(false);
+            option3.setBorder(redBorder);
+            option3.setBorderPainted(false);
+            option1.addActionListener(o1 -> {
+                option1.setBorderPainted(true);
+                option2.setBorderPainted(false);
+                option3.setBorderPainted(false);
+            });
+            option2.addActionListener(o1 -> {
+                option1.setBorderPainted(false);
+                option2.setBorderPainted(true);
+                option3.setBorderPainted(false);
+            });
+            option3.addActionListener(o1 -> {
+                option1.setBorderPainted(false);
+                option2.setBorderPainted(false);
+                option3.setBorderPainted(true);
+            });
+            radio1.addActionListener(er2 -> {
+                option1.setVisible(false);
+                option2.setVisible(false);
+                option3.setVisible(false);
+            });
+            radio2.addActionListener(er2 -> {
+                option1.setVisible(true);
+                option2.setVisible(true);
+                option3.setVisible(true);
+            });
+            frame2.add(option1);
+            frame2.add(option2);
+            frame2.add(option3);
             frame2.add(radio1);
             frame2.add(radio2);
             frame2.add(radio1_label);
             frame2.add(radio2_label);
 
             JButton BalB = new BasicArrowButton(BasicArrowButton.WEST);
-            BalB.setBounds(100,400,64,64);
+            BalB.setBounds(80,430,64,64);
             BalB.addActionListener(e1 -> {
                     frame.setVisible(true);
                     frame2.dispose();
@@ -75,7 +114,7 @@ public class NotSimCityGUI {
             BalB.setOpaque(false);
             BalB.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             JButton JobbB = new BasicArrowButton(BasicArrowButton.EAST);
-            JobbB.setBounds(536,400,64,64);
+            JobbB.setBounds(536,430,64,64);
             JobbB.addActionListener(e1 -> {
                 Border greenBorder = BorderFactory.createLineBorder(Color.GREEN, 2, true);
 
