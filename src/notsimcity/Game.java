@@ -38,6 +38,10 @@ public class Game extends JPanel {
     private final Image School = new ImageIcon("school.png").getImage();
     private final Image University = new ImageIcon("university.png").getImage();
     private final Image Stadium = new ImageIcon("stadium.png").getImage();
+    private final Image StadiumLL = new ImageIcon("stadium_lower_left.png").getImage();
+    private final Image StadiumLR = new ImageIcon("stadium_lower_right.png").getImage();
+    private final Image StadiumUL = new ImageIcon("stadium_upper_left.png").getImage();
+    private final Image StadiumUR = new ImageIcon("stadium_upper_right.png").getImage();
     private final Image PowerPlant = new ImageIcon("power_plant.png").getImage();
     private final Image Border = new ImageIcon("yellow_border.png").getImage();
     private final Image GBorder = new ImageIcon("green_border.png").getImage();
@@ -47,7 +51,7 @@ public class Game extends JPanel {
     private final Image Office = new ImageIcon("office.png").getImage();
     private final Image Factory = new ImageIcon("factory.png").getImage();
     private int starter;
-    private String semmi;
+    private static int buildingSelected;
 
     public Game() {
         super();
@@ -468,8 +472,14 @@ public class Game extends JPanel {
                                         addSpriteComponent(Grid.get(i).get(j));
                                     }
                                     case 5 -> {
-                                        Grid.get(i).get(j).setImage(Stadium);
+                                        Grid.get(i).get(j).setImage(StadiumUL);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        Grid.get(i).get(j+1).setImage(StadiumUR);
+                                        addSpriteComponent(Grid.get(i).get(j+1));
+                                        Grid.get(i+1).get(j).setImage(StadiumLL);
+                                        addSpriteComponent(Grid.get(i+1).get(j));
+                                        Grid.get(i+1).get(j+1).setImage(StadiumLR);
+                                        addSpriteComponent(Grid.get(i+1).get(j+1));
                                     }
                                     case 6 -> {
                                         Grid.get(i).get(j).setImage(PowerPlant);
@@ -526,6 +536,7 @@ public class Game extends JPanel {
 
     public void setBuildingMode(int mode,int building) {
         this.buildingMode = mode;
+        buildingSelected = building;
 
         spriteComponents.removeIf(sprite -> sprite.getImage().equals(Border));
         repaint();
@@ -541,8 +552,14 @@ public class Game extends JPanel {
                 for (ArrayList<Field> fields : Grid) {
                     for (Field field : fields) {
                         if (field.getPosX() < Pos_x && Pos_x < (field.getPosX() + CELL_SIZE) && field.getPosY() < Pos_y && Pos_y < (field.getPosY() + CELL_SIZE)) {
-                            addSpriteComponent(new Sprite(CELL_SIZE, CELL_SIZE, field.getPosX(), field.getPosY(), Border));
-                            repaint();
+                            if (buildingSelected == 5) {
+                                addSpriteComponent(new Sprite(CELL_SIZE*2, CELL_SIZE*2, field.getPosX(), field.getPosY(), Border));
+                                repaint();
+                            } else {
+                                addSpriteComponent(new Sprite(CELL_SIZE, CELL_SIZE, field.getPosX(), field.getPosY(), Border));
+                                repaint();
+                            }
+
                         }
                     }
                 }
@@ -557,7 +574,11 @@ public class Game extends JPanel {
             for (MouseListener l : this.getMouseListeners()) {
                 this.removeMouseListener(l);
             }
-
+            for (ActionListener l: timer2.getActionListeners()
+                 ) {
+                timer2.removeActionListener(l);
+            }
+            buildingSelected = 0;
         }
 
         this.addMouseWheelListener(new MouseAdapter(){
