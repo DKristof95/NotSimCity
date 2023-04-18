@@ -211,6 +211,17 @@ public class NotSimCityGUI {
                 });
                 menu.add(menuItem);
 
+                menu.addSeparator();
+
+                menuItem = new JMenuItem("Erdősítés");
+                menuItem.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                menuItem.addActionListener(e118 -> {
+                    gameArea.setBuildingMode(3,0);
+                    timetext.setBorder(new EmptyBorder(0, 284, 0, 566));
+                    stopBuild.setVisible(true);
+                });
+                menu.add(menuItem);
+
                 timetext = new JLabel("2023.01.01. 00:00");
                 timetext.setFont(timetext.getFont().deriveFont(24.0f));
                 gameArea.Time();

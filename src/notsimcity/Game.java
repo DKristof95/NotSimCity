@@ -46,8 +46,9 @@ public class Game extends JPanel {
     private final Image House = new ImageIcon("house.png").getImage();
     private final Image Office = new ImageIcon("office.png").getImage();
     private final Image Factory = new ImageIcon("factory.png").getImage();
+    private final Image Forest = new ImageIcon("forest.png").getImage();
     private int starter;
-    private String semmi;
+
 
     public Game() {
         super();
