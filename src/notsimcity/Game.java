@@ -47,6 +47,7 @@ public class Game extends JPanel {
     private final Image House = new ImageIcon("house.png").getImage();
     private final Image Office = new ImageIcon("office.png").getImage();
     private final Image Factory = new ImageIcon("factory.png").getImage();
+    private final Image Grass = new ImageIcon("grass.jpg").getImage();
     private int starter;
     private float taxMultiplier = 1.0f;
 
@@ -975,8 +976,6 @@ public class Game extends JPanel {
     @Override
     protected void paintComponent(Graphics grphcs) {
         super.paintComponent(grphcs);
-        grphcs.setColor(new Color(0,204, 0));
-        grphcs.fillRect(0, 0, 1600, 900);
         sizeHelper++;
         if(sizeHelper == 2) {
             this.Width = this.getWidth();
@@ -987,8 +986,7 @@ public class Game extends JPanel {
             for (int row = 0; row < Width / CELL_SIZE; row++) {
                 int x = row * CELL_SIZE;
                 int y = col * CELL_SIZE;
-                grphcs.setColor(new Color(204, 204, 204));
-                grphcs.drawRect(x, y, CELL_SIZE, CELL_SIZE);
+                grphcs.drawImage(Grass,x,y,CELL_SIZE,CELL_SIZE,null);
             }
         }
 
