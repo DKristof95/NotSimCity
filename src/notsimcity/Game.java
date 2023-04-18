@@ -31,6 +31,7 @@ public class Game extends JPanel {
     private int sizeHelper = 0;
     private int Width;
     private int Height;
+    private int Money = 50000;
     private boolean scrolled = false;
     private final Image Ut1 = new ImageIcon("ut_viz.png").getImage();
     private final Image Ut2 = new ImageIcon("ut_fugg.png").getImage();
@@ -177,6 +178,10 @@ public class Game extends JPanel {
     }
     */
 
+    public int getMoney() {
+        return this.Money;
+    }
+
     public void clickOnField(int building) {
 
         try {
@@ -197,31 +202,38 @@ public class Game extends JPanel {
                                         if (scrolled) {
                                             Grid.get(i).get(j).setImage(Ut2);
                                             addSpriteComponent(Grid.get(i).get(j));
+                                            this.Money -= 50;
                                         } else {
                                             Grid.get(i).get(j).setImage(Ut1);
                                             addSpriteComponent(Grid.get(i).get(j));
+                                            this.Money -= 50;
                                         }
                                         Grid.get(i).get(j).setIsRoad(true);
                                     }
                                     case 2 -> {
                                         Grid.get(i).get(j).setImage(Police);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 10000;
                                     }
                                     case 3 -> {
                                         Grid.get(i).get(j).setImage(School);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 10000;
                                     }
                                     case 4 -> {
                                         Grid.get(i).get(j).setImage(University);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 25000;
                                     }
                                     case 5 -> {
                                         Grid.get(i).get(j).setImage(Stadium);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 100000;
                                     }
                                     case 6 -> {
                                         Grid.get(i).get(j).setImage(PowerPlant);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 20000;
                                     }
                                 }
                             }
@@ -233,31 +245,38 @@ public class Game extends JPanel {
                                         if (scrolled) {
                                             Grid.get(i).get(j).setImage(Ut2);
                                             addSpriteComponent(Grid.get(i).get(j));
+                                            this.Money -= 50;
                                         } else {
                                             Grid.get(i).get(j).setImage(Ut1);
                                             addSpriteComponent(Grid.get(i).get(j));
+                                            this.Money -= 50;
                                         }
                                         Grid.get(i).get(j).setIsRoad(true);
                                     }
                                     case 2 -> {
                                         Grid.get(i).get(j).setImage(Police);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 10000;
                                     }
                                     case 3 -> {
                                         Grid.get(i).get(j).setImage(School);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 10000;
                                     }
                                     case 4 -> {
                                         Grid.get(i).get(j).setImage(University);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 25000;
                                     }
                                     case 5 -> {
                                         Grid.get(i).get(j).setImage(Stadium);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 100000;
                                     }
                                     case 6 -> {
                                         Grid.get(i).get(j).setImage(PowerPlant);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 20000;
                                     }
                                 }
                             }
@@ -269,31 +288,38 @@ public class Game extends JPanel {
                                         if (scrolled) {
                                             Grid.get(i).get(j).setImage(Ut2);
                                             addSpriteComponent(Grid.get(i).get(j));
+                                            this.Money -= 50;
                                         } else {
                                             Grid.get(i).get(j).setImage(Ut1);
                                             addSpriteComponent(Grid.get(i).get(j));
+                                            this.Money -= 50;
                                         }
                                         Grid.get(i).get(j).setIsRoad(true);
                                     }
                                     case 2 -> {
                                         Grid.get(i).get(j).setImage(Police);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 10000;
                                     }
                                     case 3 -> {
                                         Grid.get(i).get(j).setImage(School);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 10000;
                                     }
                                     case 4 -> {
                                         Grid.get(i).get(j).setImage(University);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 25000;
                                     }
                                     case 5 -> {
                                         Grid.get(i).get(j).setImage(Stadium);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 100000;
                                     }
                                     case 6 -> {
                                         Grid.get(i).get(j).setImage(PowerPlant);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 20000;
                                     }
                                 }
                             }
@@ -305,31 +331,38 @@ public class Game extends JPanel {
                                         if (scrolled) {
                                             Grid.get(i).get(j).setImage(Ut2);
                                             addSpriteComponent(Grid.get(i).get(j));
+                                            this.Money -= 50;
                                         } else {
                                             Grid.get(i).get(j).setImage(Ut1);
                                             addSpriteComponent(Grid.get(i).get(j));
+                                            this.Money -= 50;
                                         }
                                         Grid.get(i).get(j).setIsRoad(true);
                                     }
                                     case 2 -> {
                                         Grid.get(i).get(j).setImage(Police);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 10000;
                                     }
                                     case 3 -> {
                                         Grid.get(i).get(j).setImage(School);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 10000;
                                     }
                                     case 4 -> {
                                         Grid.get(i).get(j).setImage(University);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 25000;
                                     }
                                     case 5 -> {
                                         Grid.get(i).get(j).setImage(Stadium);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 100000;
                                     }
                                     case 6 -> {
                                         Grid.get(i).get(j).setImage(PowerPlant);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 20000;
                                     }
                                 }
                             }
@@ -341,31 +374,38 @@ public class Game extends JPanel {
                                         if (scrolled) {
                                             Grid.get(i).get(j).setImage(Ut2);
                                             addSpriteComponent(Grid.get(i).get(j));
+                                            this.Money -= 50;
                                         } else {
                                             Grid.get(i).get(j).setImage(Ut1);
                                             addSpriteComponent(Grid.get(i).get(j));
+                                            this.Money -= 50;
                                         }
                                         Grid.get(i).get(j).setIsRoad(true);
                                     }
                                     case 2 -> {
                                         Grid.get(i).get(j).setImage(Police);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 10000;
                                     }
                                     case 3 -> {
                                         Grid.get(i).get(j).setImage(School);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 10000;
                                     }
                                     case 4 -> {
                                         Grid.get(i).get(j).setImage(University);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 25000;
                                     }
                                     case 5 -> {
                                         Grid.get(i).get(j).setImage(Stadium);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 100000;
                                     }
                                     case 6 -> {
                                         Grid.get(i).get(j).setImage(PowerPlant);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 20000;
                                     }
                                 }
                             }
@@ -377,31 +417,38 @@ public class Game extends JPanel {
                                         if (scrolled) {
                                             Grid.get(i).get(j).setImage(Ut2);
                                             addSpriteComponent(Grid.get(i).get(j));
+                                            this.Money -= 50;
                                         } else {
                                             Grid.get(i).get(j).setImage(Ut1);
                                             addSpriteComponent(Grid.get(i).get(j));
+                                            this.Money -= 50;
                                         }
                                         Grid.get(i).get(j).setIsRoad(true);
                                     }
                                     case 2 -> {
                                         Grid.get(i).get(j).setImage(Police);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 10000;
                                     }
                                     case 3 -> {
                                         Grid.get(i).get(j).setImage(School);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 10000;
                                     }
                                     case 4 -> {
                                         Grid.get(i).get(j).setImage(University);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 25000;
                                     }
                                     case 5 -> {
                                         Grid.get(i).get(j).setImage(Stadium);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 100000;
                                     }
                                     case 6 -> {
                                         Grid.get(i).get(j).setImage(PowerPlant);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 20000;
                                     }
                                 }
                             }
@@ -413,31 +460,38 @@ public class Game extends JPanel {
                                         if (scrolled) {
                                             Grid.get(i).get(j).setImage(Ut2);
                                             addSpriteComponent(Grid.get(i).get(j));
+                                            this.Money -= 50;
                                         } else {
                                             Grid.get(i).get(j).setImage(Ut1);
                                             addSpriteComponent(Grid.get(i).get(j));
+                                            this.Money -= 50;
                                         }
                                         Grid.get(i).get(j).setIsRoad(true);
                                     }
                                     case 2 -> {
                                         Grid.get(i).get(j).setImage(Police);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 10000;
                                     }
                                     case 3 -> {
                                         Grid.get(i).get(j).setImage(School);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 10000;
                                     }
                                     case 4 -> {
                                         Grid.get(i).get(j).setImage(University);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 25000;
                                     }
                                     case 5 -> {
                                         Grid.get(i).get(j).setImage(Stadium);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 100000;
                                     }
                                     case 6 -> {
                                         Grid.get(i).get(j).setImage(PowerPlant);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 20000;
                                     }
                                 }
                             }
@@ -449,31 +503,38 @@ public class Game extends JPanel {
                                         if (scrolled) {
                                             Grid.get(i).get(j).setImage(Ut2);
                                             addSpriteComponent(Grid.get(i).get(j));
+                                            this.Money -= 50;
                                         } else {
                                             Grid.get(i).get(j).setImage(Ut1);
                                             addSpriteComponent(Grid.get(i).get(j));
+                                            this.Money -= 50;
                                         }
                                         Grid.get(i).get(j).setIsRoad(true);
                                     }
                                     case 2 -> {
                                         Grid.get(i).get(j).setImage(Police);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 10000;
                                     }
                                     case 3 -> {
                                         Grid.get(i).get(j).setImage(School);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 10000;
                                     }
                                     case 4 -> {
                                         Grid.get(i).get(j).setImage(University);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 25000;
                                     }
                                     case 5 -> {
                                         Grid.get(i).get(j).setImage(Stadium);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 100000;
                                     }
                                     case 6 -> {
                                         Grid.get(i).get(j).setImage(PowerPlant);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 20000;
                                     }
                                 }
                             }
@@ -485,31 +546,38 @@ public class Game extends JPanel {
                                         if (scrolled) {
                                             Grid.get(i).get(j).setImage(Ut2);
                                             addSpriteComponent(Grid.get(i).get(j));
+                                            this.Money -= 50;
                                         } else {
                                             Grid.get(i).get(j).setImage(Ut1);
                                             addSpriteComponent(Grid.get(i).get(j));
+                                            this.Money -= 50;
                                         }
                                         Grid.get(i).get(j).setIsRoad(true);
                                     }
                                     case 2 -> {
                                         Grid.get(i).get(j).setImage(Police);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 10000;
                                     }
                                     case 3 -> {
                                         Grid.get(i).get(j).setImage(School);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 10000;
                                     }
                                     case 4 -> {
                                         Grid.get(i).get(j).setImage(University);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 25000;
                                     }
                                     case 5 -> {
                                         Grid.get(i).get(j).setImage(Stadium);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 100000;
                                     }
                                     case 6 -> {
                                         Grid.get(i).get(j).setImage(PowerPlant);
                                         addSpriteComponent(Grid.get(i).get(j));
+                                        this.Money -= 20000;
                                     }
                                 }
                             }
@@ -716,7 +784,7 @@ public class Game extends JPanel {
     }
     
     public void aMonthPassed() {
-        //money += taxMultiplier * 10000;
+        this.Money += this.taxMultiplier * 10000;
     }
 
     public void setTaxMultiplier(int type) {

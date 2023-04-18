@@ -253,10 +253,6 @@ public class NotSimCityGUI {
 
                 timetext = new JLabel("2023.01.01. 00:00");
                 timetext.setFont(timetext.getFont().deriveFont(24.0f));
-                gameArea.Time();
-
-                Timer timer = new Timer(1000, e117 -> timetext.setText(gameArea.getTime()));
-                timer.start();
                 timetext.setBorder(new EmptyBorder(0, 450, 0, 566));
 
                 JButton saveButton = new JButton("Mentés");
@@ -298,14 +294,6 @@ public class NotSimCityGUI {
                 pauseButton.setFocusPainted(false);
                 pauseButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 pauseButton.setBorder(greenBorder);
-                pauseButton.addActionListener(e119 -> {
-                    gameArea.setGameSpeed(0);
-                    pauseButton.setBorderPainted(true);
-                    playButton.setBorderPainted(false);
-                    fastForwardButton.setBorderPainted(false);
-                    fasterForwardButton.setBorderPainted(false);
-                    timer.stop();
-                });
                 menuBar.add(pauseButton);
 
                 playButton.setIcon(new ImageIcon("play.png"));
@@ -314,15 +302,6 @@ public class NotSimCityGUI {
                 playButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 playButton.setBorderPainted(true);
                 playButton.setBorder(greenBorder);
-                playButton.addActionListener(e1110 -> {
-                    gameArea.setGameSpeed(1);
-                    pauseButton.setBorderPainted(false);
-                    playButton.setBorderPainted(true);
-                    fastForwardButton.setBorderPainted(false);
-                    fasterForwardButton.setBorderPainted(false);
-                    timer.setDelay(1000);
-                    timer.start();
-                });
                 menuBar.add(playButton);
 
                 fastForwardButton.setIcon(new ImageIcon("fast_forward.png"));
@@ -331,15 +310,6 @@ public class NotSimCityGUI {
                 fastForwardButton.setFocusPainted(false);
                 fastForwardButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 fastForwardButton.setBorder(greenBorder);
-                fastForwardButton.addActionListener(e1111 -> {
-                    gameArea.setGameSpeed(2);
-                    pauseButton.setBorderPainted(false);
-                    playButton.setBorderPainted(false);
-                    fastForwardButton.setBorderPainted(true);
-                    fasterForwardButton.setBorderPainted(false);
-                    timer.setDelay(10);
-                    timer.start();
-                });
                 menuBar.add(fastForwardButton);
 
                 fasterForwardButton.setIcon(new ImageIcon("fast_forward_3.png"));
@@ -348,15 +318,6 @@ public class NotSimCityGUI {
                 fasterForwardButton.setFocusPainted(false);
                 fasterForwardButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 fasterForwardButton.setBorder(greenBorder);
-                fasterForwardButton.addActionListener(e1112 -> {
-                    gameArea.setGameSpeed(3);
-                    pauseButton.setBorderPainted(false);
-                    playButton.setBorderPainted(false);
-                    fastForwardButton.setBorderPainted(false);
-                    fasterForwardButton.setBorderPainted(true);
-                    timer.setDelay(1);
-                    timer.start();
-                });
                 menuBar.add(fasterForwardButton);
 
                 frame3.setJMenuBar(menuBar);
@@ -466,6 +427,52 @@ public class NotSimCityGUI {
                 menuBar2.add(menuItem);
 
                 frame3.add(menuBar2,BorderLayout.SOUTH);
+
+                gameArea.Time();
+                Timer timer = new Timer(1000, e117 -> {
+                    timetext.setText(gameArea.getTime());
+                    money.setText(String.valueOf(gameArea.getMoney()));
+                });
+                timer.start();
+
+                pauseButton.addActionListener(e119 -> {
+                    gameArea.setGameSpeed(0);
+                    pauseButton.setBorderPainted(true);
+                    playButton.setBorderPainted(false);
+                    fastForwardButton.setBorderPainted(false);
+                    fasterForwardButton.setBorderPainted(false);
+                    timer.stop();
+                });
+
+                playButton.addActionListener(e1110 -> {
+                    gameArea.setGameSpeed(1);
+                    pauseButton.setBorderPainted(false);
+                    playButton.setBorderPainted(true);
+                    fastForwardButton.setBorderPainted(false);
+                    fasterForwardButton.setBorderPainted(false);
+                    timer.setDelay(1000);
+                    timer.start();
+                });
+
+                fastForwardButton.addActionListener(e1111 -> {
+                    gameArea.setGameSpeed(2);
+                    pauseButton.setBorderPainted(false);
+                    playButton.setBorderPainted(false);
+                    fastForwardButton.setBorderPainted(true);
+                    fasterForwardButton.setBorderPainted(false);
+                    timer.setDelay(10);
+                    timer.start();
+                });
+
+                fasterForwardButton.addActionListener(e1112 -> {
+                    gameArea.setGameSpeed(3);
+                    pauseButton.setBorderPainted(false);
+                    playButton.setBorderPainted(false);
+                    fastForwardButton.setBorderPainted(false);
+                    fasterForwardButton.setBorderPainted(true);
+                    timer.setDelay(1);
+                    timer.start();
+                });
             });
             JobbB.setBorder(BorderFactory.createEmptyBorder());
             JobbB.setOpaque(false);
