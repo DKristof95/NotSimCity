@@ -47,6 +47,7 @@ public class Game extends JPanel {
     private final Image Office = new ImageIcon("office.png").getImage();
     private final Image Factory = new ImageIcon("factory.png").getImage();
     private int starter;
+    private float taxMultiplier = 1.0f;
 
     public Game() {
         super();
@@ -715,7 +716,23 @@ public class Game extends JPanel {
     }
     
     public void aMonthPassed() {
-        
+        //money += taxMultiplier * 10000;
+    }
+
+    public void setTaxMultiplier(int type) {
+        switch (type) {
+            case 1 -> this.taxMultiplier = 0.0f;
+            case 2 -> this.taxMultiplier = 0.5f;
+            case 3 -> this.taxMultiplier = 1.0f;
+            case 4 -> this.taxMultiplier = 1.5f;
+            case 5 -> this.taxMultiplier = 2.0f;
+            default -> {
+            }
+        }
+    }
+
+    public float getTaxMultiplier() {
+        return this.taxMultiplier;
     }
 
     public void aDayPassed() {
@@ -825,7 +842,7 @@ public class Game extends JPanel {
         else {
             day++;
             if(day < 10) {
-                s_day = "0" + String.valueOf(day);
+                s_day = "0" + day;
             }
             else {
                 s_day = String.valueOf(day);
@@ -848,30 +865,30 @@ public class Game extends JPanel {
                 time = time % 60;
                 aDayPassed();
                 if (time < 10) {
-                    timetext = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "00:0" + String.valueOf(time);
+                    timetext = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "00:0" + time;
                 }
                 else {
-                    timetext = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "00:" + String.valueOf(time);
+                    timetext = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "00:" + time;
                 }
             } else {
                 if (h == 0) {
                     if (m < 10) {
-                        timetext = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "00:0" + String.valueOf(m);
+                        timetext = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "00:0" + m;
                     } else {
-                        timetext = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "00:" + String.valueOf(m);
+                        timetext = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "00:" + m;
                     }
                 }
                 if (h < 10) {
                     if (m < 10) {
-                        timetext = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "0" + String.valueOf(h) + ":0" + String.valueOf(m);
+                        timetext = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "0" + h + ":0" + m;
                     } else {
-                        timetext = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "0" + String.valueOf(h) + ":" + String.valueOf(m);
+                        timetext = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "0" + h + ":" + m;
                     }
                 } else {
                     if (m < 10) {
-                        timetext = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + String.valueOf(h) + ":0" + String.valueOf(m);
+                        timetext = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + h + ":0" + m;
                     } else {
-                        timetext = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + String.valueOf(h) + ":" + String.valueOf(m);
+                        timetext = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + h + ":" + m;
                     }
                 }
             }
