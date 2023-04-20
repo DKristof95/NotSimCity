@@ -6,8 +6,11 @@ import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 import javax.swing.*;
 
+import static java.lang.Math.floor;
+import static notsimcity.ZoneType.*;
+
 public class Game extends JPanel {
-    private final int CELL_SIZE = 50;
+    private static final int CELL_SIZE = 50;
     private ArrayList<ArrayList<Field>> Grid = new ArrayList<ArrayList<Field>>();
     private Player player;
     private String cityName;
@@ -50,12 +53,12 @@ public class Game extends JPanel {
     public Game() {
         super();
         spriteComponents = new ArrayList<>();
+        zones = new ArrayList<>();
     }
 
     public void setGrid() {
         int a = Height/CELL_SIZE;
         int b = Width/CELL_SIZE;
-        System.out.println(a + " " + b);
         for (int col = 0; col < a; col++) {
             ArrayList<Field> rows = new ArrayList<Field>();
             for (int row = 0; row < b; row++) {
@@ -67,6 +70,14 @@ public class Game extends JPanel {
         int randomNum = ThreadLocalRandom.current().nextInt(1, a-1);
         starter = randomNum;
         Grid.get(randomNum).set(0, new Road(Grid.get(randomNum).get(0), Ut1));
+    }
+
+    public static int iFromX(int x) {
+        return (int)(floor(x/CELL_SIZE));
+    }
+
+    public static int jFromY(int y) {
+        return (int)(floor(y/CELL_SIZE));
     }
 
     public void loadSave(int saveID) {
@@ -654,21 +665,26 @@ public class Game extends JPanel {
         }
     }
     
-    public void clickOnZone(int zoneType) {
+    public void clickOnZone(int zoneType) { //ide
         Image mainBorder;
+        ZoneType type;
         if(zoneType == 1) {
             mainBorder = GBorder;
+            type = ResidentalArea;
         }
         else if (zoneType == 2) {
             mainBorder = OBorder;
+            type = IndustrialArea;
         }
         else {
             mainBorder = BBorder;
+            type = ServiceArea;
         }
         try {
 
-            for (Sprite s: spriteComponents) {
-                if (s.getX() == ((Pos_x / CELL_SIZE)*CELL_SIZE) && s.getY() == ((Pos_y / CELL_SIZE)*CELL_SIZE)) {
+            for (Zone zone : zones) {
+                if ((Pos_x >= zone.getX() && Pos_y >= zone.getY()) && (Pos_x <= zone.getX()+CELL_SIZE && Pos_y <= zone.getY()+CELL_SIZE)) {
+                    System.out.println("Van már ott zóna.");
                     return;
                 }
             }
@@ -678,56 +694,47 @@ public class Game extends JPanel {
                     if (Grid.get(i).get(j).getPosX() < Pos_x && Pos_x < (Grid.get(i).get(j).getPosX() + CELL_SIZE) && Grid.get(i).get(j).getPosY() < Pos_y && Pos_y < (Grid.get(i).get(j).getPosY() + CELL_SIZE)) {
                         if(i-1 == -1 && j-1 == -1) {
                             if (Grid.get(i+1).get(j).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad()) {
-                                Grid.get(i).get(j).setImage(mainBorder);
-                                addSpriteComponent(Grid.get(i).get(j));
+                                addZone(new Zone(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), mainBorder, type));
                             }
                         }
                         else if(i+1 == Grid.size() && j+1 == Grid.get(i).size()) {
                             if (Grid.get(i-1).get(j).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad()) {
-                                Grid.get(i).get(j).setImage(mainBorder);
-                                addSpriteComponent(Grid.get(i).get(j));
+                                addZone(new Zone(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), mainBorder, type));
                             }
                         }
                         else if(i+1 == Grid.size() && j-1 == -1) {
                             if (Grid.get(i-1).get(j).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad()) {
-                                Grid.get(i).get(j).setImage(mainBorder);
-                                addSpriteComponent(Grid.get(i).get(j));
+                                addZone(new Zone(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), mainBorder, type));
                             }
                         }
                         else if(i-1 == -1 && j+1 == Grid.get(i).size()) {
                             if (Grid.get(i+1).get(j).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad()) {
-                                Grid.get(i).get(j).setImage(mainBorder);
-                                addSpriteComponent(Grid.get(i).get(j));
+                                addZone(new Zone(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), mainBorder, type));
                             }
                         }
                         else if(i+1 == Grid.size()) {
                             if (Grid.get(i-1).get(j).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad()) {
-                                Grid.get(i).get(j).setImage(mainBorder);
-                                addSpriteComponent(Grid.get(i).get(j));
+                                addZone(new Zone(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), mainBorder, type));
                             }
                         }
                         else if(j+1 == Grid.get(i).size()) {
                             if (Grid.get(i-1).get(j).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad()|| Grid.get(i+1).get(j).isFieldRoad()) {
-                                Grid.get(i).get(j).setImage(mainBorder);
-                                addSpriteComponent(Grid.get(i).get(j));
+                                addZone(new Zone(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), mainBorder, type));
                             }
                         }
                         else if(i-1 == -1) {
                             if (Grid.get(i+1).get(j).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad()) {
-                                Grid.get(i).get(j).setImage(mainBorder);
-                                addSpriteComponent(Grid.get(i).get(j));
+                                addZone(new Zone(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), mainBorder, type));
                             }
                         }
                         else if(j-1 == -1) {
                             if (Grid.get(i+1).get(j).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad() || Grid.get(i-1).get(j).isFieldRoad()) {
-                                Grid.get(i).get(j).setImage(mainBorder);
-                                addSpriteComponent(Grid.get(i).get(j));
+                                addZone(new Zone(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), mainBorder, type));
                             }
                         }
                         else {
                             if ((Grid.get(i-1).get(j).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad() || Grid.get(i+1).get(j).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad())) {
-                                Grid.get(i).get(j).setImage(mainBorder);
-                                addSpriteComponent(Grid.get(i).get(j));
+                                addZone(new Zone(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), mainBorder, type));
                             }
                         }
                         repaint();
@@ -766,20 +773,21 @@ public class Game extends JPanel {
 
     public int getPower() {return this.Power;}
 
-    public void aDayPassed() {
+    public void aDayPassed() { //itt dolgozok
         if (day % 2 == 0) {
-            for (ArrayList<Field> fields : Grid) {
-                for (Field field : fields) {
-                    if (field.getImage().equals(GBorder)) {
-                        field.setImage(House);
-                        repaint();
-                    } else if (field.getImage().equals(OBorder)) {
-                        field.setImage(Factory);
-                        repaint();
-                    } else if (field.getImage().equals(BBorder)) {
-                        field.setImage(Office);
-                        repaint();
+            for (Zone zone : zones) {
+                if (zone.getImage().equals(GBorder)) {
+                    //House
+                    if(Grid.get(iFromX(zone.getX())).get(jFromY(zone.getY())).getClass().equals(Field.class)) {
+                        Grid.get(iFromX(zone.getX())).set(jFromY(zone.getY()), new House(CELL_SIZE, CELL_SIZE, zone.getX(), zone.getY()));
                     }
+                    repaint();
+                } else if (zone.getImage().equals(OBorder)) {
+                    //Factory
+                    repaint();
+                } else if (zone.getImage().equals(BBorder)) {
+                    //Office
+                    repaint();
                 }
             }
         }
@@ -935,6 +943,10 @@ public class Game extends JPanel {
         spriteComponents.add(spriteComponent);
     }
 
+    public void addZone(Zone zone) {
+        zones.add(zone);
+    }
+
     @Override
     protected void paintComponent(Graphics grphcs) {
         super.paintComponent(grphcs);
@@ -952,6 +964,10 @@ public class Game extends JPanel {
                 int y = col * CELL_SIZE;
                 grphcs.drawImage(Grass,x,y,CELL_SIZE,CELL_SIZE,null);
             }
+        }
+
+        for (Zone zone : zones) {
+            grphcs.drawImage(zone.getImage(), zone.getX(), zone.getY(), zone.getWidth(), zone.getHeight(), null);
         }
 
         for (Sprite sprite : spriteComponents) {
