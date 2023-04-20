@@ -1,28 +1,19 @@
 package notsimcity;
 
-import javax.swing.*;
 import java.util.ArrayList;
-import java.awt.Image;
+import javax.swing.ImageIcon;
 public class Field extends Sprite{
-    private int sizeX;
-    private int sizeY;
-    private int posX;
-    private int posY;
     private ArrayList<Citizen> citizens;
-    private int capacity;
-    private int powerDemand;
+    protected int capacity;
+    protected int powerDemand;
     private boolean isRoad;
-    private boolean isHorizontal;
 
-    public Field(int sizeX, int sizeY, int posX, int posY, int capacity, int powerDemand) {
-        super(sizeX,sizeY,posX,posY,new ImageIcon("Bal2.png").getImage());
-        this.sizeX = sizeX;
-        this.sizeY = sizeY;
-        this.posX = posX;
-        this.posY = posY;
+    public Field(int sizeX, int sizeY, int posX, int posY, int capacity, int powerDemand, boolean road) {
+        super(sizeX,sizeY,posX,posY,new ImageIcon("grass.png").getImage()); //*****
         this.capacity = capacity;
         this.powerDemand = powerDemand;
         this.citizens = new ArrayList<Citizen>();
+        this.isRoad = road;
     }
     
     public int distance(Field otherField) {
@@ -38,19 +29,19 @@ public class Field extends Sprite{
     }
 
     public int getSizeX() {
-        return sizeX;
+        return this.width;
     }
 
     public int getSizeY() {
-        return sizeY;
+        return this.height;
     }
 
     public int getPosX() {
-        return posX;
+        return this.x;
     }
 
     public int getPosY() {
-        return posY;
+        return this.y;
     }
 
     public ArrayList<Citizen> getCitizens() {
@@ -70,22 +61,10 @@ public class Field extends Sprite{
     }
     
     public boolean isRoadNextToField(boolean way) {
-        if (way == isHorizontal){
-            return true;
-        }
         return false;
-
     }
 
     public boolean isFieldRoad() {
         return isRoad;
-    }
-
-    public void setIsRoad(boolean r) {
-        isRoad = r;
-    }
-
-    public void setImage(Image image) {
-        this.image = image;
     }
 }

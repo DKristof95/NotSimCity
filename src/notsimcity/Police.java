@@ -1,9 +1,16 @@
 package notsimcity;
 
-public class Police extends Service {
+import javax.swing.*;
+import java.awt.Image;
 
-    public Police(int range, int sizeX, int sizeY, int posX, int posY, int capacity, int powerDemand) {
-        super(range, sizeX, sizeY, posX, posY, capacity, powerDemand);
+public class Police extends Service {
+    private final Image Police_im = new ImageIcon("police.png").getImage();
+
+    public Police(Field field) {
+        super(5,field);
+        this.image = Police_im;
+        this.capacity = 50;
+        this.powerDemand = 3;
     }
     
     
