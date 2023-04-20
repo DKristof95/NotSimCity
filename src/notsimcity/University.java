@@ -4,12 +4,12 @@ import javax.swing.*;
 import java.awt.*;
 
 public class University extends Service {
-    private final Image University_im = new ImageIcon("university.png").getImage();
     public University(Field field) {
         super(25, field);
-        this.image = University_im;
+        this.image = new ImageIcon("university.png").getImage();
         this.capacity = 10000;
         this.powerDemand = 8;
+        this.cost = 25000;
     }
     
     public void giveQualificationToRandoms() {

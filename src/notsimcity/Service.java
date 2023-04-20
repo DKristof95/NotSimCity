@@ -7,5 +7,4 @@ public abstract class Service extends Field {
         super(field.width, field.height, field.x, field.y, field.capacity,field.powerDemand,false);
         this.range = range;
     }
-    
 }

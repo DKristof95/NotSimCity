@@ -13,7 +13,7 @@ public class NotSimCityGUI {
     private JFrame frame, frame2, frame3, frame4;
     private Game gameArea;
     private JPanel panel;
-    private JLabel timetext, money, satisfaction, population, power;
+    private JLabel timetext, money, satisfaction, population;
     private Menu menuArea;
     private MapSelect mapSelectArea;
     private JMenuBar menuBar, menuBar2;
@@ -426,20 +426,12 @@ public class NotSimCityGUI {
                 menuItem.add(population);
                 menuBar2.add(menuItem);
 
-                icon = new ImageIcon("villam.png");
-                menuItem = new JMenuItem(icon);
-                power = new JLabel("0");
-                power.setBorder(new EmptyBorder(25, 100, 25, 0));
-                menuItem.add(power);
-                menuBar2.add(menuItem);
-
                 frame3.add(menuBar2,BorderLayout.SOUTH);
 
                 gameArea.Time();
                 Timer timer = new Timer(1000, e117 -> {
                     timetext.setText(gameArea.getTime());
                     money.setText(String.valueOf(gameArea.getMoney()));
-                    power.setText(String.valueOf(gameArea.getPower()));
                 });
                 timer.start();
 
