@@ -1,5 +1,6 @@
 package notsimcity;
 
+import java.awt.*;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
 public class Field extends Sprite{
@@ -9,7 +10,15 @@ public class Field extends Sprite{
     private boolean isRoad;
 
     public Field(int sizeX, int sizeY, int posX, int posY, int capacity, int powerDemand, boolean road) {
-        super(sizeX,sizeY,posX,posY,new ImageIcon("grass.png").getImage()); //*****
+        super(sizeX, sizeY, posX, posY, new ImageIcon("grass.png").getImage());
+        this.capacity = capacity;
+        this.powerDemand = powerDemand;
+        this.citizens = new ArrayList<Citizen>();
+        this.isRoad = road;
+    }
+
+    public Field(int sizeX, int sizeY, int posX, int posY, int capacity, int powerDemand, boolean road, Image img) {
+        super(sizeX, sizeY, posX, posY, img);
         this.capacity = capacity;
         this.powerDemand = powerDemand;
         this.citizens = new ArrayList<Citizen>();
