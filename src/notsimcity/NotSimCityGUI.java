@@ -13,7 +13,7 @@ public class NotSimCityGUI {
     private JFrame frame, frame2, frame3, frame4;
     private Game gameArea;
     private JPanel panel;
-    private JLabel timetext, money, satisfaction, population, power;
+    private JLabel timetext, money, satisfaction, population;
     private Menu menuArea;
     private MapSelect mapSelectArea;
     private JMenuBar menuBar, menuBar2;
@@ -107,8 +107,8 @@ public class NotSimCityGUI {
             JButton BalB = new BasicArrowButton(BasicArrowButton.WEST);
             BalB.setBounds(80,430,64,64);
             BalB.addActionListener(e1 -> {
-                    frame.setVisible(true);
-                    frame2.dispose();
+                frame.setVisible(true);
+                frame2.dispose();
             });
             BalB.setBorder(BorderFactory.createEmptyBorder());
             BalB.setOpaque(false);
@@ -421,16 +421,9 @@ public class NotSimCityGUI {
 
                 icon = new ImageIcon("village.png");
                 menuItem = new JMenuItem(icon);
-                population = new JLabel("100");
+                population = new JLabel("0");
                 population.setBorder(new EmptyBorder(25, 100, 25, 0));
                 menuItem.add(population);
-                menuBar2.add(menuItem);
-
-                icon = new ImageIcon("villam.png");
-                menuItem = new JMenuItem(icon);
-                power = new JLabel("0");
-                power.setBorder(new EmptyBorder(25, 100, 25, 0));
-                menuItem.add(power);
                 menuBar2.add(menuItem);
 
                 frame3.add(menuBar2,BorderLayout.SOUTH);
@@ -439,7 +432,7 @@ public class NotSimCityGUI {
                 Timer timer = new Timer(1000, e117 -> {
                     timetext.setText(gameArea.getTime());
                     money.setText(String.valueOf(gameArea.getMoney()));
-                    power.setText(String.valueOf(gameArea.getPower()));
+                    population.setText(String.valueOf(gameArea.getCitizens()));
                 });
                 timer.start();
 

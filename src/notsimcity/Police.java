@@ -10,6 +10,7 @@ public class Police extends Service {
         super(5, field, Police_im);
         this.capacity = 50;
         this.powerDemand = 3;
+        this.cost = 10000;
     }
     
     

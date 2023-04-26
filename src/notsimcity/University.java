@@ -9,6 +9,7 @@ public class University extends Service {
         super(25, field, University_im);
         this.capacity = 10000;
         this.powerDemand = 8;
+        this.cost = 25000;
     }
     
     public void giveQualificationToRandoms() {

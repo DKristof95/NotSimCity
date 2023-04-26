@@ -54,6 +54,7 @@ public class Game extends JPanel {
         super();
         spriteComponents = new ArrayList<>();
         zones = new ArrayList<>();
+        citizens = new ArrayList<>();
     }
 
     public void setGrid() {
@@ -72,12 +73,8 @@ public class Game extends JPanel {
         Grid.get(randomNum).set(0, new Road(Grid.get(randomNum).get(0), Ut1));
     }
 
-    public static int iFromX(int x) {
+    public static int cordinateToNum(int x) {
         return (int)(floor(x/CELL_SIZE));
-    }
-
-    public static int jFromY(int y) {
-        return (int)(floor(y/CELL_SIZE));
     }
 
     public void loadSave(int saveID) {
@@ -119,74 +116,55 @@ public class Game extends JPanel {
         return this.gameSpeed;
     }
 
-    /*public void clickOnFieldOld(int building) {
-
-        try {
-
-            for (Sprite s: spriteComponents) {
-                if (s.getX() == ((Pos_x / CELL_SIZE)*CELL_SIZE) && s.getY() == ((Pos_y / CELL_SIZE)*CELL_SIZE)) {
-                    return;
-                }
-            }
-
-            for (int i = 0; i < Grid.size(); i++) {
-                for (int j = 0; j < Grid.get(i).size(); j++) {
-                    if (Grid.get(i).get(j).getPosX() < Pos_x && Pos_x < (Grid.get(i).get(j).getPosX() + CELL_SIZE) && Grid.get(i).get(j).getPosY() < Pos_y && Pos_y < (Grid.get(i).get(j).getPosY() + CELL_SIZE) && !Grid.get(i).get(j).isFieldRoad()) {
-                        if (((i-1 == -1 && j-1 == -1) && (Grid.get(i+1).get(j).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad()))
-                                || ((i+1 == Grid.size() && j+1 == Grid.get(i).size()) && (Grid.get(i-1).get(j).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad()))
-                                || ((i+1 == Grid.size() && j-1 == -1) && (Grid.get(i-1).get(j).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad()))
-                                || ((i-1 == -1 && j+1 == Grid.get(i).size()) && (Grid.get(i+1).get(j).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad()))
-                                || ((i+1 == Grid.size()) && (Grid.get(i-1).get(j).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad()))
-                                || ((j+1 == Grid.get(i).size()) && (Grid.get(i-1).get(j).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad()|| Grid.get(i+1).get(j).isFieldRoad()))
-                                || ((i-1 == -1) && (Grid.get(i+1).get(j).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad()))
-                                || ((j-1 == -1) && (Grid.get(i+1).get(j).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad() || Grid.get(i-1).get(j).isFieldRoad()))
-                                || ((Grid.get(i-1).get(j).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad() || Grid.get(i+1).get(j).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad()))) {
-
-                            switch (building) {
-                                case 1 -> {
-                                    if (scrolled) {
-                                        addSpriteComponent(new Sprite(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), Ut2));
-                                    } else {
-                                        addSpriteComponent(new Sprite(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), Ut1));
-                                    }
-                                    Grid.get(i).get(j).setIsRoad(scrolled);
-                                    repaint();
-                                }
-                                case 2 -> {
-                                    addSpriteComponent(new Sprite(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), Police));
-                                    repaint();
-                                }
-                                case 3 -> {
-                                    addSpriteComponent(new Sprite(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), School));
-                                    repaint();
-                                }
-                                case 4 -> {
-                                    addSpriteComponent(new Sprite(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), University));
-                                    repaint();
-                                }
-                                case 5 -> {
-                                    addSpriteComponent(new Sprite(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), Stadium));
-                                    repaint();
-                                }
-                                case 6 -> {
-                                    addSpriteComponent(new Sprite(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), PowerPlant));
-                                    repaint();
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-        } catch (IndexOutOfBoundsException e) {
-            System.out.println("Indexelési hiba");
-        }
-
-    }
-    */
+    public int getCitizens() {return this.citizens.size();}
 
     public int getMoney() {
         return this.Money;
+    }
+
+    public void placeBuilding(int i, int j, int building) {
+        switch (building) {
+            case 1 -> {
+                if (scrolled) {
+                    Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut2));
+                } else {
+                    Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut1));
+                }
+                this.Money -= Grid.get(i).get(j).getCost();
+            }
+            case 2 -> {
+                Grid.get(i).set(j, new Police(Grid.get(i).get(j)));
+                this.Money -= Grid.get(i).get(j).getCost();
+                if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
+                    Grid.get(i).get(j).setHasPower(true);
+                }
+            }
+            case 3 -> {
+                Grid.get(i).set(j, new School(Grid.get(i).get(j)));
+                this.Money -= Grid.get(i).get(j).getCost();
+                if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
+                    Grid.get(i).get(j).setHasPower(true);
+                }
+            }
+            case 4 -> {
+                Grid.get(i).set(j, new University(Grid.get(i).get(j)));
+                this.Money -= Grid.get(i).get(j).getCost();
+                if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
+                    Grid.get(i).get(j).setHasPower(true);
+                }
+            }
+            case 5 -> {
+                Grid.get(i).set(j, new Stadium(Grid.get(i).get(j)));
+                this.Money -= Grid.get(i).get(j).getCost();
+                if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
+                    Grid.get(i).get(j).setHasPower(true);
+                }
+            }
+            case 6 -> {
+                Grid.get(i).set(j,new PowerPlant(Grid.get(i).get(j),Grid));
+                this.Money -= Grid.get(i).get(j).getCost();
+            }
+        }
     }
 
     public void clickOnField(int building) {
@@ -208,353 +186,47 @@ public class Game extends JPanel {
                     if (Grid.get(i).get(j).getPosX() <= Pos_x && Pos_x <= (Grid.get(i).get(j).getPosX() + CELL_SIZE) && Grid.get(i).get(j).getPosY() <= Pos_y && Pos_y <= (Grid.get(i).get(j).getPosY() + CELL_SIZE)) {
                         if(i-1 == -1 && j-1 == -1) {
                             if (Grid.get(i+1).get(j).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad()) {
-                                switch (building) {
-                                    case 1 -> {
-                                        if (scrolled) {
-                                            Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut2));
-                                        } else {
-                                            Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut1));
-                                        }
-                                        this.Money -= 50;
-                                    }
-                                    case 2 -> {
-                                        Grid.get(i).set(j, new Police(Grid.get(i).get(j)));
-                                        this.Money -= 10000;
-                                        this.Power -= Grid.get(i).get(j).getPowerDemand();
-                                    }
-                                    case 3 -> {
-                                        Grid.get(i).set(j, new School(Grid.get(i).get(j)));
-                                        this.Money -= 10000;
-                                        this.Power -= Grid.get(i).get(j).getPowerDemand();
-                                    }
-                                    case 4 -> {
-                                        Grid.get(i).set(j, new University(Grid.get(i).get(j)));
-                                        this.Money -= 25000;
-                                        this.Power -= Grid.get(i).get(j).getPowerDemand();
-                                    }
-                                    case 5 -> {
-                                        Grid.get(i).set(j, new Stadium(Grid.get(i).get(j)));
-                                        this.Money -= 100000;
-                                        this.Power -= Grid.get(i).get(j).getPowerDemand();
-                                    }
-                                    case 6 -> {
-                                        Grid.get(i).set(j, new PowerPlant(Grid.get(i).get(j)));
-                                        this.Money -= 20000;
-                                        this.Power += 20;
-                                    }
-                                }
+                                placeBuilding(i, j, building);
                             }
                         }
                         else if(i+1 == Grid.size() && j+1 == Grid.get(i).size()) {
                             if (Grid.get(i-1).get(j).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad()) {
-                                switch (building) {
-                                    case 1 -> {
-                                        if (scrolled) {
-                                            Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut2));
-                                        } else {
-                                            Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut1));
-                                        }
-                                        this.Money -= 50;
-                                    }
-                                    case 2 -> {
-                                        Grid.get(i).set(j, new Police(Grid.get(i).get(j)));
-                                        this.Money -= 10000;
-                                        this.Power -= Grid.get(i).get(j).getPowerDemand();
-                                    }
-                                    case 3 -> {
-                                        Grid.get(i).set(j, new School(Grid.get(i).get(j)));
-                                        this.Money -= 10000;
-                                        this.Power -= Grid.get(i).get(j).getPowerDemand();
-                                    }
-                                    case 4 -> {
-                                        Grid.get(i).set(j, new University(Grid.get(i).get(j)));
-                                        this.Money -= 25000;
-                                        this.Power -= Grid.get(i).get(j).getPowerDemand();
-                                    }
-                                    case 5 -> {
-                                        Grid.get(i).set(j, new Stadium(Grid.get(i).get(j)));
-                                        this.Money -= 100000;
-                                        this.Power -= Grid.get(i).get(j).getPowerDemand();
-                                    }
-                                    case 6 -> {
-                                        Grid.get(i).set(j, new PowerPlant(Grid.get(i).get(j)));
-                                        this.Money -= 20000;
-                                        this.Power += 20;
-                                    }
-                                }
+                                placeBuilding(i, j, building);
                             }
                         }
                         else if(i+1 == Grid.size() && j-1 == -1) {
                             if (Grid.get(i-1).get(j).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad()) {
-                                switch (building) {
-                                    case 1 -> {
-                                        if (scrolled) {
-                                            Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut2));
-                                        } else {
-                                            Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut1));
-                                        }
-                                        this.Money -= 50;
-                                    }
-                                    case 2 -> {
-                                        Grid.get(i).set(j, new Police(Grid.get(i).get(j)));
-                                        this.Money -= 10000;
-                                        this.Power -= Grid.get(i).get(j).getPowerDemand();
-                                    }
-                                    case 3 -> {
-                                        Grid.get(i).set(j, new School(Grid.get(i).get(j)));
-                                        this.Money -= 10000;
-                                        this.Power -= Grid.get(i).get(j).getPowerDemand();
-                                    }
-                                    case 4 -> {
-                                        Grid.get(i).set(j, new University(Grid.get(i).get(j)));
-                                        this.Money -= 25000;
-                                        this.Power -= Grid.get(i).get(j).getPowerDemand();
-                                    }
-                                    case 5 -> {
-                                        Grid.get(i).set(j, new Stadium(Grid.get(i).get(j)));
-                                        this.Money -= 100000;
-                                        this.Power -= Grid.get(i).get(j).getPowerDemand();
-                                    }
-                                    case 6 -> {
-                                        Grid.get(i).set(j, new PowerPlant(Grid.get(i).get(j)));
-                                        this.Money -= 20000;
-                                        this.Power += 20;
-                                    }
-                                }
+                                placeBuilding(i, j, building);
                             }
                         }
                         else if(i-1 == -1 && j+1 == Grid.get(i).size()) {
                             if (Grid.get(i+1).get(j).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad()) {
-                                switch (building) {
-                                    case 1 -> {
-                                        if (scrolled) {
-                                            Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut2));
-                                        } else {
-                                            Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut1));
-                                        }
-                                        this.Money -= 50;
-                                    }
-                                    case 2 -> {
-                                        Grid.get(i).set(j, new Police(Grid.get(i).get(j)));
-                                        this.Money -= 10000;
-                                        this.Power -= Grid.get(i).get(j).getPowerDemand();
-                                    }
-                                    case 3 -> {
-                                        Grid.get(i).set(j, new School(Grid.get(i).get(j)));
-                                        this.Money -= 10000;
-                                        this.Power -= Grid.get(i).get(j).getPowerDemand();
-                                    }
-                                    case 4 -> {
-                                        Grid.get(i).set(j, new University(Grid.get(i).get(j)));
-                                        this.Money -= 25000;
-                                        this.Power -= Grid.get(i).get(j).getPowerDemand();
-                                    }
-                                    case 5 -> {
-                                        Grid.get(i).set(j, new Stadium(Grid.get(i).get(j)));
-                                        this.Money -= 100000;
-                                        this.Power -= Grid.get(i).get(j).getPowerDemand();
-                                    }
-                                    case 6 -> {
-                                        Grid.get(i).set(j, new PowerPlant(Grid.get(i).get(j)));
-                                        this.Money -= 20000;
-                                        this.Power += 20;
-                                    }
-                                }
+                                placeBuilding(i, j, building);
                             }
                         }
                         else if(i+1 == Grid.size()) {
                             if (Grid.get(i-1).get(j).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad()) {
-                                switch (building) {
-                                    case 1 -> {
-                                        if (scrolled) {
-                                            Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut2));
-                                        } else {
-                                            Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut1));
-                                        }
-                                        this.Money -= 50;
-                                    }
-                                    case 2 -> {
-                                        Grid.get(i).set(j,new Police(Grid.get(i).get(j)));
-                                        this.Money -= 10000;
-                                        this.Power -= Grid.get(i).get(j).getPowerDemand();
-                                    }
-                                    case 3 -> {
-                                        Grid.get(i).set(j,new School(Grid.get(i).get(j)));
-                                        this.Money -= 10000;
-                                        this.Power -= Grid.get(i).get(j).getPowerDemand();
-                                    }
-                                    case 4 -> {
-                                        Grid.get(i).set(j,new University(Grid.get(i).get(j)));
-                                        this.Money -= 25000;
-                                        this.Power -= Grid.get(i).get(j).getPowerDemand();
-                                    }
-                                    case 5 -> {
-                                        Grid.get(i).set(j,new Stadium(Grid.get(i).get(j)));
-                                        this.Money -= 100000;
-                                        this.Power -= Grid.get(i).get(j).getPowerDemand();
-                                    }
-                                    case 6 -> {
-                                        Grid.get(i).set(j,new PowerPlant(Grid.get(i).get(j)));
-                                        this.Money -= 20000;
-                                        this.Power += 20;
-                                    }
-                                }
+                                placeBuilding(i, j, building);
                             }
                         }
                         else if(j+1 == Grid.get(i).size()) {
                             if (Grid.get(i-1).get(j).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad()|| Grid.get(i+1).get(j).isFieldRoad()) {
-                                switch (building) {
-                                    case 1 -> {
-                                        if (scrolled) {
-                                            Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut2));
-                                        } else {
-                                            Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut1));
-                                        }
-                                        this.Money -= 50;
-                                    }
-                                    case 2 -> {
-                                        Grid.get(i).set(j,new Police(Grid.get(i).get(j)));
-                                        this.Money -= 10000;
-                                        this.Power -= Grid.get(i).get(j).getPowerDemand();
-                                    }
-                                    case 3 -> {
-                                        Grid.get(i).set(j,new School(Grid.get(i).get(j)));
-                                        this.Money -= 10000;
-                                        this.Power -= Grid.get(i).get(j).getPowerDemand();
-                                    }
-                                    case 4 -> {
-                                        Grid.get(i).set(j,new University(Grid.get(i).get(j)));
-                                        this.Money -= 25000;
-                                        this.Power -= Grid.get(i).get(j).getPowerDemand();
-                                    }
-                                    case 5 -> {
-                                        Grid.get(i).set(j,new Stadium(Grid.get(i).get(j)));
-                                        this.Money -= 100000;
-                                        this.Power -= Grid.get(i).get(j).getPowerDemand();
-                                    }
-                                    case 6 -> {
-                                        Grid.get(i).set(j,new PowerPlant(Grid.get(i).get(j)));
-                                        this.Money -= 20000;
-                                        this.Power += 20;
-                                    }
-                                }
+                                placeBuilding(i, j, building);
                             }
                         }
                         else if(i-1 == -1) {
                             if (Grid.get(i+1).get(j).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad()) {
-                                switch (building) {
-                                    case 1 -> {
-                                        if (scrolled) {
-                                            Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut2));
-                                        } else {
-                                            Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut1));
-                                        }
-                                        this.Money -= 50;
-                                    }
-                                    case 2 -> {
-                                        Grid.get(i).set(j,new Police(Grid.get(i).get(j)));
-                                        this.Money -= 10000;
-                                        this.Power -= Grid.get(i).get(j).getPowerDemand();
-                                    }
-                                    case 3 -> {
-                                        Grid.get(i).set(j,new School(Grid.get(i).get(j)));
-                                        this.Money -= 10000;
-                                        this.Power -= Grid.get(i).get(j).getPowerDemand();
-                                    }
-                                    case 4 -> {
-                                        Grid.get(i).set(j,new University(Grid.get(i).get(j)));
-                                        this.Money -= 25000;
-                                        this.Power -= Grid.get(i).get(j).getPowerDemand();
-                                    }
-                                    case 5 -> {
-                                        Grid.get(i).set(j,new Stadium(Grid.get(i).get(j)));
-                                        this.Money -= 100000;
-                                        this.Power -= Grid.get(i).get(j).getPowerDemand();
-                                    }
-                                    case 6 -> {
-                                        Grid.get(i).set(j,new PowerPlant(Grid.get(i).get(j)));
-                                        this.Money -= 20000;
-                                        this.Power += 20;
-                                    }
-                                }
+                                placeBuilding(i, j, building);
                             }
                         }
                         else if(j-1 == -1) {
                             if (Grid.get(i+1).get(j).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad() || Grid.get(i-1).get(j).isFieldRoad()) {
-                                switch (building) {
-                                    case 1 -> {
-                                        if (scrolled) {
-                                            Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut2));
-                                        } else {
-                                            Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut1));
-                                        }
-                                        this.Money -= 50;
-                                    }
-                                    case 2 -> {
-                                        Grid.get(i).set(j,new Police(Grid.get(i).get(j)));
-                                        this.Money -= 10000;
-                                        this.Power -= Grid.get(i).get(j).getPowerDemand();
-                                    }
-                                    case 3 -> {
-                                        Grid.get(i).set(j,new School(Grid.get(i).get(j)));
-                                        this.Money -= 10000;
-                                        this.Power -= Grid.get(i).get(j).getPowerDemand();
-                                    }
-                                    case 4 -> {
-                                        Grid.get(i).set(j,new University(Grid.get(i).get(j)));
-                                        this.Money -= 25000;
-                                        this.Power -= Grid.get(i).get(j).getPowerDemand();
-                                    }
-                                    case 5 -> {
-                                        Grid.get(i).set(j,new Stadium(Grid.get(i).get(j)));
-                                        this.Money -= 100000;
-                                        this.Power -= Grid.get(i).get(j).getPowerDemand();
-                                    }
-                                    case 6 -> {
-                                        Grid.get(i).set(j,new PowerPlant(Grid.get(i).get(j)));
-                                        this.Money -= 20000;
-                                        this.Power += 20;
-                                    }
-                                }
+                                placeBuilding(i, j, building);
                             }
                         }
                         else {
                             if ((Grid.get(i-1).get(j).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad() || Grid.get(i+1).get(j).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad())) {
-                                switch (building) {
-                                    case 1 -> {
-                                        if (scrolled) {
-                                            Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut2));
-                                        } else {
-                                            Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut1));
-                                        }
-                                        this.Money -= 50;
-                                    }
-                                    case 2 -> {
-                                        Grid.get(i).set(j,new Police(Grid.get(i).get(j)));
-                                        this.Money -= 10000;
-                                        this.Power -= Grid.get(i).get(j).getPowerDemand();
-                                    }
-                                    case 3 -> {
-                                        Grid.get(i).set(j,new School(Grid.get(i).get(j)));
-                                        this.Money -= 10000;
-                                        this.Power -= Grid.get(i).get(j).getPowerDemand();
-                                    }
-                                    case 4 -> {
-                                        Grid.get(i).set(j,new University(Grid.get(i).get(j)));
-                                        this.Money -= 25000;
-                                        this.Power -= Grid.get(i).get(j).getPowerDemand();
-                                    }
-                                    case 5 -> {
-                                        Grid.get(i).set(j,new Stadium(Grid.get(i).get(j)));
-                                        this.Money -= 100000;
-                                        this.Power -= Grid.get(i).get(j).getPowerDemand();
-                                    }
-                                    case 6 -> {
-                                        Grid.get(i).set(j,new PowerPlant(Grid.get(i).get(j)));
-                                        this.Money -= 20000;
-                                        this.Power += 20;
-                                    }
-                                }
+                                placeBuilding(i, j, building);
                             }
                         }
                         repaint();
@@ -653,7 +325,8 @@ public class Game extends JPanel {
             for (int j = 0; j < Grid.get(i).size(); j++) {
                 if (Grid.get(i).get(j).getPosX() < Pos_x && Pos_x < (Grid.get(i).get(j).getPosX() + CELL_SIZE) && Grid.get(i).get(j).getPosY() < Pos_y && Pos_y < (Grid.get(i).get(j).getPosY() + CELL_SIZE)) {
                     if(i != starter || j != 0) {
-                        Grid.get(i).set(j,new Field(CELL_SIZE, CELL_SIZE, j * CELL_SIZE, i * CELL_SIZE, 0, 0,false));
+                        this.Money += (Grid.get(i).get(j).getCost()/2);
+                        Grid.get(i).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
                         helper = true;
                         break;
                     }
@@ -773,13 +446,14 @@ public class Game extends JPanel {
 
     public int getPower() {return this.Power;}
 
-    public void aDayPassed() { //itt dolgozok
+    public void aDayPassed() { //itt dolgozok (Bence)
         if (day % 2 == 0) {
             for (Zone zone : zones) {
                 if (zone.getImage().equals(GBorder)) {
                     //House
-                    if(Grid.get(iFromX(zone.getX())).get(jFromY(zone.getY())).getClass().equals(Field.class)) {
-                        Grid.get(iFromX(zone.getX())).set(jFromY(zone.getY()), new House(CELL_SIZE, CELL_SIZE, zone.getX(), zone.getY()));
+                    if(Grid.get(cordinateToNum(zone.getY())).get(cordinateToNum(zone.getX())).getClass().equals(Field.class)) {
+                        Grid.get(cordinateToNum(zone.getY())).set(cordinateToNum(zone.getX()), new House(CELL_SIZE, CELL_SIZE, zone.getX(), zone.getY()));
+                        citizens.add(new Citizen(new House(CELL_SIZE, CELL_SIZE, zone.getX(), zone.getY()),1)); // még nincs kész
                     }
                     repaint();
                 } else if (zone.getImage().equals(OBorder)) {

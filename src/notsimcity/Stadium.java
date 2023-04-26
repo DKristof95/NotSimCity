@@ -9,6 +9,7 @@ public class Stadium extends Service {
         super(25, field, Stadium_im);
         this.capacity = 50000;
         this.powerDemand = 100;
+        this.cost = 100000;
     }
     
 }
