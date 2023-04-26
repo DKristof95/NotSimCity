@@ -6,8 +6,11 @@ import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 import javax.swing.*;
 
+import static java.lang.Math.floor;
+import static notsimcity.ZoneType.*;
+
 public class Game extends JPanel {
-    private final int CELL_SIZE = 50;
+    private static final int CELL_SIZE = 50;
     private ArrayList<ArrayList<Field>> Grid = new ArrayList<ArrayList<Field>>();
     private Player player;
     private String cityName;
@@ -50,12 +53,13 @@ public class Game extends JPanel {
     public Game() {
         super();
         spriteComponents = new ArrayList<>();
+        zones = new ArrayList<>();
+        citizens = new ArrayList<>();
     }
 
     public void setGrid() {
         int a = Height/CELL_SIZE;
         int b = Width/CELL_SIZE;
-        System.out.println(a + " " + b);
         for (int col = 0; col < a; col++) {
             ArrayList<Field> rows = new ArrayList<Field>();
             for (int row = 0; row < b; row++) {
@@ -66,8 +70,11 @@ public class Game extends JPanel {
         }
         int randomNum = ThreadLocalRandom.current().nextInt(1, a-1);
         starter = randomNum;
-        addSpriteComponent(new Sprite(CELL_SIZE, CELL_SIZE, 0, randomNum * CELL_SIZE, Ut1));
         Grid.get(randomNum).set(0, new Road(Grid.get(randomNum).get(0), Ut1));
+    }
+
+    public static int cordinateToNum(int x) {
+        return (int)(floor(x/CELL_SIZE));
     }
 
     public void loadSave(int saveID) {
@@ -109,555 +116,117 @@ public class Game extends JPanel {
         return this.gameSpeed;
     }
 
-    /*public void clickOnFieldOld(int building) {
-
-        try {
-
-            for (Sprite s: spriteComponents) {
-                if (s.getX() == ((Pos_x / CELL_SIZE)*CELL_SIZE) && s.getY() == ((Pos_y / CELL_SIZE)*CELL_SIZE)) {
-                    return;
-                }
-            }
-
-            for (int i = 0; i < Grid.size(); i++) {
-                for (int j = 0; j < Grid.get(i).size(); j++) {
-                    if (Grid.get(i).get(j).getPosX() < Pos_x && Pos_x < (Grid.get(i).get(j).getPosX() + CELL_SIZE) && Grid.get(i).get(j).getPosY() < Pos_y && Pos_y < (Grid.get(i).get(j).getPosY() + CELL_SIZE) && !Grid.get(i).get(j).isFieldRoad()) {
-                        if (((i-1 == -1 && j-1 == -1) && (Grid.get(i+1).get(j).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad()))
-                                || ((i+1 == Grid.size() && j+1 == Grid.get(i).size()) && (Grid.get(i-1).get(j).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad()))
-                                || ((i+1 == Grid.size() && j-1 == -1) && (Grid.get(i-1).get(j).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad()))
-                                || ((i-1 == -1 && j+1 == Grid.get(i).size()) && (Grid.get(i+1).get(j).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad()))
-                                || ((i+1 == Grid.size()) && (Grid.get(i-1).get(j).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad()))
-                                || ((j+1 == Grid.get(i).size()) && (Grid.get(i-1).get(j).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad()|| Grid.get(i+1).get(j).isFieldRoad()))
-                                || ((i-1 == -1) && (Grid.get(i+1).get(j).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad()))
-                                || ((j-1 == -1) && (Grid.get(i+1).get(j).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad() || Grid.get(i-1).get(j).isFieldRoad()))
-                                || ((Grid.get(i-1).get(j).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad() || Grid.get(i+1).get(j).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad()))) {
-
-                            switch (building) {
-                                case 1 -> {
-                                    if (scrolled) {
-                                        addSpriteComponent(new Sprite(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), Ut2));
-                                    } else {
-                                        addSpriteComponent(new Sprite(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), Ut1));
-                                    }
-                                    Grid.get(i).get(j).setIsRoad(scrolled);
-                                    repaint();
-                                }
-                                case 2 -> {
-                                    addSpriteComponent(new Sprite(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), Police));
-                                    repaint();
-                                }
-                                case 3 -> {
-                                    addSpriteComponent(new Sprite(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), School));
-                                    repaint();
-                                }
-                                case 4 -> {
-                                    addSpriteComponent(new Sprite(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), University));
-                                    repaint();
-                                }
-                                case 5 -> {
-                                    addSpriteComponent(new Sprite(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), Stadium));
-                                    repaint();
-                                }
-                                case 6 -> {
-                                    addSpriteComponent(new Sprite(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), PowerPlant));
-                                    repaint();
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-        } catch (IndexOutOfBoundsException e) {
-            System.out.println("Indexelési hiba");
-        }
-
-    }
-    */
+    public int getCitizens() {return this.citizens.size();}
 
     public int getMoney() {
         return this.Money;
+    }
+
+    public void placeBuilding(int i, int j, int building) {
+        switch (building) {
+            case 1 -> {
+                if (scrolled) {
+                    Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut2));
+                } else {
+                    Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut1));
+                }
+                this.Money -= Grid.get(i).get(j).getCost();
+            }
+            case 2 -> {
+                Grid.get(i).set(j, new Police(Grid.get(i).get(j)));
+                this.Money -= Grid.get(i).get(j).getCost();
+                if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
+                    Grid.get(i).get(j).setHasPower(true);
+                }
+            }
+            case 3 -> {
+                Grid.get(i).set(j, new School(Grid.get(i).get(j)));
+                this.Money -= Grid.get(i).get(j).getCost();
+                if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
+                    Grid.get(i).get(j).setHasPower(true);
+                }
+            }
+            case 4 -> {
+                Grid.get(i).set(j, new University(Grid.get(i).get(j)));
+                this.Money -= Grid.get(i).get(j).getCost();
+                if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
+                    Grid.get(i).get(j).setHasPower(true);
+                }
+            }
+            case 5 -> {
+                Grid.get(i).set(j, new Stadium(Grid.get(i).get(j)));
+                this.Money -= Grid.get(i).get(j).getCost();
+                if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
+                    Grid.get(i).get(j).setHasPower(true);
+                }
+            }
+            case 6 -> {
+                Grid.get(i).set(j,new PowerPlant(Grid.get(i).get(j),Grid));
+                this.Money -= Grid.get(i).get(j).getCost();
+            }
+        }
     }
 
     public void clickOnField(int building) {
 
         try {
 
-            for (Sprite s: spriteComponents) {
-                if (s.getX() == ((Pos_x / CELL_SIZE)*CELL_SIZE) && s.getY() == ((Pos_y / CELL_SIZE)*CELL_SIZE)) {
-                    return;
+            for (ArrayList<Field> rows : Grid) {
+                for (Field cell : rows) {
+                    if ((Pos_x >= cell.getX() && Pos_y >= cell.getY()) && (Pos_x <= cell.getX()+CELL_SIZE && Pos_y <= cell.getY()+CELL_SIZE)) { // a cellába esik a kattintás
+                        if(!cell.getClass().equals(Field.class)) { // nem üres mező (üres, ha Field típusú, ha van rajta valami, akkor pl Road típust ad vissza)
+                            return;
+                        }
+                    }
                 }
             }
 
             for (int i = 0; i < Grid.size(); i++) {
                 for (int j = 0; j < Grid.get(i).size(); j++) {
-                    if (Grid.get(i).get(j).getPosX() < Pos_x && Pos_x < (Grid.get(i).get(j).getPosX() + CELL_SIZE) && Grid.get(i).get(j).getPosY() < Pos_y && Pos_y < (Grid.get(i).get(j).getPosY() + CELL_SIZE)) {
+                    if (Grid.get(i).get(j).getPosX() <= Pos_x && Pos_x <= (Grid.get(i).get(j).getPosX() + CELL_SIZE) && Grid.get(i).get(j).getPosY() <= Pos_y && Pos_y <= (Grid.get(i).get(j).getPosY() + CELL_SIZE)) {
                         if(i-1 == -1 && j-1 == -1) {
                             if (Grid.get(i+1).get(j).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad()) {
-                                switch (building) {
-                                    case 1 -> {
-                                        if (scrolled) {
-                                            Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut2));
-                                        } else {
-                                            Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut1));
-                                        }
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                    }
-                                    case 2 -> {
-                                        Grid.get(i).set(j,new Police(Grid.get(i).get(j)));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                        if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
-                                            Grid.get(i).get(j).setHasPower(true);
-                                        }
-                                    }
-                                    case 3 -> {
-                                        Grid.get(i).set(j,new School(Grid.get(i).get(j)));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                        if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
-                                            Grid.get(i).get(j).setHasPower(true);
-                                        }
-                                    }
-                                    case 4 -> {
-                                        Grid.get(i).set(j,new University(Grid.get(i).get(j)));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                        if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
-                                            Grid.get(i).get(j).setHasPower(true);
-                                        }
-                                    }
-                                    case 5 -> {
-                                        Grid.get(i).set(j,new Stadium(Grid.get(i).get(j)));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                        if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
-                                            Grid.get(i).get(j).setHasPower(true);
-                                        }
-                                    }
-                                    case 6 -> {
-                                        Grid.get(i).set(j,new PowerPlant(Grid.get(i).get(j),Grid));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                    }
-                                }
+                                placeBuilding(i, j, building);
                             }
                         }
                         else if(i+1 == Grid.size() && j+1 == Grid.get(i).size()) {
                             if (Grid.get(i-1).get(j).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad()) {
-                                switch (building) {
-                                    case 1 -> {
-                                        if (scrolled) {
-                                            Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut2));
-                                        } else {
-                                            Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut1));
-                                        }
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                    }
-                                    case 2 -> {
-                                        Grid.get(i).set(j,new Police(Grid.get(i).get(j)));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                        if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
-                                            Grid.get(i).get(j).setHasPower(true);
-                                        }
-                                    }
-                                    case 3 -> {
-                                        Grid.get(i).set(j,new School(Grid.get(i).get(j)));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                        if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
-                                            Grid.get(i).get(j).setHasPower(true);
-                                        }
-                                    }
-                                    case 4 -> {
-                                        Grid.get(i).set(j,new University(Grid.get(i).get(j)));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                        if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
-                                            Grid.get(i).get(j).setHasPower(true);
-                                        }
-                                    }
-                                    case 5 -> {
-                                        Grid.get(i).set(j,new Stadium(Grid.get(i).get(j)));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                        if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
-                                            Grid.get(i).get(j).setHasPower(true);
-                                        }
-                                    }
-                                    case 6 -> {
-                                        Grid.get(i).set(j,new PowerPlant(Grid.get(i).get(j),Grid));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                    }
-                                }
+                                placeBuilding(i, j, building);
                             }
                         }
                         else if(i+1 == Grid.size() && j-1 == -1) {
                             if (Grid.get(i-1).get(j).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad()) {
-                                switch (building) {
-                                    case 1 -> {
-                                        if (scrolled) {
-                                            Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut2));
-                                        } else {
-                                            Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut1));
-                                        }
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                    }
-                                    case 2 -> {
-                                        Grid.get(i).set(j,new Police(Grid.get(i).get(j)));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                        if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
-                                            Grid.get(i).get(j).setHasPower(true);
-                                        }
-                                    }
-                                    case 3 -> {
-                                        Grid.get(i).set(j,new School(Grid.get(i).get(j)));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                        if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
-                                            Grid.get(i).get(j).setHasPower(true);
-                                        }
-                                    }
-                                    case 4 -> {
-                                        Grid.get(i).set(j,new University(Grid.get(i).get(j)));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                        if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
-                                            Grid.get(i).get(j).setHasPower(true);
-                                        }
-                                    }
-                                    case 5 -> {
-                                        Grid.get(i).set(j,new Stadium(Grid.get(i).get(j)));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                        if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
-                                            Grid.get(i).get(j).setHasPower(true);
-                                        }
-                                    }
-                                    case 6 -> {
-                                        Grid.get(i).set(j,new PowerPlant(Grid.get(i).get(j),Grid));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                    }
-                                }
+                                placeBuilding(i, j, building);
                             }
                         }
                         else if(i-1 == -1 && j+1 == Grid.get(i).size()) {
                             if (Grid.get(i+1).get(j).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad()) {
-                                switch (building) {
-                                    case 1 -> {
-                                        if (scrolled) {
-                                            Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut2));
-                                        } else {
-                                            Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut1));
-                                        }
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                    }
-                                    case 2 -> {
-                                        Grid.get(i).set(j,new Police(Grid.get(i).get(j)));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                        if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
-                                            Grid.get(i).get(j).setHasPower(true);
-                                        }
-                                    }
-                                    case 3 -> {
-                                        Grid.get(i).set(j,new School(Grid.get(i).get(j)));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                        if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
-                                            Grid.get(i).get(j).setHasPower(true);
-                                        }
-                                    }
-                                    case 4 -> {
-                                        Grid.get(i).set(j,new University(Grid.get(i).get(j)));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                        if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
-                                            Grid.get(i).get(j).setHasPower(true);
-                                        }
-                                    }
-                                    case 5 -> {
-                                        Grid.get(i).set(j,new Stadium(Grid.get(i).get(j)));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                        if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
-                                            Grid.get(i).get(j).setHasPower(true);
-                                        }
-                                    }
-                                    case 6 -> {
-                                        Grid.get(i).set(j,new PowerPlant(Grid.get(i).get(j),Grid));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                    }
-                                }
+                                placeBuilding(i, j, building);
                             }
                         }
                         else if(i+1 == Grid.size()) {
                             if (Grid.get(i-1).get(j).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad()) {
-                                switch (building) {
-                                    case 1 -> {
-                                        if (scrolled) {
-                                            Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut2));
-                                        } else {
-                                            Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut1));
-                                        }
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                    }
-                                    case 2 -> {
-                                        Grid.get(i).set(j,new Police(Grid.get(i).get(j)));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                        if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
-                                            Grid.get(i).get(j).setHasPower(true);
-                                        }
-                                    }
-                                    case 3 -> {
-                                        Grid.get(i).set(j,new School(Grid.get(i).get(j)));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                        if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
-                                            Grid.get(i).get(j).setHasPower(true);
-                                        }
-                                    }
-                                    case 4 -> {
-                                        Grid.get(i).set(j,new University(Grid.get(i).get(j)));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                        if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
-                                            Grid.get(i).get(j).setHasPower(true);
-                                        }
-                                    }
-                                    case 5 -> {
-                                        Grid.get(i).set(j,new Stadium(Grid.get(i).get(j)));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                        if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
-                                            Grid.get(i).get(j).setHasPower(true);
-                                        }
-                                    }
-                                    case 6 -> {
-                                        Grid.get(i).set(j,new PowerPlant(Grid.get(i).get(j),Grid));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                    }
-                                }
+                                placeBuilding(i, j, building);
                             }
                         }
                         else if(j+1 == Grid.get(i).size()) {
                             if (Grid.get(i-1).get(j).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad()|| Grid.get(i+1).get(j).isFieldRoad()) {
-                                switch (building) {
-                                    case 1 -> {
-                                        if (scrolled) {
-                                            Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut2));
-                                        } else {
-                                            Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut1));
-                                        }
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                    }
-                                    case 2 -> {
-                                        Grid.get(i).set(j,new Police(Grid.get(i).get(j)));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                        if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
-                                            Grid.get(i).get(j).setHasPower(true);
-                                        }
-                                    }
-                                    case 3 -> {
-                                        Grid.get(i).set(j,new School(Grid.get(i).get(j)));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                        if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
-                                            Grid.get(i).get(j).setHasPower(true);
-                                        }
-                                    }
-                                    case 4 -> {
-                                        Grid.get(i).set(j,new University(Grid.get(i).get(j)));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                        if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
-                                            Grid.get(i).get(j).setHasPower(true);
-                                        }
-                                    }
-                                    case 5 -> {
-                                        Grid.get(i).set(j,new Stadium(Grid.get(i).get(j)));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                        if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
-                                            Grid.get(i).get(j).setHasPower(true);
-                                        }
-                                    }
-                                    case 6 -> {
-                                        Grid.get(i).set(j,new PowerPlant(Grid.get(i).get(j),Grid));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                    }
-                                }
+                                placeBuilding(i, j, building);
                             }
                         }
                         else if(i-1 == -1) {
                             if (Grid.get(i+1).get(j).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad()) {
-                                switch (building) {
-                                    case 1 -> {
-                                        if (scrolled) {
-                                            Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut2));
-                                        } else {
-                                            Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut1));
-                                        }
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                    }
-                                    case 2 -> {
-                                        Grid.get(i).set(j,new Police(Grid.get(i).get(j)));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                        if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
-                                            Grid.get(i).get(j).setHasPower(true);
-                                        }
-                                    }
-                                    case 3 -> {
-                                        Grid.get(i).set(j,new School(Grid.get(i).get(j)));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                        if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
-                                            Grid.get(i).get(j).setHasPower(true);
-                                        }
-                                    }
-                                    case 4 -> {
-                                        Grid.get(i).set(j,new University(Grid.get(i).get(j)));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                        if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
-                                            Grid.get(i).get(j).setHasPower(true);
-                                        }
-                                    }
-                                    case 5 -> {
-                                        Grid.get(i).set(j,new Stadium(Grid.get(i).get(j)));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                        if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
-                                            Grid.get(i).get(j).setHasPower(true);
-                                        }
-                                    }
-                                    case 6 -> {
-                                        Grid.get(i).set(j,new PowerPlant(Grid.get(i).get(j),Grid));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                    }
-                                }
+                                placeBuilding(i, j, building);
                             }
                         }
                         else if(j-1 == -1) {
                             if (Grid.get(i+1).get(j).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad() || Grid.get(i-1).get(j).isFieldRoad()) {
-                                switch (building) {
-                                    case 1 -> {
-                                        if (scrolled) {
-                                            Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut2));
-                                        } else {
-                                            Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut1));
-                                        }
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                    }
-                                    case 2 -> {
-                                        Grid.get(i).set(j,new Police(Grid.get(i).get(j)));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                        if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
-                                            Grid.get(i).get(j).setHasPower(true);
-                                        }
-                                    }
-                                    case 3 -> {
-                                        Grid.get(i).set(j,new School(Grid.get(i).get(j)));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                        if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
-                                            Grid.get(i).get(j).setHasPower(true);
-                                        }
-                                    }
-                                    case 4 -> {
-                                        Grid.get(i).set(j,new University(Grid.get(i).get(j)));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                        if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
-                                            Grid.get(i).get(j).setHasPower(true);
-                                        }
-                                    }
-                                    case 5 -> {
-                                        Grid.get(i).set(j,new Stadium(Grid.get(i).get(j)));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                        if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
-                                            Grid.get(i).get(j).setHasPower(true);
-                                        }
-                                    }
-                                    case 6 -> {
-                                        Grid.get(i).set(j,new PowerPlant(Grid.get(i).get(j),Grid));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                    }
-                                }
+                                placeBuilding(i, j, building);
                             }
                         }
                         else {
                             if ((Grid.get(i-1).get(j).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad() || Grid.get(i+1).get(j).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad())) {
-                                switch (building) {
-                                    case 1 -> {
-                                        if (scrolled) {
-                                            Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut2));
-                                        } else {
-                                            Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut1));
-                                        }
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                    }
-                                    case 2 -> {
-                                        Grid.get(i).set(j,new Police(Grid.get(i).get(j)));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                        if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
-                                            Grid.get(i).get(j).setHasPower(true);
-                                        }
-                                    }
-                                    case 3 -> {
-                                        Grid.get(i).set(j,new School(Grid.get(i).get(j)));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                        if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
-                                            Grid.get(i).get(j).setHasPower(true);
-                                        }
-                                    }
-                                    case 4 -> {
-                                        Grid.get(i).set(j,new University(Grid.get(i).get(j)));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                        if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
-                                            Grid.get(i).get(j).setHasPower(true);
-                                        }
-                                    }
-                                    case 5 -> {
-                                        Grid.get(i).set(j,new Stadium(Grid.get(i).get(j)));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                        if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
-                                            Grid.get(i).get(j).setHasPower(true);
-                                        }
-                                    }
-                                    case 6 -> {
-                                        Grid.get(i).set(j,new PowerPlant(Grid.get(i).get(j),Grid));
-                                        addSpriteComponent(Grid.get(i).get(j));
-                                        this.Money -= Grid.get(i).get(j).getCost();
-                                    }
-                                }
+                                placeBuilding(i, j, building);
                             }
                         }
                         repaint();
@@ -756,9 +325,8 @@ public class Game extends JPanel {
             for (int j = 0; j < Grid.get(i).size(); j++) {
                 if (Grid.get(i).get(j).getPosX() < Pos_x && Pos_x < (Grid.get(i).get(j).getPosX() + CELL_SIZE) && Grid.get(i).get(j).getPosY() < Pos_y && Pos_y < (Grid.get(i).get(j).getPosY() + CELL_SIZE)) {
                     if(i != starter || j != 0) {
-                        spriteComponents.remove(Grid.get(i).get(j));
                         this.Money += (Grid.get(i).get(j).getCost()/2);
-                        Grid.get(i).set(j,new Field(CELL_SIZE, CELL_SIZE, j * CELL_SIZE, i * CELL_SIZE, 0, 0,false));
+                        Grid.get(i).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
                         helper = true;
                         break;
                     }
@@ -770,21 +338,26 @@ public class Game extends JPanel {
         }
     }
     
-    public void clickOnZone(int zoneType) {
+    public void clickOnZone(int zoneType) { //ide
         Image mainBorder;
+        ZoneType type;
         if(zoneType == 1) {
             mainBorder = GBorder;
+            type = ResidentalArea;
         }
         else if (zoneType == 2) {
             mainBorder = OBorder;
+            type = IndustrialArea;
         }
         else {
             mainBorder = BBorder;
+            type = ServiceArea;
         }
         try {
 
-            for (Sprite s: spriteComponents) {
-                if (s.getX() == ((Pos_x / CELL_SIZE)*CELL_SIZE) && s.getY() == ((Pos_y / CELL_SIZE)*CELL_SIZE)) {
+            for (Zone zone : zones) {
+                if ((Pos_x >= zone.getX() && Pos_y >= zone.getY()) && (Pos_x <= zone.getX()+CELL_SIZE && Pos_y <= zone.getY()+CELL_SIZE)) {
+                    System.out.println("Van már ott zóna.");
                     return;
                 }
             }
@@ -794,56 +367,47 @@ public class Game extends JPanel {
                     if (Grid.get(i).get(j).getPosX() < Pos_x && Pos_x < (Grid.get(i).get(j).getPosX() + CELL_SIZE) && Grid.get(i).get(j).getPosY() < Pos_y && Pos_y < (Grid.get(i).get(j).getPosY() + CELL_SIZE)) {
                         if(i-1 == -1 && j-1 == -1) {
                             if (Grid.get(i+1).get(j).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad()) {
-                                Grid.get(i).get(j).setImage(mainBorder);
-                                addSpriteComponent(Grid.get(i).get(j));
+                                addZone(new Zone(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), mainBorder, type));
                             }
                         }
                         else if(i+1 == Grid.size() && j+1 == Grid.get(i).size()) {
                             if (Grid.get(i-1).get(j).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad()) {
-                                Grid.get(i).get(j).setImage(mainBorder);
-                                addSpriteComponent(Grid.get(i).get(j));
+                                addZone(new Zone(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), mainBorder, type));
                             }
                         }
                         else if(i+1 == Grid.size() && j-1 == -1) {
                             if (Grid.get(i-1).get(j).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad()) {
-                                Grid.get(i).get(j).setImage(mainBorder);
-                                addSpriteComponent(Grid.get(i).get(j));
+                                addZone(new Zone(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), mainBorder, type));
                             }
                         }
                         else if(i-1 == -1 && j+1 == Grid.get(i).size()) {
                             if (Grid.get(i+1).get(j).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad()) {
-                                Grid.get(i).get(j).setImage(mainBorder);
-                                addSpriteComponent(Grid.get(i).get(j));
+                                addZone(new Zone(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), mainBorder, type));
                             }
                         }
                         else if(i+1 == Grid.size()) {
                             if (Grid.get(i-1).get(j).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad()) {
-                                Grid.get(i).get(j).setImage(mainBorder);
-                                addSpriteComponent(Grid.get(i).get(j));
+                                addZone(new Zone(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), mainBorder, type));
                             }
                         }
                         else if(j+1 == Grid.get(i).size()) {
                             if (Grid.get(i-1).get(j).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad()|| Grid.get(i+1).get(j).isFieldRoad()) {
-                                Grid.get(i).get(j).setImage(mainBorder);
-                                addSpriteComponent(Grid.get(i).get(j));
+                                addZone(new Zone(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), mainBorder, type));
                             }
                         }
                         else if(i-1 == -1) {
                             if (Grid.get(i+1).get(j).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad()) {
-                                Grid.get(i).get(j).setImage(mainBorder);
-                                addSpriteComponent(Grid.get(i).get(j));
+                                addZone(new Zone(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), mainBorder, type));
                             }
                         }
                         else if(j-1 == -1) {
                             if (Grid.get(i+1).get(j).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad() || Grid.get(i-1).get(j).isFieldRoad()) {
-                                Grid.get(i).get(j).setImage(mainBorder);
-                                addSpriteComponent(Grid.get(i).get(j));
+                                addZone(new Zone(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), mainBorder, type));
                             }
                         }
                         else {
                             if ((Grid.get(i-1).get(j).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad() || Grid.get(i+1).get(j).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad())) {
-                                Grid.get(i).get(j).setImage(mainBorder);
-                                addSpriteComponent(Grid.get(i).get(j));
+                                addZone(new Zone(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), mainBorder, type));
                             }
                         }
                         repaint();
@@ -882,20 +446,22 @@ public class Game extends JPanel {
 
     public int getPower() {return this.Power;}
 
-    public void aDayPassed() {
+    public void aDayPassed() { //itt dolgozok (Bence)
         if (day % 2 == 0) {
-            for (ArrayList<Field> fields : Grid) {
-                for (Field field : fields) {
-                    if (field.getImage().equals(GBorder)) {
-                        field.setImage(House);
-                        repaint();
-                    } else if (field.getImage().equals(OBorder)) {
-                        field.setImage(Factory);
-                        repaint();
-                    } else if (field.getImage().equals(BBorder)) {
-                        field.setImage(Office);
-                        repaint();
+            for (Zone zone : zones) {
+                if (zone.getImage().equals(GBorder)) {
+                    //House
+                    if(Grid.get(cordinateToNum(zone.getY())).get(cordinateToNum(zone.getX())).getClass().equals(Field.class)) {
+                        Grid.get(cordinateToNum(zone.getY())).set(cordinateToNum(zone.getX()), new House(CELL_SIZE, CELL_SIZE, zone.getX(), zone.getY()));
+                        citizens.add(new Citizen(new House(CELL_SIZE, CELL_SIZE, zone.getX(), zone.getY()),1)); // még nincs kész
                     }
+                    repaint();
+                } else if (zone.getImage().equals(OBorder)) {
+                    //Factory
+                    repaint();
+                } else if (zone.getImage().equals(BBorder)) {
+                    //Office
+                    repaint();
                 }
             }
         }
@@ -1051,6 +617,10 @@ public class Game extends JPanel {
         spriteComponents.add(spriteComponent);
     }
 
+    public void addZone(Zone zone) {
+        zones.add(zone);
+    }
+
     @Override
     protected void paintComponent(Graphics grphcs) {
         super.paintComponent(grphcs);
@@ -1060,6 +630,8 @@ public class Game extends JPanel {
             this.Height = this.getHeight();
             setGrid();
         }
+
+        // háttér
         for (int col = 0; col < Height/CELL_SIZE; col++) {
             for (int row = 0; row < Width / CELL_SIZE; row++) {
                 int x = row * CELL_SIZE;
@@ -1068,8 +640,18 @@ public class Game extends JPanel {
             }
         }
 
+        for (Zone zone : zones) {
+            grphcs.drawImage(zone.getImage(), zone.getX(), zone.getY(), zone.getWidth(), zone.getHeight(), null);
+        }
+
         for (Sprite sprite : spriteComponents) {
-            grphcs.drawImage(sprite.getImage(),sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight(), null);
+            grphcs.drawImage(sprite.getImage(), sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight(), null);
+        }
+
+        for (ArrayList<Field> rows : Grid) {
+            for (Field cell : rows) {
+                grphcs.drawImage(cell.getImage(), cell.getX(), cell.getY(), cell.getWidth(), cell.getHeight(), null);
+            }
         }
 
     }

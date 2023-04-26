@@ -1,13 +1,15 @@
 package notsimcity;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 
 public class PowerPlant extends Field {
+    private final Image PowerPlant_im = new ImageIcon("power_plant.png").getImage();
     public PowerPlant(Field field, ArrayList<ArrayList<Field>> Grid) {
         super(field.width, field.height, field.x,field.y,100,0,false);
         this.cost = 20000;
-        this.image = new ImageIcon("power_plant.png").getImage();
+        this.image = PowerPlant_im;
         this.hasPower = true;
         boolean empty = false;
         int i = field.y/field.height;
