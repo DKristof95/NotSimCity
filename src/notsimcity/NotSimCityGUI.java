@@ -4,27 +4,21 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.MouseListener;
-
 import static javax.swing.JOptionPane.showMessageDialog;
-
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicArrowButton;
 
 public class NotSimCityGUI {
-    private JFrame frame;
-    private JFrame frame2;
-    private JFrame frame3;
+    private JFrame frame, frame2, frame3, frame4;
     private Game gameArea;
-
-    private JLabel timetext;
-
+    private JPanel panel;
+    private JLabel timetext, money, satisfaction, population;
     private Menu menuArea;
     private MapSelect mapSelectArea;
-    private JMenuBar menuBar;
+    private JMenuBar menuBar, menuBar2;
     private JMenu menu, subMenu;
     private JMenuItem menuItem;
-
     private JTextField cityNameField;
     private String cityName;
     public NotSimCityGUI() {
@@ -47,7 +41,7 @@ public class NotSimCityGUI {
             cityNameField.setBounds(275,50,200,30);
             frame2.add(cityNameField);
 
-
+            Border redBorder = BorderFactory.createLineBorder(Color.RED, 2, true);
             ButtonGroup buttonGroup = new ButtonGroup();
             JRadioButton radio1 = new JRadioButton("Véletlenszerű pálya",true);
             radio1.setBounds(100,110,20,20);
@@ -56,16 +50,62 @@ public class NotSimCityGUI {
             buttonGroup.add(radio1);
             JRadioButton radio2 = new JRadioButton("Előre megadott pálya választása");
             radio2.setBounds(100,150,20,20);
-            JLabel radio2_label = new JLabel("Előre megadott pálya választása( Nem működik )");
+            JLabel radio2_label = new JLabel("Előre megadott pálya választása");
             radio2_label.setBounds(120,150,300,20);
             buttonGroup.add(radio2);
+            JButton option1 = new JButton("1");
+            option1.setBounds(50,220,160,160);
+            option1.setVisible(false);
+            option1.setFocusPainted(false);
+            option1.setBorder(redBorder);
+            option1.setBorderPainted(true);
+            JButton option2 = new JButton("2");
+            option2.setBounds(260,220,160,160);
+            option2.setVisible(false);
+            option2.setFocusPainted(false);
+            option2.setBorder(redBorder);
+            option2.setBorderPainted(false);
+            JButton option3 = new JButton("3");
+            option3.setBounds(470,220,160,160);
+            option3.setVisible(false);
+            option3.setFocusPainted(false);
+            option3.setBorder(redBorder);
+            option3.setBorderPainted(false);
+            option1.addActionListener(o1 -> {
+                option1.setBorderPainted(true);
+                option2.setBorderPainted(false);
+                option3.setBorderPainted(false);
+            });
+            option2.addActionListener(o1 -> {
+                option1.setBorderPainted(false);
+                option2.setBorderPainted(true);
+                option3.setBorderPainted(false);
+            });
+            option3.addActionListener(o1 -> {
+                option1.setBorderPainted(false);
+                option2.setBorderPainted(false);
+                option3.setBorderPainted(true);
+            });
+            radio1.addActionListener(er2 -> {
+                option1.setVisible(false);
+                option2.setVisible(false);
+                option3.setVisible(false);
+            });
+            radio2.addActionListener(er2 -> {
+                option1.setVisible(true);
+                option2.setVisible(true);
+                option3.setVisible(true);
+            });
+            frame2.add(option1);
+            frame2.add(option2);
+            frame2.add(option3);
             frame2.add(radio1);
             frame2.add(radio2);
             frame2.add(radio1_label);
             frame2.add(radio2_label);
 
             JButton BalB = new BasicArrowButton(BasicArrowButton.WEST);
-            BalB.setBounds(100,400,64,64);
+            BalB.setBounds(80,430,64,64);
             BalB.addActionListener(e1 -> {
                     frame.setVisible(true);
                     frame2.dispose();
@@ -74,7 +114,7 @@ public class NotSimCityGUI {
             BalB.setOpaque(false);
             BalB.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             JButton JobbB = new BasicArrowButton(BasicArrowButton.EAST);
-            JobbB.setBounds(536,400,64,64);
+            JobbB.setBounds(536,430,64,64);
             JobbB.addActionListener(e1 -> {
                 Border greenBorder = BorderFactory.createLineBorder(Color.GREEN, 2, true);
 
@@ -213,10 +253,6 @@ public class NotSimCityGUI {
 
                 timetext = new JLabel("2023.01.01. 00:00");
                 timetext.setFont(timetext.getFont().deriveFont(24.0f));
-                gameArea.Time();
-
-                Timer timer = new Timer(1000, e117 -> timetext.setText(gameArea.getTime()));
-                timer.start();
                 timetext.setBorder(new EmptyBorder(0, 450, 0, 566));
 
                 JButton saveButton = new JButton("Mentés");
@@ -258,14 +294,6 @@ public class NotSimCityGUI {
                 pauseButton.setFocusPainted(false);
                 pauseButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 pauseButton.setBorder(greenBorder);
-                pauseButton.addActionListener(e119 -> {
-                    gameArea.setGameSpeed(0);
-                    pauseButton.setBorderPainted(true);
-                    playButton.setBorderPainted(false);
-                    fastForwardButton.setBorderPainted(false);
-                    fasterForwardButton.setBorderPainted(false);
-                    timer.stop();
-                });
                 menuBar.add(pauseButton);
 
                 playButton.setIcon(new ImageIcon("play.png"));
@@ -274,6 +302,149 @@ public class NotSimCityGUI {
                 playButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 playButton.setBorderPainted(true);
                 playButton.setBorder(greenBorder);
+                menuBar.add(playButton);
+
+                fastForwardButton.setIcon(new ImageIcon("fast_forward.png"));
+                fastForwardButton.setBorderPainted(false);
+                fastForwardButton.setContentAreaFilled(false);
+                fastForwardButton.setFocusPainted(false);
+                fastForwardButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                fastForwardButton.setBorder(greenBorder);
+                menuBar.add(fastForwardButton);
+
+                fasterForwardButton.setIcon(new ImageIcon("fast_forward_3.png"));
+                fasterForwardButton.setBorderPainted(false);
+                fasterForwardButton.setContentAreaFilled(false);
+                fasterForwardButton.setFocusPainted(false);
+                fasterForwardButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                fasterForwardButton.setBorder(greenBorder);
+                menuBar.add(fasterForwardButton);
+
+                frame3.setJMenuBar(menuBar);
+
+                menuBar2 = new JMenuBar();
+                menuBar2.setPreferredSize(new Dimension(1616,50));
+                ImageIcon icon = new ImageIcon("money.png");
+                JButton moneyButton = new JButton(icon);
+                moneyButton.setHorizontalAlignment(SwingConstants.LEFT);
+                moneyButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                moneyButton.setBorderPainted(false);
+                moneyButton.setContentAreaFilled(false);
+                moneyButton.setFocusPainted(false);
+                moneyButton.addActionListener(e2 -> {
+                    frame4 = new JFrame("Adók");
+                    frame4.setResizable(false);
+                    panel = new JPanel();
+                    panel.setPreferredSize(new Dimension(400,250));
+                    panel.setLayout(new BoxLayout(panel,BoxLayout.PAGE_AXIS));
+                    JButton zeroButton = new JButton("0%    ++Elégedettség");
+                    JButton halfButton = new JButton("25%    +Elégedettség");
+                    JButton oneButton = new JButton("50%");
+                    JButton onehalfButton = new JButton("75%    -Elégedettség");
+                    JButton twoButton = new JButton("100%  --Elégedettség");
+                    switch ((int)(gameArea.getTaxMultiplier() * 2)) {
+                        case 0 -> zeroButton.setForeground(new Color(112, 78, 148));
+                        case 1 -> halfButton.setForeground(new Color(112, 78, 148));
+                        case 2 -> oneButton.setForeground(new Color(112, 78, 148));
+                        case 3 -> onehalfButton.setForeground(new Color(112, 78, 148));
+                        case 4 -> twoButton.setForeground(new Color(112, 78, 148));
+                        default -> {
+                        }
+                    }
+                    zeroButton.setMaximumSize(new Dimension(400,50));
+                    zeroButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                    zeroButton.setBorderPainted(false);
+                    zeroButton.setContentAreaFilled(false);
+                    zeroButton.setFocusPainted(false);
+                    zeroButton.addActionListener(e21 -> {
+                        gameArea.setTaxMultiplier(1);
+                        frame4.dispose();
+                    });
+                    panel.add(zeroButton);
+                    halfButton.setMaximumSize(new Dimension(400,50));
+                    halfButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                    halfButton.setBorderPainted(false);
+                    halfButton.setContentAreaFilled(false);
+                    halfButton.setFocusPainted(false);
+                    halfButton.addActionListener(e21 -> {
+                        gameArea.setTaxMultiplier(2);
+                        frame4.dispose();
+                    });
+                    panel.add(halfButton);
+                    oneButton.setMaximumSize(new Dimension(400,50));
+                    oneButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                    oneButton.setBorderPainted(false);
+                    oneButton.setContentAreaFilled(false);
+                    oneButton.setFocusPainted(false);
+                    oneButton.addActionListener(e21 -> {
+                        gameArea.setTaxMultiplier(3);
+                        frame4.dispose();
+                    });
+                    panel.add(oneButton);
+                    onehalfButton.setMaximumSize(new Dimension(400,50));
+                    onehalfButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                    onehalfButton.setBorderPainted(false);
+                    onehalfButton.setContentAreaFilled(false);
+                    onehalfButton.setFocusPainted(false);
+                    onehalfButton.addActionListener(e21 -> {
+                        gameArea.setTaxMultiplier(4);
+                        frame4.dispose();
+                    });
+                    panel.add(onehalfButton);
+                    twoButton.setMaximumSize(new Dimension(400,50));
+                    twoButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                    twoButton.setBorderPainted(false);
+                    twoButton.setContentAreaFilled(false);
+                    twoButton.setFocusPainted(false);
+                    twoButton.addActionListener(e21 -> {
+                        gameArea.setTaxMultiplier(5);
+                        frame4.dispose();
+                    });
+                    panel.add(twoButton);
+                    frame4.getContentPane().add(panel);
+                    frame4.setSize(new Dimension(400, 250));
+                    frame4.pack();
+                    frame4.setLocationRelativeTo(null);
+                    frame4.setVisible(true);
+                });
+                money = new JLabel("50000");
+                money.setBorder(new EmptyBorder(25, 100, 25, 0));
+                moneyButton.add(money);
+                menuBar2.add(moneyButton);
+
+                icon = new ImageIcon("smile.png");
+                menuItem = new JMenuItem(icon);
+                satisfaction = new JLabel("100%");
+                satisfaction.setBorder(new EmptyBorder(25, 100, 25, 0));
+                menuItem.add(satisfaction);
+                menuBar2.add(menuItem);
+
+                icon = new ImageIcon("village.png");
+                menuItem = new JMenuItem(icon);
+                population = new JLabel("100");
+                population.setBorder(new EmptyBorder(25, 100, 25, 0));
+                menuItem.add(population);
+                menuBar2.add(menuItem);
+
+                frame3.add(menuBar2,BorderLayout.SOUTH);
+
+                gameArea.Time();
+                Timer timer = new Timer(1000, e117 -> {
+                    timetext.setText(gameArea.getTime());
+                    money.setText(String.valueOf(gameArea.getMoney()));
+                    population.setText(String.valueOf(gameArea.getCitizens()));
+                });
+                timer.start();
+
+                pauseButton.addActionListener(e119 -> {
+                    gameArea.setGameSpeed(0);
+                    pauseButton.setBorderPainted(true);
+                    playButton.setBorderPainted(false);
+                    fastForwardButton.setBorderPainted(false);
+                    fasterForwardButton.setBorderPainted(false);
+                    timer.stop();
+                });
+
                 playButton.addActionListener(e1110 -> {
                     gameArea.setGameSpeed(1);
                     pauseButton.setBorderPainted(false);
@@ -283,14 +454,7 @@ public class NotSimCityGUI {
                     timer.setDelay(1000);
                     timer.start();
                 });
-                menuBar.add(playButton);
 
-                fastForwardButton.setIcon(new ImageIcon("fast_forward.png"));
-                fastForwardButton.setBorderPainted(false);
-                fastForwardButton.setContentAreaFilled(false);
-                fastForwardButton.setFocusPainted(false);
-                fastForwardButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-                fastForwardButton.setBorder(greenBorder);
                 fastForwardButton.addActionListener(e1111 -> {
                     gameArea.setGameSpeed(2);
                     pauseButton.setBorderPainted(false);
@@ -300,14 +464,7 @@ public class NotSimCityGUI {
                     timer.setDelay(10);
                     timer.start();
                 });
-                menuBar.add(fastForwardButton);
 
-                fasterForwardButton.setIcon(new ImageIcon("fast_forward_3.png"));
-                fasterForwardButton.setBorderPainted(false);
-                fasterForwardButton.setContentAreaFilled(false);
-                fasterForwardButton.setFocusPainted(false);
-                fasterForwardButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-                fasterForwardButton.setBorder(greenBorder);
                 fasterForwardButton.addActionListener(e1112 -> {
                     gameArea.setGameSpeed(3);
                     pauseButton.setBorderPainted(false);
@@ -317,9 +474,6 @@ public class NotSimCityGUI {
                     timer.setDelay(1);
                     timer.start();
                 });
-                menuBar.add(fasterForwardButton);
-
-                frame3.setJMenuBar(menuBar);
             });
             JobbB.setBorder(BorderFactory.createEmptyBorder());
             JobbB.setOpaque(false);
@@ -361,7 +515,5 @@ public class NotSimCityGUI {
         frame.setSize(new Dimension(700, 600));
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-
-
     }
 }
