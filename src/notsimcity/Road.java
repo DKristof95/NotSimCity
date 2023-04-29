@@ -1,8 +1,9 @@
 package notsimcity;
 
+import java.awt.Image;
 public class Road extends Field {
-
-    public Road(int sizeX, int sizeY, int posX, int posY) {
-        super(sizeX, sizeY, posX, posY, 0, 0);
+    public Road(Field field, Image get_image) {
+        super(field.width, field.height, field.x, field.y, 0, 0,true, get_image);
+        this.cost = 50;
     }
 }

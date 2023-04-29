@@ -1,32 +1,39 @@
 package notsimcity;
 
-import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
-import java.awt.Image;
-public class Field extends Sprite{
-    private int sizeX;
-    private int sizeY;
-    private int posX;
-    private int posY;
-    private ArrayList<Citizen> citizens;
-    private int capacity;
-    private int powerDemand;
-    private boolean isRoad;
-    private boolean isHorizontal;
+import javax.swing.ImageIcon;
 
-    public Field(int sizeX, int sizeY, int posX, int posY, int capacity, int powerDemand) {
-        super(sizeX,sizeY,posX,posY,new ImageIcon("Bal2.png").getImage());
-        this.sizeX = sizeX;
-        this.sizeY = sizeY;
-        this.posX = posX;
-        this.posY = posY;
+public class Field extends Sprite{
+    private ArrayList<Citizen> citizens;
+    protected int capacity;
+    protected int powerDemand;
+    protected int cost;
+    private boolean isRoad;
+    protected boolean hasPower;
+
+    public Field(int sizeX, int sizeY, int posX, int posY, int capacity, int powerDemand, boolean road) {
+        super(sizeX,sizeY,posX,posY,new ImageIcon("grass.png").getImage());
         this.capacity = capacity;
         this.powerDemand = powerDemand;
         this.citizens = new ArrayList<Citizen>();
+        this.isRoad = road;
+        this.hasPower = false;
+        this.cost = 0;
     }
-    
-    public int distance(Field otherField) {
-        return 0; // még nem tudjuk
+
+    public Field(int sizeX, int sizeY, int posX, int posY, int capacity, int powerDemand, boolean road, Image img) {
+        super(sizeX, sizeY, posX, posY, img);
+        this.capacity = capacity;
+        this.powerDemand = powerDemand;
+        this.citizens = new ArrayList<Citizen>();
+        this.isRoad = road;
+        this.hasPower = false;
+        this.cost = 0;
+    }
+
+    public int distanceToPowerPlant() {
+        return 0;
     }
     
     public void makeField() {
@@ -37,20 +44,29 @@ public class Field extends Sprite{
         
     }
 
+    public boolean setHasPower(boolean on) {return this.hasPower = on;}
+
     public int getSizeX() {
-        return sizeX;
+        return this.width;
     }
 
     public int getSizeY() {
-        return sizeY;
+        return this.height;
     }
 
     public int getPosX() {
-        return posX;
+        return this.x;
     }
 
     public int getPosY() {
-        return posY;
+        return this.y;
+    }
+
+    public boolean equals(Field field){
+        if(this.x == field.x && this.y == field.y) {
+            return true;
+        }
+        else {return false;}
     }
 
     public ArrayList<Citizen> getCitizens() {
@@ -64,28 +80,20 @@ public class Field extends Sprite{
     public int getPowerDemand() {
         return powerDemand;
     }
+
+    public int getCost() {
+        return cost;
+    }
     
     public ArrayList<Citizen> getSiblings() {
         return null; // még nem tudjuk
     }
-    
-    public boolean isRoadNextToField(boolean way) {
-        if (way == isHorizontal){
-            return true;
-        }
-        return false;
 
+    public boolean isRoadNextToField(boolean way) {
+        return false;
     }
 
     public boolean isFieldRoad() {
         return isRoad;
-    }
-
-    public void setIsRoad(boolean r) {
-        isRoad = r;
-    }
-
-    public void setImage(Image image) {
-        this.image = image;
     }
 }

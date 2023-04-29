@@ -3,14 +3,14 @@ package notsimcity;
 public class Forest extends Field {
     private int growth;
 
-    public Forest(int sizeX, int sizeY, int posX, int posY) {
-        super(sizeX, sizeY, posX, posY, 0, 0);
+    public Forest(Field field) {
+        super(field.width,field.height,field.x,field.y, 0, 0,false);
     }
-    
+
     public void setGrowthLevel(int value) {
         this.growth = value;
     }
-    
+
     public int getGrowthLevel() {
         return growth;
     }

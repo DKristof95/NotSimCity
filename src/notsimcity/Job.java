@@ -1,15 +1,15 @@
 package notsimcity;
 
-public class Job extends Field {
+public class Job {
     private int jobType;
-    
-    public Job(int jobType, int sizeX, int sizeY, int posX, int posY, int capacity, int powerDemand) {
-        super(sizeX, sizeY, posX, posY, capacity, powerDemand);
+
+    public Job(int jobType) {
         this.jobType = jobType;
     }
 
     public int getJobType() {
         return jobType;
     }
-    
+
 }
+
