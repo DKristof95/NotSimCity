@@ -376,10 +376,44 @@ public class Game extends JPanel {
             for (int j = 0; j < Grid.get(i).size(); j++) {
                 if (Grid.get(i).get(j).getPosX() < Pos_x && Pos_x < (Grid.get(i).get(j).getPosX() + CELL_SIZE) && Grid.get(i).get(j).getPosY() < Pos_y && Pos_y < (Grid.get(i).get(j).getPosY() + CELL_SIZE)) {
                     if(i != starter || j != 0) {
-                        this.Money += (Grid.get(i).get(j).getCost()/2);
-                        Grid.get(i).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
-                        helper = true;
-                        break;
+                        if (Grid.get(i).get(j).getClass().equals(Stadium.class)) {
+                            this.Money += (Grid.get(i).get(j).getCost()/2);
+                            Grid.get(i).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
+                            Grid.get(i).set(j+1,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j+1).getPosX(), Grid.get(i).get(j+1).getPosY(), 0, 0, false));
+                            Grid.get(i+1).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i+1).get(j).getPosX(), Grid.get(i+1).get(j).getPosY(), 0, 0, false));
+                            Grid.get(i+1).set(j+1,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i+1).get(j+1).getPosX(), Grid.get(i+1).get(j+1).getPosY(), 0, 0, false));
+                            helper = true;
+                            break;
+                        } else if (Grid.get(i).get(j).getClass().equals(StadiumUR.class)) {
+                            this.Money += (Grid.get(i).get(j-1).getCost()/2);
+                            Grid.get(i).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
+                            Grid.get(i).set(j-1,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j-1).getPosX(), Grid.get(i).get(j-1).getPosY(), 0, 0, false));
+                            Grid.get(i+1).set(j-1,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i+1).get(j-1).getPosX(), Grid.get(i+1).get(j-1).getPosY(), 0, 0, false));
+                            Grid.get(i+1).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i+1).get(j).getPosX(), Grid.get(i+1).get(j).getPosY(), 0, 0, false));
+                            helper = true;
+                            break;
+                        } else if (Grid.get(i).get(j).getClass().equals(StadiumLL.class)) {
+                            this.Money += (Grid.get(i-1).get(j).getCost()/2);
+                            Grid.get(i).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
+                            Grid.get(i-1).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i-1).get(j).getPosX(), Grid.get(i-1).get(j).getPosY(), 0, 0, false));
+                            Grid.get(i-1).set(j+1,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i-1).get(j+1).getPosX(), Grid.get(i-1).get(j+1).getPosY(), 0, 0, false));
+                            Grid.get(i).set(j+1,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j+1).getPosX(), Grid.get(i).get(j+1).getPosY(), 0, 0, false));
+                            helper = true;
+                            break;
+                        } else if (Grid.get(i).get(j).getClass().equals(StadiumLR.class)) {
+                            this.Money += (Grid.get(i-1).get(j-1).getCost()/2);
+                            Grid.get(i).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
+                            Grid.get(i-1).set(j-1,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i-1).get(j-1).getPosX(), Grid.get(i-1).get(j-1).getPosY(), 0, 0, false));
+                            Grid.get(i-1).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i-1).get(j).getPosX(), Grid.get(i-1).get(j).getPosY(), 0, 0, false));
+                            Grid.get(i).set(j-1,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j-1).getPosX(), Grid.get(i).get(j-1).getPosY(), 0, 0, false));
+                            helper = true;
+                            break;
+                        } else {
+                            this.Money += (Grid.get(i).get(j).getCost() / 2);
+                            Grid.get(i).set(j, new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
+                            helper = true;
+                            break;
+                        }
                     }
                 }
             }
