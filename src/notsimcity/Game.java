@@ -559,6 +559,21 @@ public class Game extends JPanel {
             }
         }
 
+        for (ArrayList<Field> rows : Grid) {
+            for (Field cell : rows) {
+                if(cell.getClass().equals(ForestNew.class)) {
+                    int i = cell.getY()/CELL_SIZE;
+                    int j = cell.getX()/CELL_SIZE;
+                    if(((ForestNew) cell).planted[2] == day-1) {
+
+                        Grid.get(i).set(j, new ForestGrown(Grid.get(i).get(j)));
+                    }
+
+                    repaint();
+                }
+            }
+        }
+
         if(month == 1 && day == 31) {
             month++;
             day = 1;
