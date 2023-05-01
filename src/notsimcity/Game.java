@@ -549,24 +549,6 @@ public class Game extends JPanel {
         this.Money += this.taxMultiplier * 10000;
     }
 
-    public void setTaxMultiplier(int type) {
-        switch (type) {
-            case 1 -> this.taxMultiplier = 0.0f;
-            case 2 -> this.taxMultiplier = 0.5f;
-            case 3 -> this.taxMultiplier = 1.0f;
-            case 4 -> this.taxMultiplier = 1.5f;
-            case 5 -> this.taxMultiplier = 2.0f;
-            default -> {
-            }
-        }
-    }
-
-    public float getTaxMultiplier() {
-        return this.taxMultiplier;
-    }
-
-    public int getPower() {return this.Power;}
-
     public void aDayPassed() { //itt dolgozok (Bence)
         if (day % 2 == 0) {
             for (Zone zone : zones) {
