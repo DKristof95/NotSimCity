@@ -88,7 +88,7 @@ public class Field extends Sprite{
     public ArrayList<Citizen> getSiblings() {
         return null; // még nem tudjuk
     }
-    
+
     public boolean isRoadNextToField(boolean way) {
         return false;
     }

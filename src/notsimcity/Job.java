@@ -10,5 +10,6 @@ public class Job {
     public int getJobType() {
         return jobType;
     }
-    
+
 }
+

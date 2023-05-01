@@ -12,6 +12,6 @@ public class Police extends Service {
         this.powerDemand = 3;
         this.cost = 10000;
     }
-    
-    
+
+
 }

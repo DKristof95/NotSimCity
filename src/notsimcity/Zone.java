@@ -24,11 +24,11 @@ public class Zone extends Sprite {
     public int getCapacity() {
         return 0; // még nem tudjuk
     }
-    
+
     public void makeZone() {
-        
+
     }
-    
+
     public double getCitizensSatisfaction() {
         return 0.0; // még nem tudjuk
     }

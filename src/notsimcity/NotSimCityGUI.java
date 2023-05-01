@@ -136,7 +136,7 @@ public class NotSimCityGUI {
                 stopBuild.addActionListener(e1113 -> {
                     gameArea.setBuildingMode(0,0);
                     stopBuild.setVisible(false);
-                    timetext.setBorder(new EmptyBorder(0, 450, 0, 566));
+                    timetext.setBorder(new EmptyBorder(0, 450, 0, 450));
                     for (MouseListener l : gameArea.getMouseListeners()) {
                         gameArea.removeMouseListener(l);
                     }
@@ -251,9 +251,20 @@ public class NotSimCityGUI {
                 });
                 menu.add(menuItem);
 
+                menu.addSeparator();
+
+                menuItem = new JMenuItem("Erdősítés");
+                menuItem.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                menuItem.addActionListener(e118 -> {
+                    gameArea.setBuildingMode(1,7);
+                    timetext.setBorder(new EmptyBorder(0, 284, 0, 566));
+                    stopBuild.setVisible(true);
+                });
+                menu.add(menuItem);
+
                 timetext = new JLabel("2023.01.01. 00:00");
                 timetext.setFont(timetext.getFont().deriveFont(24.0f));
-                timetext.setBorder(new EmptyBorder(0, 450, 0, 566));
+                timetext.setBorder(new EmptyBorder(0, 450, 0, 466));
 
                 JButton saveButton = new JButton("Mentés");
                 saveButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));

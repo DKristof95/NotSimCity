@@ -11,8 +11,8 @@ public class School extends Service {
         this.powerDemand = 4;
         this.cost = 10000;
     }
-    
+
     public void giveQualificationToRandoms() {
-        
+
     }
 }
