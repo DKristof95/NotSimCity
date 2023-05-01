@@ -444,6 +444,9 @@ public class NotSimCityGUI {
                     timetext.setText(gameArea.getTime());
                     money.setText(String.valueOf(gameArea.getMoney()));
                     population.setText(String.valueOf(gameArea.getCitizens()));
+                    if(gameArea.getCitizens() > 0){
+                        satisfaction.setText(gameArea.getSatisfaction() + "%");
+                    }
                 });
                 timer.start();
 

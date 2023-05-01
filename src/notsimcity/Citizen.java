@@ -7,14 +7,23 @@ public class Citizen {
     private double satisfaction;
     private int age;
     private int preferredJobType;
+    private double randomNum;
+    private int amountOfTax;
 
-    public Citizen(House house, int preferredJobType) {
+    public Citizen(House house) {
         this.job = null;
         this.house = house;
         this.qualification = 1;
-        this.satisfaction = 100.0;
-        this.age = 18;
-        this.preferredJobType = preferredJobType;
+        this.satisfaction = 75.0;
+        this.age = (int)(Math.random() * 42 + 18);
+        this.randomNum = Math.random();
+        if (randomNum >= 0.5) {
+            this.preferredJobType = 1; //Ipar
+        }
+        else {
+            this.preferredJobType = 2; //Szolgáltatás
+        }
+        this.amountOfTax = 0;
     }
 
     public Job getJob() {
@@ -33,14 +42,14 @@ public class Citizen {
         return satisfaction;
     }
 
-    public int getAge() {
-        return age;
+    public void addAge() {
+        age++;
     }
 
     public int getPreferredJobType() {
         return preferredJobType;
     }
-    
+
     public boolean isRetired() {
         return this.age>=65;
     }
@@ -61,34 +70,40 @@ public class Citizen {
         this.satisfaction = satisfaction;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public void setAmountOfTax(double modifier) {
+        if(this.age >= 45){
+            this.amountOfTax += this.getQualification() * modifier * 100;
+        }
     }
-    
+
+    public int getRetirementMoney() {
+        return this.amountOfTax / 40;
+    }
+
     public void build() {
-        
+
     }
-    
+
     public void resetCitizen() {
-        
+
     }
-    
+
     public void deleteCitizen() {
-        
+
     }
-    
+
     public Job getNearestJob() {
         return null; // még nem tudjuk
     }
-    
+
     public int getNearestJobDistance() {
         return 0; // még nem tudjuk
     }
-    
+
     public boolean isNearPolice() {
         return true; // meg nem tudjuk
     }
-    
+
     public boolean isNearStadium() {
         return true; // meg nem tudjuk
     }
