@@ -306,7 +306,7 @@ public class Game extends JPanel {
         repaint();
 
         Timer timer2 = new Timer(0, e -> {
-            if (buildingMode == 1 || buildingMode == 2 || buildingMode == 3) {
+            if (buildingMode == 1 || buildingMode == 2 || buildingMode == 3 || buildingMode == 4) {
 
                 spriteComponents.removeIf(sprite -> sprite.getImage().equals(Border));
 
@@ -375,6 +375,9 @@ public class Game extends JPanel {
                 else if(buildingMode == 3) {
                     clickOnZone(building);
                 }
+                else if(buildingMode == 4) {
+                    destroyZone();
+                }
                 scrolled = false;
             }
 
@@ -434,6 +437,24 @@ public class Game extends JPanel {
                             break;
                         }
                     }
+                }
+            }
+            if(helper) {
+                break;
+            }
+        }
+    }
+
+    public void destroyZone() { //ide
+        boolean helper = false;
+        for (Zone zone : zones) {
+            if (zone.getX() < Pos_x && Pos_x < (zone.getX() + CELL_SIZE) && zone.getY() < Pos_y && Pos_y < (zone.getY() + CELL_SIZE)) {
+                if(Grid.get(cordinateToNum(Pos_y)).get(cordinateToNum(Pos_x)).getClass().equals(Field.class)) {
+                    zones.remove(zone);
+                    helper = true;
+                    break;
+                }else {
+                    JOptionPane.showMessageDialog(null, "Nem lehet olyan zónát törölni, amire már épült valami.", "Hiba!",  JOptionPane.ERROR_MESSAGE);
                 }
             }
             if(helper) {
