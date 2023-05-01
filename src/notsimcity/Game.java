@@ -77,6 +77,13 @@ public class Game extends JPanel {
         int randomNum = ThreadLocalRandom.current().nextInt(1, a-1);
         starter = randomNum;
         Grid.get(randomNum).set(0, new Road(Grid.get(randomNum).get(0), Ut1));
+
+        for (int i = 0; i < 10; i++) {
+            int randX = ThreadLocalRandom.current().nextInt(1, a-1);
+            int randY = ThreadLocalRandom.current().nextInt(1, b-1);
+
+            placeBuilding(randX, randY, 8);
+        }
     }
 
     public static int cordinateToNum(int x) {
@@ -179,6 +186,9 @@ public class Game extends JPanel {
             case 7 -> {
                 Grid.get(i).set(j, new ForestNew(Grid.get(i).get(j), year, month, day));
                 this.Money -= Grid.get(i).get(j).getCost();
+            }
+            case 8 -> {
+                Grid.get(i).set(j, new ForestGrown(Grid.get(i).get(j)));
             }
         }
     }
@@ -566,7 +576,7 @@ public class Game extends JPanel {
                     int j = cell.getX()/CELL_SIZE;
                     if(((ForestNew) cell).planted[2] == day-1) {
 
-                        Grid.get(i).set(j, new ForestGrown(Grid.get(i).get(j)));
+                        placeBuilding(i, j,8);
                     }
 
                     repaint();

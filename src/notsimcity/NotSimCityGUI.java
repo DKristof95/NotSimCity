@@ -136,7 +136,7 @@ public class NotSimCityGUI {
                 stopBuild.addActionListener(e1113 -> {
                     gameArea.setBuildingMode(0,0);
                     stopBuild.setVisible(false);
-                    timetext.setBorder(new EmptyBorder(0, 450, 0, 466));
+                    timetext.setBorder(new EmptyBorder(0, 450, 0, 450));
                     for (MouseListener l : gameArea.getMouseListeners()) {
                         gameArea.removeMouseListener(l);
                     }
