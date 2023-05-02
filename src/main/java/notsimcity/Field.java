@@ -13,7 +13,7 @@ public class Field extends Sprite{
     protected boolean hasPower;
 
     public Field(int sizeX, int sizeY, int posX, int posY, int capacity, int powerDemand, boolean road) {
-        super(sizeX,sizeY,posX,posY,new ImageIcon("grass.png").getImage());
+        super(sizeX, sizeY, posX, posY, new ImageIcon("grass.png").getImage());
         this.capacity = capacity;
         this.powerDemand = powerDemand;
         this.citizens = new ArrayList<Citizen>();

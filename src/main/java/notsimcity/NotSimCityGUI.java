@@ -107,8 +107,8 @@ public class NotSimCityGUI {
             JButton BalB = new BasicArrowButton(BasicArrowButton.WEST);
             BalB.setBounds(80,430,64,64);
             BalB.addActionListener(e1 -> {
-                    frame.setVisible(true);
-                    frame2.dispose();
+                frame.setVisible(true);
+                frame2.dispose();
             });
             BalB.setBorder(BorderFactory.createEmptyBorder());
             BalB.setOpaque(false);
@@ -136,7 +136,7 @@ public class NotSimCityGUI {
                 stopBuild.addActionListener(e1113 -> {
                     gameArea.setBuildingMode(0,0);
                     stopBuild.setVisible(false);
-                    timetext.setBorder(new EmptyBorder(0, 450, 0, 450));
+                    timetext.setBorder(new EmptyBorder(0, 450, 0, 566));
                     for (MouseListener l : gameArea.getMouseListeners()) {
                         gameArea.removeMouseListener(l);
                     }
@@ -251,6 +251,15 @@ public class NotSimCityGUI {
                 });
                 menu.add(menuItem);
 
+                menuItem = new JMenuItem("Zóna törlés");
+                menuItem.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                menuItem.addActionListener(e1000 -> {
+                    gameArea.setBuildingMode(4,0);
+                    timetext.setBorder(new EmptyBorder(0, 284, 0, 566));
+                    stopBuild.setVisible(true);
+                });
+                menu.add(menuItem);
+
                 menu.addSeparator();
 
                 menuItem = new JMenuItem("Erdősítés");
@@ -264,7 +273,7 @@ public class NotSimCityGUI {
 
                 timetext = new JLabel("2023.01.01. 00:00");
                 timetext.setFont(timetext.getFont().deriveFont(24.0f));
-                timetext.setBorder(new EmptyBorder(0, 450, 0, 466));
+                timetext.setBorder(new EmptyBorder(0, 450, 0, 566));
 
                 JButton saveButton = new JButton("Mentés");
                 saveButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -425,14 +434,14 @@ public class NotSimCityGUI {
 
                 icon = new ImageIcon("smile.png");
                 menuItem = new JMenuItem(icon);
-                satisfaction = new JLabel("100%");
+                satisfaction = new JLabel("N/A");
                 satisfaction.setBorder(new EmptyBorder(25, 100, 25, 0));
                 menuItem.add(satisfaction);
                 menuBar2.add(menuItem);
 
                 icon = new ImageIcon("village.png");
                 menuItem = new JMenuItem(icon);
-                population = new JLabel("100");
+                population = new JLabel("0");
                 population.setBorder(new EmptyBorder(25, 100, 25, 0));
                 menuItem.add(population);
                 menuBar2.add(menuItem);
@@ -444,6 +453,9 @@ public class NotSimCityGUI {
                     timetext.setText(gameArea.getTime());
                     money.setText(String.valueOf(gameArea.getMoney()));
                     population.setText(String.valueOf(gameArea.getCitizens()));
+                    if(gameArea.getCitizens() > 0){
+                        satisfaction.setText(gameArea.getSatisfaction() + "%");
+                    }
                 });
                 timer.start();
 

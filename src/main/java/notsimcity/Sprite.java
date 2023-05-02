@@ -53,7 +53,7 @@ public class Sprite {
         return image;
     }
 
-    public void setHeight(int height) {
-        this.height = height;
+    public void setImage(Image image) {
+        this.image = image;
     }
 }
