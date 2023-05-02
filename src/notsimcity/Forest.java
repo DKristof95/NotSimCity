@@ -1,10 +1,10 @@
 package notsimcity;
 
-public class Forest extends Field {
+public class Forest extends Service {
     private int growth;
 
     public Forest(Field field) {
-        super(field.width,field.height,field.x,field.y, 0, 0,false);
+        super(3,field,null); growth = 0;
     }
 
     public void setGrowthLevel(int value) {
