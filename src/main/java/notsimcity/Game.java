@@ -3,6 +3,7 @@ package notsimcity;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import javax.swing.*;
 
@@ -11,6 +12,7 @@ import static notsimcity.ZoneType.*;
 
 public class Game extends JPanel {
     private static final int CELL_SIZE = 50, FPS = 240;
+    private static final Random rand = new Random();
     private ArrayList<ArrayList<Field>> Grid = new ArrayList<>();
     private ArrayList<Zone> zones;
     private ArrayList<Citizen> citizens;
@@ -232,13 +234,9 @@ public class Game extends JPanel {
                 }
             }
 
-            for (ArrayList<Field> rows : Grid) {
-                for (Field cell : rows) {
-                    if ((Pos_x >= cell.getX() && Pos_y >= cell.getY()) && (Pos_x <= cell.getX()+CELL_SIZE && Pos_y <= cell.getY()+CELL_SIZE)) { // a cellába esik a kattintás
-                        if(!cell.getClass().equals(Field.class)) { // nem üres mező (üres, ha Field típusú, ha van rajta valami, akkor pl Road típust ad vissza)
-                            return;
-                        }
-                    }
+            for (Zone zone : zones) {
+                if (zone.getX() < Pos_x && Pos_x < (zone.getX() + CELL_SIZE) && zone.getY() < Pos_y && Pos_y < (zone.getY() + CELL_SIZE)) {
+                    return;
                 }
             }
 
@@ -543,7 +541,7 @@ public class Game extends JPanel {
 
             for (Zone zone : zones) {
                 if ((Pos_x >= zone.getX() && Pos_y >= zone.getY()) && (Pos_x <= zone.getX()+CELL_SIZE && Pos_y <= zone.getY()+CELL_SIZE)) {
-                    System.out.println("Van már ott zóna.");
+                    // van már ott zóna
                     return;
                 }
             }
@@ -659,19 +657,37 @@ public class Game extends JPanel {
                 if (zone.getImage().equals(GBorder)) {
                     //House
                     if(Grid.get(cordinateToNum(zone.getY())).get(cordinateToNum(zone.getX())).getClass().equals(Field.class)) {
-                        Grid.get(cordinateToNum(zone.getY())).set(cordinateToNum(zone.getX()), new House(CELL_SIZE, CELL_SIZE, zone.getX(), zone.getY()));
-                        House currentHouse = new House(zone.width,zone.height,zone.x,zone.y);
-                        randomRes = (int)(Math.random() * 5) + 1;
-                        for(int i = 0; i < randomRes; i++) {
-                            citizens.add(new Citizen(currentHouse));
+                        // random lerak pár házat, nem mindet egyből
+                        int randomChance = rand.nextInt((20 - 1) + 1) + 1;
+                        if((randomChance % 4) == 0) {
+                            Grid.get(cordinateToNum(zone.getY())).set(cordinateToNum(zone.getX()), new House(CELL_SIZE, CELL_SIZE, zone.getX(), zone.getY()));
+                            House currentHouse = new House(zone.width,zone.height,zone.x,zone.y);
+                            randomRes = (int)(Math.random() * 5) + 1;
+                            for(int i = 0; i < randomRes; i++) {
+                                citizens.add(new Citizen(currentHouse));
+                            }
                         }
                     }
                     repaint();
                 } else if (zone.getImage().equals(OBorder)) {
                     //Factory
+                    if(Grid.get(cordinateToNum(zone.getY())).get(cordinateToNum(zone.getX())).getClass().equals(Field.class)) {
+                        // random lerak pár gyárat, nem mindet egyből
+                        int randomChance = rand.nextInt((20 - 1) + 1) + 1;
+                        if((randomChance % 4) == 0) {
+                            Grid.get(cordinateToNum(zone.getY())).set(cordinateToNum(zone.getX()), new Job(CELL_SIZE, CELL_SIZE, zone.getX(), zone.getY(), Factory, 2));
+                        }
+                    }
                     repaint();
                 } else if (zone.getImage().equals(BBorder)) {
                     //Office
+                    if(Grid.get(cordinateToNum(zone.getY())).get(cordinateToNum(zone.getX())).getClass().equals(Field.class)) {
+                        // random lerak pár irodát, nem mindet egyből
+                        int randomChance = rand.nextInt((20 - 1) + 1) + 1;
+                        if((randomChance % 4) == 0) {
+                            Grid.get(cordinateToNum(zone.getY())).set(cordinateToNum(zone.getX()), new Job(CELL_SIZE, CELL_SIZE, zone.getX(), zone.getY(), Office, 1));
+                        }
+                    }
                     repaint();
                 }
             }
