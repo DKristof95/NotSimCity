@@ -3,6 +3,7 @@ package notsimcity;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import javax.swing.*;
 
@@ -11,6 +12,7 @@ import static notsimcity.ZoneType.*;
 
 public class Game extends JPanel {
     private static final int CELL_SIZE = 50, FPS = 240;
+    private static final Random rand = new Random();
     private ArrayList<ArrayList<Field>> Grid = new ArrayList<>();
     private ArrayList<Zone> zones;
     private ArrayList<Citizen> citizens;
@@ -137,22 +139,51 @@ public class Game extends JPanel {
             case 2 -> {
                 Grid.get(i).set(j, new Police(Grid.get(i).get(j)));
                 this.Money -= Grid.get(i).get(j).getCost();
-                if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
+                if(i-1 >=0 && j-1 >=0 && i+1 < Height/CELL_SIZE && j+1 < Width/CELL_SIZE && (Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower)) {
                     Grid.get(i).get(j).setHasPower(true);
                 }
             }
             case 3 -> {
-                Grid.get(i).set(j, new School(Grid.get(i).get(j)));
-                this.Money -= Grid.get(i).get(j).getCost();
-                if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
-                    Grid.get(i).get(j).setHasPower(true);
+                if (!scrolled) {
+                    Grid.get(i).set(j, new School(Grid.get(i).get(j)));
+                    Grid.get(i).set(j+1, new SchoolR(Grid.get(i).get(j+1)));
+                    this.Money -= Grid.get(i).get(j).getCost();
+                    if(i-1 >=0 && j-1 >=0 && i+1 < Height/CELL_SIZE && j+2 < Width/CELL_SIZE
+                            && (Grid.get(i-1).get(j).hasPower
+                            || Grid.get(i-1).get(j+1).hasPower
+                            || Grid.get(i+1).get(j).hasPower
+                            || Grid.get(i+1).get(j+1).hasPower
+                            || Grid.get(i).get(j-1).hasPower
+                            || Grid.get(i).get(j+2).hasPower)) {
+                        Grid.get(i).get(j).setHasPower(true);
+                    }
+                } else {
+                    Grid.get(i).set(j, new SchoolR(Grid.get(i).get(j), true));
+                    Grid.get(i+1).set(j, new School(Grid.get(i+1).get(j), true));
+                    this.Money -= Grid.get(i+1).get(j).getCost();
+                    if(i-1 >=0 && j-1 >=0 && i+2 < Height/CELL_SIZE && j+1 < Width/CELL_SIZE
+                            && (Grid.get(i).get(j-1).hasPower
+                            || Grid.get(i+1).get(j-1).hasPower
+                            || Grid.get(i).get(j+1).hasPower
+                            || Grid.get(i+1).get(j+1).hasPower
+                            || Grid.get(i-1).get(j).hasPower
+                            || Grid.get(i+2).get(j).hasPower)) {
+                        Grid.get(i).get(j).setHasPower(true);
+                    }
                 }
                 No_schoolExists++;
             }
             case 4 -> {
                 Grid.get(i).set(j, new University(Grid.get(i).get(j)));
+                Grid.get(i).set(j+1, new UniversityUR(Grid.get(i).get(j+1)));
+                Grid.get(i+1).set(j, new UniversityLL(Grid.get(i+1).get(j)));
+                Grid.get(i+1).set(j+1, new UniversityLR(Grid.get(i+1).get(j+1)));
                 this.Money -= Grid.get(i).get(j).getCost();
-                if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
+                if (i-1 >=0 && j-1 >=0 && i+2 < Height/CELL_SIZE && j+2 < Width/CELL_SIZE
+                        && (Grid.get(i-1).get(j).hasPower || Grid.get(i-1).get(j+1).hasPower
+                        || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j-1).hasPower
+                        || Grid.get(i+2).get(j).hasPower || Grid.get(i+2).get(j+1).hasPower
+                        || Grid.get(i).get(j+2).hasPower || Grid.get(i+1).get(j+2).hasPower)) {
                     Grid.get(i).get(j).setHasPower(true);
                 }
                 No_universityExists++;
@@ -163,16 +194,20 @@ public class Game extends JPanel {
                 Grid.get(i+1).set(j, new StadiumLL(Grid.get(i+1).get(j)));
                 Grid.get(i+1).set(j+1, new StadiumLR(Grid.get(i+1).get(j+1)));
                 this.Money -= Grid.get(i).get(j).getCost();
-                if (Grid.get(i-1).get(j).hasPower || Grid.get(i-1).get(j+1).hasPower
-                    || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j-1).hasPower
-                    || Grid.get(i+2).get(j).hasPower || Grid.get(i+2).get(j+1).hasPower
-                    || Grid.get(i).get(j+2).hasPower || Grid.get(i+1).get(j+2).hasPower) {
+                if (i-1 >=0 && j-1 >=0 && i+2 < Height/CELL_SIZE && j+2 < Width/CELL_SIZE
+                        && (Grid.get(i-1).get(j).hasPower || Grid.get(i-1).get(j+1).hasPower
+                        || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j-1).hasPower
+                        || Grid.get(i+2).get(j).hasPower || Grid.get(i+2).get(j+1).hasPower
+                        || Grid.get(i).get(j+2).hasPower || Grid.get(i+1).get(j+2).hasPower)) {
                     Grid.get(i).get(j).setHasPower(true);
                 }
                 stadiumExists = true;
             }
             case 6 -> {
                 Grid.get(i).set(j,new PowerPlant(Grid.get(i).get(j),Grid));
+                Grid.get(i).set(j+1, new PowerPlantUR(Grid.get(i).get(j+1)));
+                Grid.get(i+1).set(j, new PowerPlantLL(Grid.get(i+1).get(j)));
+                Grid.get(i+1).set(j+1, new PowerPlantLR(Grid.get(i+1).get(j+1)));
                 this.Money -= Grid.get(i).get(j).getCost();
             }
             case 7 -> {
@@ -191,11 +226,17 @@ public class Game extends JPanel {
 
             for (ArrayList<Field> rows : Grid) {
                 for (Field cell : rows) {
-                    if ((Pos_x >= cell.getX() && Pos_y >= cell.getY()) && (Pos_x <= cell.getX() + CELL_SIZE && Pos_y <= cell.getY() + CELL_SIZE)) { // a cellába esik a kattintás
-                        if (!cell.getClass().equals(Field.class)) { // nem üres mező (üres, ha Field típusú, ha van rajta valami, akkor pl Road típust ad vissza)
+                    if ((Pos_x >= cell.getX() && Pos_y >= cell.getY()) && (Pos_x <= cell.getX()+CELL_SIZE && Pos_y <= cell.getY()+CELL_SIZE)) { // a cellába esik a kattintás
+                        if(!cell.getClass().equals(Field.class)) { // nem üres mező (üres, ha Field típusú, ha van rajta valami, akkor pl Road típust ad vissza)
                             return;
                         }
                     }
+                }
+            }
+
+            for (Zone zone : zones) {
+                if (zone.getX() < Pos_x && Pos_x < (zone.getX() + CELL_SIZE) && zone.getY() < Pos_y && Pos_y < (zone.getY() + CELL_SIZE)) {
+                    return;
                 }
             }
 
@@ -206,8 +247,21 @@ public class Game extends JPanel {
                         if (building == 7) {
                             placeBuilding(i, j, building);
                         }
-                        else if (building == 5) {
-                            //ha stadiont építenénk, nézzük meg, hogy mind a 4 mezője üres-e
+                        else if (building == 3) {
+                            if (!scrolled) {
+                                if ((Grid.get(i-1).get(j).isFieldRoad() && Grid.get(i-1).get(j+1).isFieldRoad())
+                                    || (Grid.get(i+1).get(j).isFieldRoad() && Grid.get(i+1).get(j+1).isFieldRoad())) {
+                                    placeBuilding(i, j, building);
+                                }
+                            } else {
+                                if ((Grid.get(i).get(j-1).isFieldRoad() && Grid.get(i+1).get(j-1).isFieldRoad())
+                                    || (Grid.get(i).get(j+1).isFieldRoad() && Grid.get(i+1).get(j+1).isFieldRoad())) {
+                                    placeBuilding(i, j, building);
+                                }
+                            }
+                        }
+                        else if (building == 4 || building == 5 || building == 6) {
+                            //ha egyetemet, stadiont vagy erőművet építenénk, nézzük meg, hogy mind a 4 mezője üres-e
                             if (!Grid.get(i).get(j).getClass().equals(Field.class)
                                 || !Grid.get(i+1).get(j).getClass().equals(Field.class)
                                 || !Grid.get(i).get(j+1).getClass().equals(Field.class)
@@ -287,7 +341,7 @@ public class Game extends JPanel {
         repaint();
 
         Timer timer2 = new Timer(0, e -> {
-            if (buildingMode == 1 || buildingMode == 2 || buildingMode == 3) {
+            if (buildingMode == 1 || buildingMode == 2 || buildingMode == 3 || buildingMode == 4) {
 
                 spriteComponents.removeIf(sprite -> sprite.getImage().equals(Border));
 
@@ -297,7 +351,15 @@ public class Game extends JPanel {
                 for (ArrayList<Field> fields : Grid) {
                     for (Field field : fields) {
                         if (field.getPosX() < Pos_x && Pos_x < (field.getPosX() + CELL_SIZE) && field.getPosY() < Pos_y && Pos_y < (field.getPosY() + CELL_SIZE)) {
-                            if (buildingSelected == 5) {
+                            if (buildingSelected == 3) {
+                                if (!scrolled) {
+                                    addSpriteComponent(new Sprite(CELL_SIZE*2, CELL_SIZE, field.getPosX(), field.getPosY(), Border));
+                                    repaint();
+                                } else {
+                                    addSpriteComponent(new Sprite(CELL_SIZE, CELL_SIZE*2, field.getPosX(), field.getPosY(), Border));
+                                    repaint();
+                                }
+                            } else if (buildingSelected == 4 || buildingSelected == 5 || buildingSelected == 6) {
                                 addSpriteComponent(new Sprite(CELL_SIZE*2, CELL_SIZE*2, field.getPosX(), field.getPosY(), Border));
                                 repaint();
                             } else {
@@ -356,6 +418,9 @@ public class Game extends JPanel {
                 else if(buildingMode == 3) {
                     clickOnZone(building);
                 }
+                else if(buildingMode == 4) {
+                    destroyZone();
+                }
                 scrolled = false;
             }
 
@@ -376,7 +441,23 @@ public class Game extends JPanel {
             for (int j = 0; j < Grid.get(i).size(); j++) {
                 if (Grid.get(i).get(j).getPosX() < Pos_x && Pos_x < (Grid.get(i).get(j).getPosX() + CELL_SIZE) && Grid.get(i).get(j).getPosY() < Pos_y && Pos_y < (Grid.get(i).get(j).getPosY() + CELL_SIZE)) {
                     if(i != starter || j != 0) {
-                        if (Grid.get(i).get(j).getClass().equals(Stadium.class)) {
+                        if (Grid.get(i).get(j).getClass().equals(School.class) && !((School)Grid.get(i).get(j)).rotated){
+                            this.Money += (Grid.get(i).get(j).getCost()/2);
+                            Grid.get(i).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
+                            Grid.get(i).set(j+1,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j+1).getPosX(), Grid.get(i).get(j+1).getPosY(), 0, 0, false));
+                        } else if (Grid.get(i).get(j).getClass().equals(School.class) && ((School)Grid.get(i).get(j)).rotated) {
+                            this.Money += (Grid.get(i).get(j).getCost() / 2);
+                            Grid.get(i).set(j, new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
+                            Grid.get(i-1).set(j, new Field(CELL_SIZE, CELL_SIZE, Grid.get(i-1).get(j).getPosX(), Grid.get(i-1).get(j).getPosY(), 0, 0, false));
+                        } else if (Grid.get(i).get(j).getClass().equals(SchoolR.class) && !((SchoolR)Grid.get(i).get(j)).rotated){
+                            this.Money += (Grid.get(i).get(j-1).getCost()/2);
+                            Grid.get(i).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
+                            Grid.get(i).set(j-1,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j-1).getPosX(), Grid.get(i).get(j-1).getPosY(), 0, 0, false));
+                        } else if (Grid.get(i).get(j).getClass().equals(SchoolR.class) && ((SchoolR)Grid.get(i).get(j)).rotated){
+                            this.Money += (Grid.get(i+1).get(j).getCost()/2);
+                            Grid.get(i).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
+                            Grid.get(i+1).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i+1).get(j).getPosX(), Grid.get(i+1).get(j).getPosY(), 0, 0, false));
+                        } else if (Grid.get(i).get(j).getClass().equals(University.class) || Grid.get(i).get(j).getClass().equals(Stadium.class) || Grid.get(i).get(j).getClass().equals(PowerPlant.class)) {
                             this.Money += (Grid.get(i).get(j).getCost()/2);
                             Grid.get(i).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
                             Grid.get(i).set(j+1,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j+1).getPosX(), Grid.get(i).get(j+1).getPosY(), 0, 0, false));
@@ -384,7 +465,7 @@ public class Game extends JPanel {
                             Grid.get(i+1).set(j+1,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i+1).get(j+1).getPosX(), Grid.get(i+1).get(j+1).getPosY(), 0, 0, false));
                             helper = true;
                             break;
-                        } else if (Grid.get(i).get(j).getClass().equals(StadiumUR.class)) {
+                        } else if (Grid.get(i).get(j).getClass().equals(UniversityUR.class) || Grid.get(i).get(j).getClass().equals(StadiumUR.class) || Grid.get(i).get(j).getClass().equals(PowerPlantUR.class)) {
                             this.Money += (Grid.get(i).get(j-1).getCost()/2);
                             Grid.get(i).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
                             Grid.get(i).set(j-1,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j-1).getPosX(), Grid.get(i).get(j-1).getPosY(), 0, 0, false));
@@ -392,7 +473,7 @@ public class Game extends JPanel {
                             Grid.get(i+1).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i+1).get(j).getPosX(), Grid.get(i+1).get(j).getPosY(), 0, 0, false));
                             helper = true;
                             break;
-                        } else if (Grid.get(i).get(j).getClass().equals(StadiumLL.class)) {
+                        } else if (Grid.get(i).get(j).getClass().equals(UniversityLL.class) || Grid.get(i).get(j).getClass().equals(StadiumLL.class) || Grid.get(i).get(j).getClass().equals(PowerPlantLL.class)) {
                             this.Money += (Grid.get(i-1).get(j).getCost()/2);
                             Grid.get(i).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
                             Grid.get(i-1).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i-1).get(j).getPosX(), Grid.get(i-1).get(j).getPosY(), 0, 0, false));
@@ -400,7 +481,7 @@ public class Game extends JPanel {
                             Grid.get(i).set(j+1,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j+1).getPosX(), Grid.get(i).get(j+1).getPosY(), 0, 0, false));
                             helper = true;
                             break;
-                        } else if (Grid.get(i).get(j).getClass().equals(StadiumLR.class)) {
+                        } else if (Grid.get(i).get(j).getClass().equals(UniversityLR.class) || Grid.get(i).get(j).getClass().equals(StadiumLR.class) || Grid.get(i).get(j).getClass().equals(PowerPlantLR.class)) {
                             this.Money += (Grid.get(i-1).get(j-1).getCost()/2);
                             Grid.get(i).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
                             Grid.get(i-1).set(j-1,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i-1).get(j-1).getPosX(), Grid.get(i-1).get(j-1).getPosY(), 0, 0, false));
@@ -435,6 +516,24 @@ public class Game extends JPanel {
             }
         }
     }
+
+    public void destroyZone() { //ide
+        boolean helper = false;
+        for (Zone zone : zones) {
+            if (zone.getX() < Pos_x && Pos_x < (zone.getX() + CELL_SIZE) && zone.getY() < Pos_y && Pos_y < (zone.getY() + CELL_SIZE)) {
+                if(Grid.get(cordinateToNum(Pos_y)).get(cordinateToNum(Pos_x)).getClass().equals(Field.class)) {
+                    zones.remove(zone);
+                    helper = true;
+                    break;
+                }else {
+                    JOptionPane.showMessageDialog(null, "Nem lehet olyan zónát törölni, amire már épült valami.", "Hiba!",  JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            if(helper) {
+                break;
+            }
+        }
+    }
     
     public void clickOnZone(int zoneType) {
         Image mainBorder;
@@ -455,7 +554,7 @@ public class Game extends JPanel {
 
             for (Zone zone : zones) {
                 if ((Pos_x >= zone.getX() && Pos_y >= zone.getY()) && (Pos_x <= zone.getX()+CELL_SIZE && Pos_y <= zone.getY()+CELL_SIZE)) {
-                    System.out.println("Van már ott zóna.");
+                    // van már ott zóna
                     return;
                 }
             }
@@ -650,9 +749,23 @@ public class Game extends JPanel {
                     repaint();
                 } else if (zone.getImage().equals(OBorder)) {
                     //Factory
+                    if(Grid.get(cordinateToNum(zone.getY())).get(cordinateToNum(zone.getX())).getClass().equals(Field.class)) {
+                        // random lerak pár gyárat, nem mindet egyből
+                        int randomChance = rand.nextInt((20 - 1) + 1) + 1;
+                        if((randomChance % 4) == 0) {
+                            Grid.get(cordinateToNum(zone.getY())).set(cordinateToNum(zone.getX()), new Job(CELL_SIZE, CELL_SIZE, zone.getX(), zone.getY(), Factory, 2));
+                        }
+                    }
                     repaint();
                 } else if (zone.getImage().equals(BBorder)) {
                     //Office
+                    if(Grid.get(cordinateToNum(zone.getY())).get(cordinateToNum(zone.getX())).getClass().equals(Field.class)) {
+                        // random lerak pár irodát, nem mindet egyből
+                        int randomChance = rand.nextInt((20 - 1) + 1) + 1;
+                        if((randomChance % 4) == 0) {
+                            Grid.get(cordinateToNum(zone.getY())).set(cordinateToNum(zone.getX()), new Job(CELL_SIZE, CELL_SIZE, zone.getX(), zone.getY(), Office, 1));
+                        }
+                    }
                     repaint();
                 }
             }

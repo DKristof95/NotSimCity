@@ -251,6 +251,15 @@ public class NotSimCityGUI {
                 });
                 menu.add(menuItem);
 
+                menuItem = new JMenuItem("Zóna törlés");
+                menuItem.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                menuItem.addActionListener(e1000 -> {
+                    gameArea.setBuildingMode(4,0);
+                    timetext.setBorder(new EmptyBorder(0, 284, 0, 566));
+                    stopBuild.setVisible(true);
+                });
+                menu.add(menuItem);
+
                 menu.addSeparator();
 
                 menuItem = new JMenuItem("Erdősítés");
