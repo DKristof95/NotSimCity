@@ -138,7 +138,7 @@ public class Game extends JPanel {
             case 2 -> {
                 Grid.get(i).set(j, new Police(Grid.get(i).get(j)));
                 this.Money -= Grid.get(i).get(j).getCost();
-                if(Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower) {
+                if(i-1 >=0 && j-1 >=0 && i+1 < Height/CELL_SIZE && j+1 < Width/CELL_SIZE && (Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower)) {
                     Grid.get(i).get(j).setHasPower(true);
                 }
             }
@@ -147,25 +147,27 @@ public class Game extends JPanel {
                     Grid.get(i).set(j, new School(Grid.get(i).get(j)));
                     Grid.get(i).set(j+1, new SchoolR(Grid.get(i).get(j+1)));
                     this.Money -= Grid.get(i).get(j).getCost();
-                    if(Grid.get(i-1).get(j).hasPower
-                        || Grid.get(i-1).get(j+1).hasPower
-                        || Grid.get(i+1).get(j).hasPower
-                        || Grid.get(i+1).get(j+1).hasPower
-                        || Grid.get(i).get(j-1).hasPower
-                        || Grid.get(i).get(j+2).hasPower) {
-                            Grid.get(i).get(j).setHasPower(true);
+                    if(i-1 >=0 && j-1 >=0 && i+1 < Height/CELL_SIZE && j+2 < Width/CELL_SIZE
+                            && (Grid.get(i-1).get(j).hasPower
+                            || Grid.get(i-1).get(j+1).hasPower
+                            || Grid.get(i+1).get(j).hasPower
+                            || Grid.get(i+1).get(j+1).hasPower
+                            || Grid.get(i).get(j-1).hasPower
+                            || Grid.get(i).get(j+2).hasPower)) {
+                        Grid.get(i).get(j).setHasPower(true);
                     }
                 } else {
                     Grid.get(i).set(j, new SchoolR(Grid.get(i).get(j), true));
                     Grid.get(i+1).set(j, new School(Grid.get(i+1).get(j), true));
                     this.Money -= Grid.get(i+1).get(j).getCost();
-                    if(Grid.get(i).get(j-1).hasPower
-                        || Grid.get(i+1).get(j-1).hasPower
-                        || Grid.get(i).get(j+1).hasPower
-                        || Grid.get(i+1).get(j+1).hasPower
-                        || Grid.get(i-1).get(j).hasPower
-                        || Grid.get(i+2).get(j).hasPower) {
-                            Grid.get(i).get(j).setHasPower(true);
+                    if(i-1 >=0 && j-1 >=0 && i+2 < Height/CELL_SIZE && j+1 < Width/CELL_SIZE
+                            && (Grid.get(i).get(j-1).hasPower
+                            || Grid.get(i+1).get(j-1).hasPower
+                            || Grid.get(i).get(j+1).hasPower
+                            || Grid.get(i+1).get(j+1).hasPower
+                            || Grid.get(i-1).get(j).hasPower
+                            || Grid.get(i+2).get(j).hasPower)) {
+                        Grid.get(i).get(j).setHasPower(true);
                     }
                 }
                 No_schoolExists++;
@@ -176,10 +178,11 @@ public class Game extends JPanel {
                 Grid.get(i+1).set(j, new UniversityLL(Grid.get(i+1).get(j)));
                 Grid.get(i+1).set(j+1, new UniversityLR(Grid.get(i+1).get(j+1)));
                 this.Money -= Grid.get(i).get(j).getCost();
-                if (Grid.get(i-1).get(j).hasPower || Grid.get(i-1).get(j+1).hasPower
+                if (i-1 >=0 && j-1 >=0 && i+2 < Height/CELL_SIZE && j+2 < Width/CELL_SIZE
+                        && (Grid.get(i-1).get(j).hasPower || Grid.get(i-1).get(j+1).hasPower
                         || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j-1).hasPower
                         || Grid.get(i+2).get(j).hasPower || Grid.get(i+2).get(j+1).hasPower
-                        || Grid.get(i).get(j+2).hasPower || Grid.get(i+1).get(j+2).hasPower) {
+                        || Grid.get(i).get(j+2).hasPower || Grid.get(i+1).get(j+2).hasPower)) {
                     Grid.get(i).get(j).setHasPower(true);
                 }
                 No_universityExists++;
@@ -190,10 +193,11 @@ public class Game extends JPanel {
                 Grid.get(i+1).set(j, new StadiumLL(Grid.get(i+1).get(j)));
                 Grid.get(i+1).set(j+1, new StadiumLR(Grid.get(i+1).get(j+1)));
                 this.Money -= Grid.get(i).get(j).getCost();
-                if (Grid.get(i-1).get(j).hasPower || Grid.get(i-1).get(j+1).hasPower
-                    || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j-1).hasPower
-                    || Grid.get(i+2).get(j).hasPower || Grid.get(i+2).get(j+1).hasPower
-                    || Grid.get(i).get(j+2).hasPower || Grid.get(i+1).get(j+2).hasPower) {
+                if (i-1 >=0 && j-1 >=0 && i+2 < Height/CELL_SIZE && j+2 < Width/CELL_SIZE
+                        && (Grid.get(i-1).get(j).hasPower || Grid.get(i-1).get(j+1).hasPower
+                        || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j-1).hasPower
+                        || Grid.get(i+2).get(j).hasPower || Grid.get(i+2).get(j+1).hasPower
+                        || Grid.get(i).get(j+2).hasPower || Grid.get(i+1).get(j+2).hasPower)) {
                     Grid.get(i).get(j).setHasPower(true);
                 }
             }
