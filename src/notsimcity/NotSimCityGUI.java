@@ -136,7 +136,7 @@ public class NotSimCityGUI {
                 stopBuild.addActionListener(e1113 -> {
                     gameArea.setBuildingMode(0,0);
                     stopBuild.setVisible(false);
-                    timetext.setBorder(new EmptyBorder(0, 450, 0, 450));
+                    timetext.setBorder(new EmptyBorder(0, 450, 0, 566));
                     for (MouseListener l : gameArea.getMouseListeners()) {
                         gameArea.removeMouseListener(l);
                     }
@@ -264,7 +264,7 @@ public class NotSimCityGUI {
 
                 timetext = new JLabel("2023.01.01. 00:00");
                 timetext.setFont(timetext.getFont().deriveFont(24.0f));
-                timetext.setBorder(new EmptyBorder(0, 450, 0, 466));
+                timetext.setBorder(new EmptyBorder(0, 450, 0, 566));
 
                 JButton saveButton = new JButton("Mentés");
                 saveButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -425,7 +425,7 @@ public class NotSimCityGUI {
 
                 icon = new ImageIcon("smile.png");
                 menuItem = new JMenuItem(icon);
-                satisfaction = new JLabel("100%");
+                satisfaction = new JLabel("N/A");
                 satisfaction.setBorder(new EmptyBorder(25, 100, 25, 0));
                 menuItem.add(satisfaction);
                 menuBar2.add(menuItem);

@@ -2,12 +2,20 @@ package notsimcity;
 
 import javax.swing.*;
 import java.awt.*;
-public class ForestGrown extends Service  {
+public class ForestGrown extends Forest  {
     private static final Image grownForestImage = new ImageIcon("forest.png").getImage();
-    public ForestGrown(Field field) {
-        super(25, field, grownForestImage);
+    private boolean started;
+    public ForestGrown(Field field, boolean startedOnField) {
+        super(field);
+        this.setImage(grownForestImage);
         this.capacity = 0;
         this.powerDemand = 0;
-        this.cost = 5000;
+        this.cost = 1000;
+        this.setGrowthLevel(10);
+        this.started = startedOnField;
+    }
+
+    public boolean isStarted() {
+        return started;
     }
 }

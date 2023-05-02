@@ -18,10 +18,10 @@ public class Game extends JPanel {
     private String s_day = "01", s_month = "01", timetext = "";
     private java.util.List<Sprite> spriteComponents;
     private int time = 0, day = 1, month = 1, year = 2023, gameSpeed = 1, Pos_y, Pos_x, Width, Height, buildingMode = 0, sizeHelper = 0, Money = 50000, starter, randomRes, No_schoolExists = 0, No_universityExists = 0;
-    private double taxMultiplier = 1.0, satisfactionMod = 0.0;
+    private double taxMultiplier = 1.0, satisfactionMod = 0.0, satisfactionExtra = 0.0;
     private int zoom;
     private Timer timer;
-    private boolean scrolled = false;
+    private boolean scrolled = false, stadiumExists = false;
     private final Image Ut1 = new ImageIcon("ut_viz.png").getImage(), Ut2 = new ImageIcon("ut_fugg.png").getImage();
     private final Image Border = new ImageIcon("yellow_border.png").getImage();
     private final Image GBorder = new ImageIcon("green_border.png").getImage();
@@ -63,8 +63,7 @@ public class Game extends JPanel {
         for (int i = 0; i < 10; i++) {
             int randX = ThreadLocalRandom.current().nextInt(1, a-1);
             int randY = ThreadLocalRandom.current().nextInt(1, b-1);
-
-            placeBuilding(randX, randY, 8);
+            Grid.get(randX).set(randY, new ForestGrown(Grid.get(randX).get(randY),true));
         }
     }
 
@@ -170,6 +169,7 @@ public class Game extends JPanel {
                     || Grid.get(i).get(j+2).hasPower || Grid.get(i+1).get(j+2).hasPower) {
                     Grid.get(i).get(j).setHasPower(true);
                 }
+                stadiumExists = true;
             }
             case 6 -> {
                 Grid.get(i).set(j,new PowerPlant(Grid.get(i).get(j),Grid));
@@ -180,7 +180,7 @@ public class Game extends JPanel {
                 this.Money -= Grid.get(i).get(j).getCost();
             }
             case 8 -> {
-                Grid.get(i).set(j, new ForestGrown(Grid.get(i).get(j)));
+                Grid.get(i).set(j, new ForestGrown(Grid.get(i).get(j),false));
             }
         }
     }
@@ -191,18 +191,8 @@ public class Game extends JPanel {
 
             for (ArrayList<Field> rows : Grid) {
                 for (Field cell : rows) {
-                    if ((Pos_x >= cell.getX() && Pos_y >= cell.getY()) && (Pos_x <= cell.getX()+CELL_SIZE && Pos_y <= cell.getY()+CELL_SIZE)) { // a cellába esik a kattintás
-                        if(!cell.getClass().equals(Field.class)) { // nem üres mező (üres, ha Field típusú, ha van rajta valami, akkor pl Road típust ad vissza)
-                            return;
-                        }
-                    }
-                }
-            }
-
-            for (ArrayList<Field> rows : Grid) {
-                for (Field cell : rows) {
-                    if ((Pos_x >= cell.getX() && Pos_y >= cell.getY()) && (Pos_x <= cell.getX()+CELL_SIZE && Pos_y <= cell.getY()+CELL_SIZE)) { // a cellába esik a kattintás
-                        if(!cell.getClass().equals(Field.class)) { // nem üres mező (üres, ha Field típusú, ha van rajta valami, akkor pl Road típust ad vissza)
+                    if ((Pos_x >= cell.getX() && Pos_y >= cell.getY()) && (Pos_x <= cell.getX() + CELL_SIZE && Pos_y <= cell.getY() + CELL_SIZE)) { // a cellába esik a kattintás
+                        if (!cell.getClass().equals(Field.class)) { // nem üres mező (üres, ha Field típusú, ha van rajta valami, akkor pl Road típust ad vissza)
                             return;
                         }
                     }
@@ -419,8 +409,21 @@ public class Game extends JPanel {
                             helper = true;
                             break;
                         } else {
-                            this.Money += (Grid.get(i).get(j).getCost() / 2);
+                            if(Grid.get(i).get(j).getClass().equals(ForestGrown.class)) {
+                                if(!(((ForestGrown)(Grid.get(i).get(j))).isStarted())) {
+                                    this.Money += (Grid.get(i).get(j).getCost() / 2);
+                                }
+                            }
+                            else{
+                                this.Money += (Grid.get(i).get(j).getCost() / 2);
+                            }
                             Grid.get(i).set(j, new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
+                            if(Grid.get(i).get(j).getClass().equals(School.class)) {
+                                No_schoolExists--;
+                            }
+                            else if(Grid.get(i).get(j).getClass().equals(University.class)) {
+                                No_universityExists--;
+                            }
                             helper = true;
                             break;
                         }
@@ -553,6 +556,20 @@ public class Game extends JPanel {
             }
             citizen.addAge();
         }
+
+        for (ArrayList<Field> rows : Grid) {
+            for (Field cell : rows) {
+                if(cell.getClass().equals(ForestNew.class)) {
+                    int i = cell.getY()/CELL_SIZE;
+                    int j = cell.getX()/CELL_SIZE;
+                    ((ForestNew) cell).setGrowthLevel(((ForestNew) cell).getGrowthLevel() + 1);
+                    if(((ForestNew) cell).getGrowthLevel() == 10) {
+                        placeBuilding(i, j,8);
+                    }
+                    repaint();
+                }
+            }
+        }
     }
 
     public void aMonthPassed() {
@@ -563,6 +580,32 @@ public class Game extends JPanel {
     }
 
     public void aDayPassed() {
+        switch ((int)(taxMultiplier*2.0)) {
+            case 0 -> this.satisfactionMod = 1.0;
+            case 1 -> this.satisfactionMod = 0.5;
+            case 2 -> this.satisfactionMod = 0.0;
+            case 3 -> this.satisfactionMod = -0.5;
+            case 4 -> this.satisfactionMod = -1.0;
+            default -> {
+            }
+        }
+        this.satisfactionExtra = 0.0;
+        for(Citizen citizen : citizens) {
+            if(citizen.getHouse().getNearPark()) {
+                this.satisfactionExtra += (0.1 * citizen.getHouse().getNearestForest().getGrowthLevel());
+            }
+            if(citizen.getHouse().getNearPolice()) {
+                this.satisfactionExtra += 0.5;
+            }
+            else {
+                this.satisfactionExtra -= 0.5;
+            }
+            if(stadiumExists) {
+                this.satisfactionExtra += 1.0;
+            }
+            citizen.setSatisfaction(citizen.getSatisfaction() + this.satisfactionMod + this.satisfactionExtra);
+        }
+
         if (day % 2 == 0) {
             for (Zone zone : zones) {
                 if (zone.getImage().equals(GBorder)) {
@@ -570,6 +613,35 @@ public class Game extends JPanel {
                     if(Grid.get(cordinateToNum(zone.getY())).get(cordinateToNum(zone.getX())).getClass().equals(Field.class)) {
                         Grid.get(cordinateToNum(zone.getY())).set(cordinateToNum(zone.getX()), new House(CELL_SIZE, CELL_SIZE, zone.getX(), zone.getY()));
                         House currentHouse = new House(zone.width,zone.height,zone.x,zone.y);
+                        for(int i = -3; i < 4;i++) {
+                            for(int j = -3; j < 4;j++) {
+                                if(!(i == 0 && j == 0) && ((cordinateToNum(zone.getY()) + i) > 0 && (cordinateToNum(zone.getY()) + i) < Height/CELL_SIZE && (cordinateToNum(zone.getX()) + j) > 0 && (cordinateToNum(zone.getX()) + j) < Width/CELL_SIZE )) {
+                                    if(Grid.get(cordinateToNum(zone.getY()) + i).get(cordinateToNum(zone.getX()) + j).getClass().getSuperclass().equals(Forest.class)) {
+                                        currentHouse.setNearPark();
+                                        currentHouse.setNearestForest((Forest)(Grid.get(cordinateToNum(zone.getY()) + i ).get(cordinateToNum(zone.getX() + j))));
+                                        break;
+                                    }
+                                }
+                            }
+                            if(currentHouse.getNearPark()){
+                                break;
+                            }
+                        }
+
+                        for(int i = -5; i < 6;i++) {
+                            for(int j = -5; j < 6;j++) {
+                                if(!(i == 0 && j == 0) && ((cordinateToNum(zone.getY()) + i) > 0 && (cordinateToNum(zone.getY()) + i) < Height/CELL_SIZE && (cordinateToNum(zone.getX()) + j) > 0 && (cordinateToNum(zone.getX()) + j) < Width/CELL_SIZE )) {
+                                    if(Grid.get(cordinateToNum(zone.getY()) + i).get(cordinateToNum(zone.getX()) + j).getClass().equals(Police.class)) {
+                                        currentHouse.setNearPolice();
+                                        break;
+                                    }
+                                }
+                            }
+                            if(currentHouse.getNearPolice()){
+                                break;
+                            }
+                        }
+
                         randomRes = (int)(Math.random() * 5) + 1;
                         for(int i = 0; i < randomRes; i++) {
                             citizens.add(new Citizen(currentHouse));
@@ -581,34 +653,6 @@ public class Game extends JPanel {
                     repaint();
                 } else if (zone.getImage().equals(BBorder)) {
                     //Office
-                    repaint();
-                }
-            }
-        }
-
-        switch ((int)(taxMultiplier*2)) {
-            case 0 -> this.satisfactionMod += 1.0;
-            case 1 -> this.satisfactionMod += 0.5;
-            case 2 -> this.satisfactionMod += 0.0;
-            case 3 -> this.satisfactionMod += -0.5;
-            case 4 -> this.satisfactionMod += -1.0;
-            default -> {
-            }
-        }
-
-        for(Citizen citizen : citizens) {
-            citizen.setSatisfaction(citizen.getSatisfaction() + this.satisfactionMod);
-        }
-
-        for (ArrayList<Field> rows : Grid) {
-            for (Field cell : rows) {
-                if(cell.getClass().equals(ForestNew.class)) {
-                    int i = cell.getY()/CELL_SIZE;
-                    int j = cell.getX()/CELL_SIZE;
-                    if(((ForestNew) cell).planted[2] == day-1) {
-                        placeBuilding(i, j,8);
-                    }
-
                     repaint();
                 }
             }
