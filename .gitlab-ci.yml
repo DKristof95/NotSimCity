@@ -1,5 +1,12 @@
 image: maven:latest
 
-run_tests:
+build:
+  stage: build
+  script:
+    - mvn compile
+
+
+test:
+    stage: test
     script:
         - mvn test
