@@ -19,7 +19,7 @@ public class Game extends JPanel {
     private Player player;
     private String s_day = "01", s_month = "01", timetext = "";
     private java.util.List<Sprite> spriteComponents;
-    private int time = 0, day = 1, month = 1, year = 2023, gameSpeed = 1, Pos_y, Pos_x, Width, Height, buildingMode = 0, sizeHelper = 0, Money = 50000, starter, randomRes, No_schoolExists = 0, No_universityExists = 0;
+    private int time = 0, day = 1, month = 1, year = 2023, gameSpeed = 1, Pos_y, Pos_x, Width, Height, sizeHelper = 0, Money = 50000, starter, randomRes, No_schoolExists = 0, No_universityExists = 0;
     private double taxMultiplier = 1.0, satisfactionMod = 0.0, satisfactionExtra = 0.0;
     private int zoom;
     private Timer timer;
@@ -38,7 +38,8 @@ public class Game extends JPanel {
     private final Image StadiumUL = new ImageIcon("stadium_upper_left.png").getImage();
     private final Image StadiumUR = new ImageIcon("stadium_upper_right.png").getImage();
     private final Image PowerPlant = new ImageIcon("power_plant.png").getImage();
-    private static int buildingSelected;
+    private static int buildingSelected = 0;
+    private static int buildingMode = 0;
 
     public Game() {
         super();
@@ -247,33 +248,69 @@ public class Game extends JPanel {
                         if (building == 7) {
                             placeBuilding(i, j, building);
                         }
+                        //iskola
                         else if (building == 3) {
                             if (!scrolled) {
-                                if ((Grid.get(i-1).get(j).isFieldRoad() && Grid.get(i-1).get(j+1).isFieldRoad())
-                                    || (Grid.get(i+1).get(j).isFieldRoad() && Grid.get(i+1).get(j+1).isFieldRoad())) {
+                                for (Zone zone : zones) {
+                                    if ((Pos_x >= zone.getX() && Pos_y >= zone.getY()) && (Pos_x <= zone.getX()+CELL_SIZE && Pos_y <= zone.getY()+CELL_SIZE)
+                                            || (Pos_x +CELL_SIZE >= zone.getX() && Pos_y >= zone.getY()) && (Pos_x +CELL_SIZE <= zone.getX()+CELL_SIZE && Pos_y <= zone.getY()+CELL_SIZE)) {
+                                        // van már ott zóna
+                                        return;
+                                    }
+                                }
+                                //megnézi, hogy üres-e mindkét mező
+                                if (!Grid.get(i).get(j).getClass().equals(Field.class)
+                                        || !Grid.get(i).get(j+1).getClass().equals(Field.class)
+                                        //és hogy nem lóg-e ki a pályáról
+                                        || j+1 >= Width/CELL_SIZE) {
+                                    return;
+                                } else if ((Grid.get(i-1).get(j).isFieldRoad() && Grid.get(i-1).get(j+1).isFieldRoad())
+                                        || (Grid.get(i+1).get(j).isFieldRoad() && Grid.get(i+1).get(j+1).isFieldRoad())) {
                                     placeBuilding(i, j, building);
                                 }
                             } else {
-                                if ((Grid.get(i).get(j-1).isFieldRoad() && Grid.get(i+1).get(j-1).isFieldRoad())
-                                    || (Grid.get(i).get(j+1).isFieldRoad() && Grid.get(i+1).get(j+1).isFieldRoad())) {
+                                for (Zone zone : zones) {
+                                    if ((Pos_x >= zone.getX() && Pos_y >= zone.getY()) && (Pos_x <= zone.getX()+CELL_SIZE && Pos_y <= zone.getY()+CELL_SIZE)
+                                            || (Pos_x >= zone.getX() && Pos_y +CELL_SIZE >= zone.getY()) && (Pos_x <= zone.getX()+CELL_SIZE && Pos_y +CELL_SIZE <= zone.getY()+CELL_SIZE)) {
+                                        // van már ott zóna
+                                        return;
+                                    }
+                                }
+                                //megnézi, hogy üres-e mindkét mező
+                                if (!Grid.get(i).get(j).getClass().equals(Field.class)
+                                        || !Grid.get(i+1).get(j).getClass().equals(Field.class)
+                                        //és hogy nem lóg-e ki a pályáról
+                                        || i+1 >= Height/CELL_SIZE) {
+                                    return;
+                                } else if ((Grid.get(i).get(j-1).isFieldRoad() && Grid.get(i+1).get(j-1).isFieldRoad())
+                                        || (Grid.get(i).get(j+1).isFieldRoad() && Grid.get(i+1).get(j+1).isFieldRoad())) {
                                     placeBuilding(i, j, building);
                                 }
                             }
                         }
                         else if (building == 4 || building == 5 || building == 6) {
                             //ha egyetemet, stadiont vagy erőművet építenénk, nézzük meg, hogy mind a 4 mezője üres-e
+                            for (Zone zone : zones) {
+                                if ((Pos_x >= zone.getX() && Pos_y >= zone.getY()) && (Pos_x <= zone.getX()+CELL_SIZE && Pos_y <= zone.getY()+CELL_SIZE)
+                                        || (Pos_x +CELL_SIZE >= zone.getX() && Pos_y >= zone.getY()) && (Pos_x +CELL_SIZE <= zone.getX()+CELL_SIZE && Pos_y <= zone.getY()+CELL_SIZE)
+                                        || (Pos_x >= zone.getX() && Pos_y +CELL_SIZE >= zone.getY()) && (Pos_x <= zone.getX()+CELL_SIZE && Pos_y +CELL_SIZE <= zone.getY()+CELL_SIZE)
+                                        || (Pos_x +CELL_SIZE >= zone.getX() && Pos_y +CELL_SIZE >= zone.getY()) && (Pos_x +CELL_SIZE <= zone.getX()+CELL_SIZE && Pos_y +CELL_SIZE <= zone.getY()+CELL_SIZE)) {
+                                    // van már ott zóna
+                                    return;
+                                }
+                            }
                             if (!Grid.get(i).get(j).getClass().equals(Field.class)
-                                || !Grid.get(i+1).get(j).getClass().equals(Field.class)
-                                || !Grid.get(i).get(j+1).getClass().equals(Field.class)
-                                || !Grid.get(i+1).get(j+1).getClass().equals(Field.class)
+                                    || !Grid.get(i+1).get(j).getClass().equals(Field.class)
+                                    || !Grid.get(i).get(j+1).getClass().equals(Field.class)
+                                    || !Grid.get(i+1).get(j+1).getClass().equals(Field.class)
                             //és hogy nem lóg-e ki a pályáról
-                                || i+2 >= Height/CELL_SIZE || j+2 >= Width/CELL_SIZE) {
+                                    || i+2 >= Height/CELL_SIZE || j+2 >= Width/CELL_SIZE) {
                                 return;
                             } else {
                                 if ((i-1 >=0 && Grid.get(i-1).get(j).isFieldRoad() && Grid.get(i-1).get(j+1).isFieldRoad())
-                                    || (j-1 >=0 && Grid.get(i).get(j-1).isFieldRoad() && Grid.get(i+1).get(j-1).isFieldRoad())
-                                    || (i+2 < Height/CELL_SIZE && Grid.get(i+2).get(j).isFieldRoad() && Grid.get(i+2).get(j+1).isFieldRoad())
-                                    || (j+2 < Width/CELL_SIZE && Grid.get(i).get(j+2).isFieldRoad() && Grid.get(i+1).get(j+2).isFieldRoad())) {
+                                        || (j-1 >=0 && Grid.get(i).get(j-1).isFieldRoad() && Grid.get(i+1).get(j-1).isFieldRoad())
+                                        || (i+2 < Height/CELL_SIZE && Grid.get(i+2).get(j).isFieldRoad() && Grid.get(i+2).get(j+1).isFieldRoad())
+                                        || (j+2 < Width/CELL_SIZE && Grid.get(i).get(j+2).isFieldRoad() && Grid.get(i+1).get(j+2).isFieldRoad())) {
                                     placeBuilding(i, j, building);
                                 }
                             }
@@ -334,7 +371,7 @@ public class Game extends JPanel {
     }
 
     public void setBuildingMode(int mode,int building) {
-        this.buildingMode = mode;
+        buildingMode = mode;
         buildingSelected = building;
 
         spriteComponents.removeIf(sprite -> sprite.getImage().equals(Border));
@@ -351,7 +388,7 @@ public class Game extends JPanel {
                 for (ArrayList<Field> fields : Grid) {
                     for (Field field : fields) {
                         if (field.getPosX() < Pos_x && Pos_x < (field.getPosX() + CELL_SIZE) && field.getPosY() < Pos_y && Pos_y < (field.getPosY() + CELL_SIZE)) {
-                            if (buildingSelected == 3) {
+                            if (buildingSelected == 3 && buildingMode == 1) {
                                 if (!scrolled) {
                                     addSpriteComponent(new Sprite(CELL_SIZE*2, CELL_SIZE, field.getPosX(), field.getPosY(), Border));
                                     repaint();
