@@ -22,7 +22,7 @@ public class Game extends JPanel {
     private final ArrayList<Citizen> citizens = new ArrayList<>();
     private final ArrayList<MoneyLog> logs = new ArrayList<>();
     private Player player;
-    private String s_day = "01", s_month = "01", timText = "";
+    private String s_day = "01", s_month = "01", timeText = "";
     private final java.util.List<Sprite> spriteComponents = new ArrayList<>();
     private int time = 0, day = 1, month = 1, year = 2023, gameSpeed = 1, Pos_y, Pos_x, Width, Height, buildingMode = 0, sizeHelper = 0, Money = 50000, starter, randomRes, No_schoolExists = 0, No_universityExists = 0, monthly_tax = 0;
     private final int mapNum;
@@ -290,7 +290,7 @@ public class Game extends JPanel {
      * A mezőre minden típusú épület lerakása.
      */
     public void placeBuilding(int i, int j, int building) {
-        MoneyLog log = new MoneyLog(0, 0, "", timText);
+        MoneyLog log = new MoneyLog(0, 0, "", timeText);
         switch (building) {
             case 1 -> {
                 Grid.get(i).set(j, new Road(Grid.get(i).get(j)));
@@ -388,7 +388,7 @@ public class Game extends JPanel {
      */
     public void clickOnField(int building) {
 
-        try {
+        //try {
 
             for (ArrayList<Field> rows : Grid) {
                 for (Field cell : rows) {
@@ -520,9 +520,9 @@ public class Game extends JPanel {
                     }
                 }
             }
-        } catch (IndexOutOfBoundsException e) {
+        /*} catch (IndexOutOfBoundsException e) {
             System.out.println("Indexelési hiba");
-        }
+        }*/
     }
 
     /**
@@ -1153,30 +1153,30 @@ public class Game extends JPanel {
                 time = time % 60;
                 aDayPassed();
                 if (time < 10) {
-                    timText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "00:0" + time;
+                    timeText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "00:0" + time;
                 }
                 else {
-                    timText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "00:" + time;
+                    timeText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "00:" + time;
                 }
             } else {
                 if (h == 0) {
                     if (m < 10) {
-                        timText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "00:0" + m;
+                        timeText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "00:0" + m;
                     } else {
-                        timText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "00:" + m;
+                        timeText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "00:" + m;
                     }
                 }
                 if (h < 10) {
                     if (m < 10) {
-                        timText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "0" + h + ":0" + m;
+                        timeText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "0" + h + ":0" + m;
                     } else {
-                        timText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "0" + h + ":" + m;
+                        timeText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "0" + h + ":" + m;
                     }
                 } else {
                     if (m < 10) {
-                        timText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + h + ":0" + m;
+                        timeText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + h + ":0" + m;
                     } else {
-                        timText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + h + ":" + m;
+                        timeText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + h + ":" + m;
                     }
                 }
             }
@@ -1188,7 +1188,7 @@ public class Game extends JPanel {
      * A jelenlegi idő lekérdezése.
      */
     public String getTime() {
-        return timText;
+        return timeText;
     }
 
     /**

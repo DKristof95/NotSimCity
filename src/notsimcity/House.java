@@ -12,7 +12,7 @@ public class House extends Field {
     private boolean nearFactory = false;
 
     public House(int sizeX, int sizeY, int posX, int posY, int cap) {
-        super(sizeX, sizeY, posX, posY, cap, 1,false, houseImage);
+        super(sizeX, sizeY, posX, posY, cap, cap,false, houseImage);
     }
 
     public boolean getNearPark() {

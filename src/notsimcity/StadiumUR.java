@@ -8,7 +8,7 @@ public class StadiumUR extends Service {
     public StadiumUR(Field field) {
         super(25, field, Stadium_im);
         this.capacity = 0;
-        this.powerDemand = 0;
+        this.powerDemand = 25;
         this.cost = 0;
     }
 
