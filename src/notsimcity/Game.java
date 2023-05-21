@@ -1055,7 +1055,7 @@ public class Game extends JPanel {
             for(int i = -5; i < 6;i++) {
                 for(int j = -5; j < 6;j++) {
                     if(!(i == 0 && j == 0) && ((cordinateToNum(citizen.getHouse().getY()) + i) > 0 && (cordinateToNum(citizen.getHouse().getY()) + i) < Height/CELL_SIZE && (cordinateToNum(citizen.getHouse().getX()) + j) > 0 && (cordinateToNum(citizen.getHouse().getX()) + j) < Width/CELL_SIZE )) {
-                        if(Grid.get(cordinateToNum(citizen.getHouse().getY()) + i).get(cordinateToNum(citizen.getHouse().getX()) + j).getClass().equals(Police.class)) {
+                        if((Grid.get(cordinateToNum(citizen.getHouse().getY()) + i).get(cordinateToNum(citizen.getHouse().getX()) + j).getClass().equals(Police.class)) && (Grid.get(cordinateToNum(citizen.getHouse().getY()) + i).get(cordinateToNum(citizen.getHouse().getX()) + j)).hasPower) {
                             citizen.getHouse().setNearPolice(true);
                             break;
                         }
