@@ -65,6 +65,11 @@ public class Game extends JPanel {
                     for (Field field : fields) {
                         if (field.getPosX() < Pos_x && Pos_x < (field.getPosX() + CELL_SIZE) && field.getPosY() < Pos_y && Pos_y < (field.getPosY() + CELL_SIZE)) {
                             JPanel panel = new JPanel();
+
+                            if(frame6 != null && frame6.isVisible()) {
+                                frame6.dispose();
+                            }
+
                             if (field.getClass().equals(House.class)) {
                                 frame6 = new JFrame("Ház adatai");
                                 JLabel label1 = new JLabel();
@@ -151,7 +156,11 @@ public class Game extends JPanel {
                                 }
                                 frame6.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
                             }
+                            break;
                         }
+                    }
+                    if(show || showPack) {
+                        break;
                     }
                 }
                 scrolled = false;
@@ -407,116 +416,106 @@ public class Game extends JPanel {
                         else if (building == 3) {
                             if (!scrolled) {
                                 for (Zone zone : zones) {
-                                    if ((Pos_x >= zone.getX() && Pos_y >= zone.getY()) && (Pos_x <= zone.getX()+CELL_SIZE && Pos_y <= zone.getY()+CELL_SIZE)
-                                            || (Pos_x +CELL_SIZE >= zone.getX() && Pos_y >= zone.getY()) && (Pos_x +CELL_SIZE <= zone.getX()+CELL_SIZE && Pos_y <= zone.getY()+CELL_SIZE)) {
+                                    if ((Pos_x >= zone.getX() && Pos_y >= zone.getY()) && (Pos_x <= zone.getX() + CELL_SIZE && Pos_y <= zone.getY() + CELL_SIZE)
+                                            || (Pos_x + CELL_SIZE >= zone.getX() && Pos_y >= zone.getY()) && (Pos_x + CELL_SIZE <= zone.getX() + CELL_SIZE && Pos_y <= zone.getY() + CELL_SIZE)) {
                                         // van már ott zóna
                                         return;
                                     }
                                 }
                                 //megnézi, hogy üres-e mindkét mező
                                 if (!Grid.get(i).get(j).getClass().equals(Field.class)
-                                        || !Grid.get(i).get(j+1).getClass().equals(Field.class)
+                                        || !Grid.get(i).get(j + 1).getClass().equals(Field.class)
                                         //és hogy nem lóg-e ki a pályáról
-                                        || j+1 >= Width/CELL_SIZE) {
+                                        || j + 1 >= Width / CELL_SIZE) {
                                     return;
-                                } else if ((Grid.get(i-1).get(j).isFieldRoad() && Grid.get(i-1).get(j+1).isFieldRoad())
-                                        || (Grid.get(i+1).get(j).isFieldRoad() && Grid.get(i+1).get(j+1).isFieldRoad())) {
+                                } else if ((Grid.get(i - 1).get(j).isFieldRoad() && Grid.get(i - 1).get(j + 1).isFieldRoad())
+                                        || (Grid.get(i + 1).get(j).isFieldRoad() && Grid.get(i + 1).get(j + 1).isFieldRoad())) {
                                     placeBuilding(i, j, building);
                                 }
                             } else {
                                 for (Zone zone : zones) {
-                                    if ((Pos_x >= zone.getX() && Pos_y >= zone.getY()) && (Pos_x <= zone.getX()+CELL_SIZE && Pos_y <= zone.getY()+CELL_SIZE)
-                                            || (Pos_x >= zone.getX() && Pos_y +CELL_SIZE >= zone.getY()) && (Pos_x <= zone.getX()+CELL_SIZE && Pos_y +CELL_SIZE <= zone.getY()+CELL_SIZE)) {
+                                    if ((Pos_x >= zone.getX() && Pos_y >= zone.getY()) && (Pos_x <= zone.getX() + CELL_SIZE && Pos_y <= zone.getY() + CELL_SIZE)
+                                            || (Pos_x >= zone.getX() && Pos_y + CELL_SIZE >= zone.getY()) && (Pos_x <= zone.getX() + CELL_SIZE && Pos_y + CELL_SIZE <= zone.getY() + CELL_SIZE)) {
                                         // van már ott zóna
                                         return;
                                     }
                                 }
                                 //megnézi, hogy üres-e mindkét mező
                                 if (!Grid.get(i).get(j).getClass().equals(Field.class)
-                                        || !Grid.get(i+1).get(j).getClass().equals(Field.class)
+                                        || !Grid.get(i + 1).get(j).getClass().equals(Field.class)
                                         //és hogy nem lóg-e ki a pályáról
-                                        || i+1 >= Height/CELL_SIZE) {
+                                        || i + 1 >= Height / CELL_SIZE) {
                                     return;
-                                } else if ((Grid.get(i).get(j-1).isFieldRoad() && Grid.get(i+1).get(j-1).isFieldRoad())
-                                        || (Grid.get(i).get(j+1).isFieldRoad() && Grid.get(i+1).get(j+1).isFieldRoad())) {
+                                } else if ((Grid.get(i).get(j - 1).isFieldRoad() && Grid.get(i + 1).get(j - 1).isFieldRoad())
+                                        || (Grid.get(i).get(j + 1).isFieldRoad() && Grid.get(i + 1).get(j + 1).isFieldRoad())) {
                                     placeBuilding(i, j, building);
                                 }
                             }
-                        }
-                        else if (building == 4 || building == 5 || building == 6) {
+                        } else if (building == 4 || building == 5 || building == 6) {
                             //ha egyetemet, stadiont vagy erőművet építenénk, nézzük meg, hogy mind a 4 mezője üres-e
                             for (Zone zone : zones) {
-                                if ((Pos_x >= zone.getX() && Pos_y >= zone.getY()) && (Pos_x <= zone.getX()+CELL_SIZE && Pos_y <= zone.getY()+CELL_SIZE)
-                                        || (Pos_x +CELL_SIZE >= zone.getX() && Pos_y >= zone.getY()) && (Pos_x +CELL_SIZE <= zone.getX()+CELL_SIZE && Pos_y <= zone.getY()+CELL_SIZE)
-                                        || (Pos_x >= zone.getX() && Pos_y +CELL_SIZE >= zone.getY()) && (Pos_x <= zone.getX()+CELL_SIZE && Pos_y +CELL_SIZE <= zone.getY()+CELL_SIZE)
-                                        || (Pos_x +CELL_SIZE >= zone.getX() && Pos_y +CELL_SIZE >= zone.getY()) && (Pos_x +CELL_SIZE <= zone.getX()+CELL_SIZE && Pos_y +CELL_SIZE <= zone.getY()+CELL_SIZE)) {
+                                if ((Pos_x >= zone.getX() && Pos_y >= zone.getY()) && (Pos_x <= zone.getX() + CELL_SIZE && Pos_y <= zone.getY() + CELL_SIZE)
+                                        || (Pos_x + CELL_SIZE >= zone.getX() && Pos_y >= zone.getY()) && (Pos_x + CELL_SIZE <= zone.getX() + CELL_SIZE && Pos_y <= zone.getY() + CELL_SIZE)
+                                        || (Pos_x >= zone.getX() && Pos_y + CELL_SIZE >= zone.getY()) && (Pos_x <= zone.getX() + CELL_SIZE && Pos_y + CELL_SIZE <= zone.getY() + CELL_SIZE)
+                                        || (Pos_x + CELL_SIZE >= zone.getX() && Pos_y + CELL_SIZE >= zone.getY()) && (Pos_x + CELL_SIZE <= zone.getX() + CELL_SIZE && Pos_y + CELL_SIZE <= zone.getY() + CELL_SIZE)) {
                                     // van már ott zóna
                                     return;
                                 }
                             }
                             if (!Grid.get(i).get(j).getClass().equals(Field.class)
-                                    || !Grid.get(i+1).get(j).getClass().equals(Field.class)
-                                    || !Grid.get(i).get(j+1).getClass().equals(Field.class)
-                                    || !Grid.get(i+1).get(j+1).getClass().equals(Field.class)
-                            //és hogy nem lóg-e ki a pályáról
-                                    || i+2 >= Height/CELL_SIZE || j+2 >= Width/CELL_SIZE) {
+                                    || !Grid.get(i + 1).get(j).getClass().equals(Field.class)
+                                    || !Grid.get(i).get(j + 1).getClass().equals(Field.class)
+                                    || !Grid.get(i + 1).get(j + 1).getClass().equals(Field.class)
+                                    //és hogy nem lóg-e ki a pályáról
+                                    || i + 2 >= Height / CELL_SIZE || j + 2 >= Width / CELL_SIZE) {
                                 return;
                             } else {
-                                if ((i-1 >=0 && Grid.get(i-1).get(j).isFieldRoad() && Grid.get(i-1).get(j+1).isFieldRoad())
-                                        || (j-1 >=0 && Grid.get(i).get(j-1).isFieldRoad() && Grid.get(i+1).get(j-1).isFieldRoad())
-                                        || (i+2 < Height/CELL_SIZE && Grid.get(i+2).get(j).isFieldRoad() && Grid.get(i+2).get(j+1).isFieldRoad())
-                                        || (j+2 < Width/CELL_SIZE && Grid.get(i).get(j+2).isFieldRoad() && Grid.get(i+1).get(j+2).isFieldRoad())) {
+                                if ((i - 1 >= 0 && Grid.get(i - 1).get(j).isFieldRoad() && Grid.get(i - 1).get(j + 1).isFieldRoad())
+                                        || (j - 1 >= 0 && Grid.get(i).get(j - 1).isFieldRoad() && Grid.get(i + 1).get(j - 1).isFieldRoad())
+                                        || (i + 2 < Height / CELL_SIZE && Grid.get(i + 2).get(j).isFieldRoad() && Grid.get(i + 2).get(j + 1).isFieldRoad())
+                                        || (j + 2 < Width / CELL_SIZE && Grid.get(i).get(j + 2).isFieldRoad() && Grid.get(i + 1).get(j + 2).isFieldRoad())) {
                                     placeBuilding(i, j, building);
                                 }
                             }
-                        }
-                        else if(i-1 == -1 && j-1 == -1) {
-                            if (Grid.get(i+1).get(j).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad()) {
+                        } else if (i - 1 == -1 && j - 1 == -1) {
+                            if (Grid.get(i + 1).get(j).isFieldRoad() || Grid.get(i).get(j + 1).isFieldRoad()) {
                                 placeBuilding(i, j, building);
                             }
-                        }
-                        else if(i+1 == Grid.size() && j+1 == Grid.get(i).size()) {
-                            if (Grid.get(i-1).get(j).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad()) {
+                        } else if (i + 1 == Grid.size() && j + 1 == Grid.get(i).size()) {
+                            if (Grid.get(i - 1).get(j).isFieldRoad() || Grid.get(i).get(j - 1).isFieldRoad()) {
                                 placeBuilding(i, j, building);
                             }
-                        }
-                        else if(i+1 == Grid.size() && j-1 == -1) {
-                            if (Grid.get(i-1).get(j).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad()) {
+                        } else if (i + 1 == Grid.size() && j - 1 == -1) {
+                            if (Grid.get(i - 1).get(j).isFieldRoad() || Grid.get(i).get(j + 1).isFieldRoad()) {
                                 placeBuilding(i, j, building);
                             }
-                        }
-                        else if(i-1 == -1 && j+1 == Grid.get(i).size()) {
-                            if (Grid.get(i+1).get(j).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad()) {
+                        } else if (i - 1 == -1 && j + 1 == Grid.get(i).size()) {
+                            if (Grid.get(i + 1).get(j).isFieldRoad() || Grid.get(i).get(j - 1).isFieldRoad()) {
                                 placeBuilding(i, j, building);
                             }
-                        }
-                        else if(i+1 == Grid.size()) {
-                            if (Grid.get(i-1).get(j).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad()) {
+                        } else if (i + 1 == Grid.size()) {
+                            if (Grid.get(i - 1).get(j).isFieldRoad() || Grid.get(i).get(j - 1).isFieldRoad() || Grid.get(i).get(j + 1).isFieldRoad()) {
                                 placeBuilding(i, j, building);
                             }
-                        }
-                        else if(j+1 == Grid.get(i).size()) {
-                            if (Grid.get(i-1).get(j).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad()|| Grid.get(i+1).get(j).isFieldRoad()) {
+                        } else if (j + 1 == Grid.get(i).size()) {
+                            if (Grid.get(i - 1).get(j).isFieldRoad() || Grid.get(i).get(j - 1).isFieldRoad() || Grid.get(i + 1).get(j).isFieldRoad()) {
                                 placeBuilding(i, j, building);
                             }
-                        }
-                        else if(i-1 == -1) {
-                            if (Grid.get(i+1).get(j).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad()) {
+                        } else if (i - 1 == -1) {
+                            if (Grid.get(i + 1).get(j).isFieldRoad() || Grid.get(i).get(j + 1).isFieldRoad() || Grid.get(i).get(j - 1).isFieldRoad()) {
                                 placeBuilding(i, j, building);
                             }
-                        }
-                        else if(j-1 == -1) {
-                            if (Grid.get(i+1).get(j).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad() || Grid.get(i-1).get(j).isFieldRoad()) {
+                        } else if (j - 1 == -1) {
+                            if (Grid.get(i + 1).get(j).isFieldRoad() || Grid.get(i).get(j + 1).isFieldRoad() || Grid.get(i - 1).get(j).isFieldRoad()) {
                                 placeBuilding(i, j, building);
                             }
-                        }
-                        else {
-                            if ((Grid.get(i-1).get(j).isFieldRoad() || Grid.get(i).get(j-1).isFieldRoad() || Grid.get(i+1).get(j).isFieldRoad() || Grid.get(i).get(j+1).isFieldRoad())) {
+                        } else {
+                            if ((Grid.get(i - 1).get(j).isFieldRoad() || Grid.get(i).get(j - 1).isFieldRoad() || Grid.get(i + 1).get(j).isFieldRoad() || Grid.get(i).get(j + 1).isFieldRoad())) {
                                 placeBuilding(i, j, building);
                             }
                         }
                         repaint();
-                        break;
+                        return;
                     }
                 }
             }
@@ -529,8 +528,9 @@ public class Game extends JPanel {
      * Építői mód állítása
      */
     public void setBuildingMode(int mode,int building) {
-        buildingMode = mode;
+        this.buildingMode = mode;
         buildingSelected = building;
+        removeML();
 
         spriteComponents.removeIf(sprite -> sprite.getImage().equals(Border));
         repaint();
@@ -634,7 +634,6 @@ public class Game extends JPanel {
      * Mező törlése
      */
     public void destroyField() {
-        boolean helper = false;
         for (int i = 0; i < Grid.size(); i++) {
             for (int j = 0; j < Grid.get(i).size(); j++) {
                 if (Grid.get(i).get(j).getPosX() < Pos_x && Pos_x < (Grid.get(i).get(j).getPosX() + CELL_SIZE) && Grid.get(i).get(j).getPosY() < Pos_y && Pos_y < (Grid.get(i).get(j).getPosY() + CELL_SIZE)) {
@@ -661,32 +660,24 @@ public class Game extends JPanel {
                             Grid.get(i).set(j+1,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j+1).getPosX(), Grid.get(i).get(j+1).getPosY(), 0, 0, false));
                             Grid.get(i+1).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i+1).get(j).getPosX(), Grid.get(i+1).get(j).getPosY(), 0, 0, false));
                             Grid.get(i+1).set(j+1,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i+1).get(j+1).getPosX(), Grid.get(i+1).get(j+1).getPosY(), 0, 0, false));
-                            helper = true;
-                            break;
                         } else if (Grid.get(i).get(j).getClass().equals(UniversityUR.class) || Grid.get(i).get(j).getClass().equals(StadiumUR.class) || Grid.get(i).get(j).getClass().equals(PowerPlantUR.class)) {
                             this.Money += (Grid.get(i).get(j-1).getCost()/2);
                             Grid.get(i).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
                             Grid.get(i).set(j-1,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j-1).getPosX(), Grid.get(i).get(j-1).getPosY(), 0, 0, false));
                             Grid.get(i+1).set(j-1,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i+1).get(j-1).getPosX(), Grid.get(i+1).get(j-1).getPosY(), 0, 0, false));
                             Grid.get(i+1).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i+1).get(j).getPosX(), Grid.get(i+1).get(j).getPosY(), 0, 0, false));
-                            helper = true;
-                            break;
                         } else if (Grid.get(i).get(j).getClass().equals(UniversityLL.class) || Grid.get(i).get(j).getClass().equals(StadiumLL.class) || Grid.get(i).get(j).getClass().equals(PowerPlantLL.class)) {
                             this.Money += (Grid.get(i-1).get(j).getCost()/2);
                             Grid.get(i).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
                             Grid.get(i-1).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i-1).get(j).getPosX(), Grid.get(i-1).get(j).getPosY(), 0, 0, false));
                             Grid.get(i-1).set(j+1,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i-1).get(j+1).getPosX(), Grid.get(i-1).get(j+1).getPosY(), 0, 0, false));
                             Grid.get(i).set(j+1,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j+1).getPosX(), Grid.get(i).get(j+1).getPosY(), 0, 0, false));
-                            helper = true;
-                            break;
                         } else if (Grid.get(i).get(j).getClass().equals(UniversityLR.class) || Grid.get(i).get(j).getClass().equals(StadiumLR.class) || Grid.get(i).get(j).getClass().equals(PowerPlantLR.class)) {
                             this.Money += (Grid.get(i-1).get(j-1).getCost()/2);
                             Grid.get(i).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
                             Grid.get(i-1).set(j-1,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i-1).get(j-1).getPosX(), Grid.get(i-1).get(j-1).getPosY(), 0, 0, false));
                             Grid.get(i-1).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i-1).get(j).getPosX(), Grid.get(i-1).get(j).getPosY(), 0, 0, false));
                             Grid.get(i).set(j-1,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j-1).getPosX(), Grid.get(i).get(j-1).getPosY(), 0, 0, false));
-                            helper = true;
-                            break;
                         } else {
                             if(Grid.get(i).get(j).getClass().equals(ForestGrown.class)) {
                                 if(!(((ForestGrown)(Grid.get(i).get(j))).isStarted())) {
@@ -703,14 +694,10 @@ public class Game extends JPanel {
                             else if(Grid.get(i).get(j).getClass().equals(University.class)) {
                                 No_universityExists--;
                             }
-                            helper = true;
-                            break;
                         }
                     }
+                    return;
                 }
-            }
-            if(helper) {
-                break;
             }
         }
     }
@@ -723,10 +710,10 @@ public class Game extends JPanel {
             if (zone.getX() < Pos_x && Pos_x < (zone.getX() + CELL_SIZE) && zone.getY() < Pos_y && Pos_y < (zone.getY() + CELL_SIZE)) {
                 if(Grid.get(cordinateToNum(Pos_y)).get(cordinateToNum(Pos_x)).getClass().equals(Field.class)) {
                     zones.remove(zone);
-                    break;
                 }else {
                     JOptionPane.showMessageDialog(null, "Nem lehet olyan zónát törölni, amire már épült valami.", "Hiba!",  JOptionPane.ERROR_MESSAGE);
                 }
+                return;
             }
         }
     }
@@ -807,7 +794,7 @@ public class Game extends JPanel {
                             }
                         }
                         repaint();
-                        break;
+                        return;
                     }
                 }
             }
@@ -945,9 +932,9 @@ public class Game extends JPanel {
                             for(int i = -3; i < 4;i++) {
                                 for(int j = -3; j < 4;j++) {
                                     if(!(i == 0 && j == 0) && ((cordinateToNum(zone.getY()) + i) > 0 && (cordinateToNum(zone.getY()) + i) < Height/CELL_SIZE && (cordinateToNum(zone.getX()) + j) > 0 && (cordinateToNum(zone.getX()) + j) < Width/CELL_SIZE )) {
-                                        if(Grid.get(cordinateToNum(zone.getY()) + i).get(cordinateToNum(zone.getX()) + j).getClass().getSuperclass().equals(Forest.class)) {
+                                        if(Grid.get(cordinateToNum(zone.getY()) + i).get(cordinateToNum(zone.getX()) + j).getClass().equals(ForestGrown.class) || Grid.get(cordinateToNum(zone.getY()) + i).get(cordinateToNum(zone.getX()) + j).getClass().equals(ForestNew.class)) {
                                             currentHouse.setNearPark();
-                                            currentHouse.setNearestForest((Forest)(Grid.get(cordinateToNum(zone.getY()) + i ).get(cordinateToNum(zone.getX() + j))));
+                                            currentHouse.setNearestForest((Forest)(Grid.get(cordinateToNum(zone.getY()) + i).get(cordinateToNum(zone.getX()) + j)));
                                             break;
                                         }
                                     }
