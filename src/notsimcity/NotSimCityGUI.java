@@ -7,7 +7,6 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static javax.swing.JOptionPane.showMessageDialog;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
@@ -158,6 +157,7 @@ public class NotSimCityGUI {
                     for (MouseListener l : gameArea.getMouseListeners()) {
                         gameArea.removeMouseListener(l);
                     }
+                    gameArea.createML();
                 });
 
                 menuBar = new JMenuBar();
@@ -301,7 +301,7 @@ public class NotSimCityGUI {
                 exitButton.addActionListener(e118 -> {
                     Object[] options = {"Igen", "Nem"};
                     int confirm = JOptionPane.showOptionDialog(
-                            frame, "Biztosan be szeretnéd zárni a játékot?\nMentés nélkül az összes mentetlen adat elvész.", "Megerősítés",
+                            frame, "Biztosan be szeretnéd zárni a játékot?\nAz összes adat elvész!", "Megerősítés",
                             JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                     if (confirm == JOptionPane.YES_OPTION) {
                         System.exit(0);
@@ -572,29 +572,21 @@ public class NotSimCityGUI {
         });
         b1.setBackground(Color.BLACK);
         b1.setForeground(Color.YELLOW);
-        JButton b2 = new JButton("Betöltés");
-        b2.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        b2.setFocusPainted(false);
-        b2.setBounds(250,405,200,50);
-        b2.addActionListener(e -> showMessageDialog(null, "Jelenleg nem funkcionál.", "Hiba", JOptionPane.ERROR_MESSAGE));
-        b2.setBackground(Color.BLACK);
-        b2.setForeground(Color.GREEN);
         JButton b3 = new JButton("Kilépés");
         b3.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         b3.setFocusPainted(false);
-        b3.setBounds(250,480,200,50);
+        b3.setBounds(250,405,200,50);
         b3.addActionListener(e -> System.exit(0));
         b3.setBackground(Color.BLACK);
         b3.setForeground(Color.RED);
         frame.add(b1);
-        frame.add(b2);
         frame.add(b3);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         menuArea = new Menu();
         frame.getContentPane().add(menuArea);
         frame.pack();
-        frame.setSize(new Dimension(700, 600));
+        frame.setSize(new Dimension(700, 525));
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }

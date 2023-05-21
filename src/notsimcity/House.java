@@ -5,15 +5,14 @@ import java.awt.*;
 
 public class House extends Field {
     private static final Image houseImage = new ImageIcon("house.png").getImage();
-    private static int capacity = 5; // házban lakók száma
     private boolean nearPark = false;
     private Forest nearestForest;
 
     private boolean nearPolice = false;
     private boolean nearFactory = false;
 
-    public House(int sizeX, int sizeY, int posX, int posY) {
-        super(sizeX, sizeY, posX, posY, capacity, 1,false, houseImage);
+    public House(int sizeX, int sizeY, int posX, int posY, int cap) {
+        super(sizeX, sizeY, posX, posY, cap, 1,false, houseImage);
     }
 
     public boolean getNearPark() {
