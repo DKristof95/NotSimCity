@@ -9,6 +9,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import static java.lang.Math.floor;
+import static java.lang.Math.round;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import static notsimcity.ZoneType.*;
 
@@ -96,7 +97,7 @@ public class Game extends JPanel {
                                 show = true;
                             } else if (field.getClass().equals(Job.class)) {
                                 String frameName;
-                                if (((Job) field).getJobType() == 1) {
+                                if (((Job) field).getJobType() == 2) {
                                     frameName = "Gyár adatai";
                                 } else {
                                     frameName = "Iroda adatai";
@@ -113,7 +114,7 @@ public class Game extends JPanel {
                                 JLabel label2 = new JLabel("Kapacitás: " + field.getCapacity());
                                 label2.setBorder(new EmptyBorder(0, 0, 0, 50));
                                 panel.add(label2);
-                                JLabel label3 = new JLabel("Jelenlegi dolgozók: " + "N/A");
+                                JLabel label3 = new JLabel("Jelenlegi dolgozók: " + ((Job) field).getWorkers());
                                 panel.add(label3);
                                 show = true;
                             } else if (field.getClass().getSuperclass().equals(Forest.class)) {
@@ -876,7 +877,45 @@ public class Game extends JPanel {
         for(Citizen citizen : citizens) {
             this.monthly_tax += this.taxMultiplier * citizen.getQualification() * 100;
             citizen.setAmountOfTax(this.taxMultiplier);
+            if(citizen.getPreferredJobType() == 1 && citizen.getJob() == null) {
+                double closest = 1000.0;
+                Zone the_zone = new Zone(0,0,0,0,null, ServiceArea);
+                for (Zone zone : zones) {
+                    if (zone.getType() == ServiceArea) {
+                        double dist = distance(zone.getX(),zone.getY(),citizen.getHouse().getPosX(),citizen.getHouse().getPosY());
+                        if(closest > dist && ((Job) Grid.get(cordinateToNum(zone.getY())).get(cordinateToNum(zone.getX()))).getWorkers() != 20) {
+                            closest = dist;
+                            the_zone = zone;
+                        }
+                    }
+                }
+                if (closest != 1000.0) {
+                    citizen.setJob((Job) Grid.get(cordinateToNum(the_zone.getY())).get(cordinateToNum(the_zone.getX())));
+                    ((Job) Grid.get(cordinateToNum(the_zone.getY())).get(cordinateToNum(the_zone.getX()))).setWorkers();
+                }
+            }
+            else if (citizen.getPreferredJobType() == 2 && citizen.getJob() == null) {
+                double closest = 1000.0;
+                Zone the_zone = new Zone(0,0,0,0,null,IndustrialArea);
+                for (Zone zone : zones) {
+                    if (zone.getType() == IndustrialArea) {
+                        double dist = distance(zone.getX(),zone.getY(),citizen.getHouse().getPosX(),citizen.getHouse().getPosY());
+                        if(closest > dist && ((Job) Grid.get(cordinateToNum(zone.getY())).get(cordinateToNum(zone.getX()))).getWorkers() != 40) {
+                            closest = dist;
+                            the_zone = zone;
+                        }
+                    }
+                }
+                if (closest != 1000.0){
+                    citizen.setJob((Job) Grid.get(cordinateToNum(the_zone.getY())).get(cordinateToNum(the_zone.getX())));
+                    ((Job) Grid.get(cordinateToNum(the_zone.getY())).get(cordinateToNum(the_zone.getX()))).setWorkers();
+                }
+            }
         }
+    }
+
+    public double distance(int x1,int y1,int x2,int y2) {
+        return Math.sqrt(Math.pow(Math.abs(x1-x2),2) + Math.pow(Math.abs(y1-y2),2));
     }
 
     /**
@@ -957,11 +996,6 @@ public class Game extends JPanel {
                                     break;
                                 }
                             }
-
-                            randomRes = (int)(Math.random() * 5) + 1;
-                            for(int i = 0; i < randomRes; i++) {
-                                citizens.add(new Citizen(currentHouse));
-                            }
                         }
                     }
                     repaint();
@@ -984,12 +1018,6 @@ public class Game extends JPanel {
                             if(Grid.get(cordinateToNum(zone.getY()) - 1).get(cordinateToNum(zone.getX())).getClass().equals(House.class)) {
                                 ((House)(Grid.get(cordinateToNum(zone.getY()) - 1).get(cordinateToNum(zone.getX())))).setNearFactory(true);
                             }
-                            for(Citizen citizen : citizens) {
-                                if(citizen.getPreferredJobType() == 2 && citizen.getJob() == null) {
-                                    citizen.setJob((Job) Grid.get(cordinateToNum(zone.getY())).get(cordinateToNum(zone.getX())));
-                                    ((Job) Grid.get(cordinateToNum(zone.getY())).get(cordinateToNum(zone.getX()))).setWorkers();
-                                }
-                            }
                         }
                     }
                     repaint();
@@ -1000,12 +1028,6 @@ public class Game extends JPanel {
                         int randomChance = rand.nextInt((20 - 1) + 1) + 1;
                         if((randomChance % 4) == 0) {
                             Grid.get(cordinateToNum(zone.getY())).set(cordinateToNum(zone.getX()), new Job(CELL_SIZE, CELL_SIZE, zone.getX(), zone.getY(), Office, 1));
-                            for(Citizen citizen : citizens) {
-                                if(citizen.getPreferredJobType() == 1 && citizen.getJob() == null) {
-                                    citizen.setJob((Job) Grid.get(cordinateToNum(zone.getY())).get(cordinateToNum(zone.getX())));
-                                    ((Job) Grid.get(cordinateToNum(zone.getY())).get(cordinateToNum(zone.getX()))).setWorkers();
-                                }
-                            }
                         }
                     }
                     repaint();
