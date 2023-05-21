@@ -14,16 +14,17 @@ import static notsimcity.ZoneType.*;
 
 public class Game extends JPanel {
     private JFrame frame6;
-    private static final int CELL_SIZE = 50, FPS = 240;
+    private static final int CELL_SIZE = 50;
     private static final Random rand = new Random();
-    private ArrayList<ArrayList<Field>> Grid = new ArrayList<>();
-    private ArrayList<Zone> zones = new ArrayList<>();
-    private ArrayList<Citizen> citizens = new ArrayList<>();
-    private ArrayList<MoneyLog> logs = new ArrayList<>();
+    private final ArrayList<ArrayList<Field>> Grid = new ArrayList<>();
+    private final ArrayList<Zone> zones = new ArrayList<>();
+    private final ArrayList<Citizen> citizens = new ArrayList<>();
+    private final ArrayList<MoneyLog> logs = new ArrayList<>();
     private Player player;
-    private String s_day = "01", s_month = "01", timetext = "";
-    private java.util.List<Sprite> spriteComponents = new ArrayList<>();
-    private int time = 0, day = 1, month = 1, year = 2023, gameSpeed = 1, Pos_y, Pos_x, Width, Height, buildingMode = 0, sizeHelper = 0, Money = 50000, starter, randomRes, No_schoolExists = 0, No_universityExists = 0, monthly_tax = 0, mapNum;
+    private String s_day = "01", s_month = "01", timText = "";
+    private final java.util.List<Sprite> spriteComponents = new ArrayList<>();
+    private int time = 0, day = 1, month = 1, year = 2023, gameSpeed = 1, Pos_y, Pos_x, Width, Height, buildingMode = 0, sizeHelper = 0, Money = 50000, starter, randomRes, No_schoolExists = 0, No_universityExists = 0, monthly_tax = 0;
+    private final int mapNum;
     private double taxMultiplier = 1.0, satisfactionMod = 0.0, satisfactionExtra = 0.0;
     private Timer timer;
     private MouseListener ml;
@@ -32,23 +33,23 @@ public class Game extends JPanel {
     private final Image GBorder = new ImageIcon("green_border.png").getImage();
     private final Image OBorder = new ImageIcon("orange_border.png").getImage();
     private final Image BBorder = new ImageIcon("blue_border.png").getImage();
-    private final Image House = new ImageIcon("house.png").getImage();
     private final Image Office = new ImageIcon("office.png").getImage();
     private final Image Factory = new ImageIcon("factory.png").getImage();
     private final Image Grass = new ImageIcon("grass.jpg").getImage();
-    private final Image StadiumLL = new ImageIcon("stadium_lower_left.png").getImage();
-    private final Image StadiumLR = new ImageIcon("stadium_lower_right.png").getImage();
-    private final Image StadiumUL = new ImageIcon("stadium_upper_left.png").getImage();
-    private final Image StadiumUR = new ImageIcon("stadium_upper_right.png").getImage();
-    private final Image PowerPlant = new ImageIcon("power_plant.png").getImage();
     private static int buildingSelected = 0;
 
+    /**
+     * Játék kezdetekori beállítások. (konstruktor)
+     */
     public Game(int map_num) {
         super();
         mapNum = map_num;
         createML();
     }
 
+    /**
+     * A mezők statisztikáinak lekérdezése.
+     */
     public void createML() {
         ml = new MouseAdapter() {
             @Override
@@ -163,6 +164,9 @@ public class Game extends JPanel {
         this.removeMouseListener(ml);
     }
 
+    /**
+     * A játék kezdetekori alap mezőszerkezet kialakítása.
+     */
     public void setGrid() {
         int a = Height/CELL_SIZE;
         int b = Width/CELL_SIZE;
@@ -215,10 +219,16 @@ public class Game extends JPanel {
         }
     }
 
-    public static int cordinateToNum(int x) {
-        return (int)(floor(x/CELL_SIZE));
+    /**
+     * Egér-koordinátából tömb koordinátáva alakítás.
+     */
+    public static int cordinateToNum(int number) {
+        return (int)(floor(number/CELL_SIZE));
     }
 
+    /**
+     * A játék sebességének beállítása
+     */
     public void setGameSpeed(int speed) {
         this.gameSpeed = speed;
         if(speed == 0) {
@@ -238,27 +248,39 @@ public class Game extends JPanel {
         }
     }
 
-    public int getGameSpeed() {
-        return this.gameSpeed;
-    }
+    /**
+     * A játékos költségvetésének lekérdezése.
+     */
     public ArrayList<MoneyLog> getLogs() {return this.logs;}
 
+    /**
+     * A városban lakók számának lekérdezése.
+     */
     public int getCitizens() {return this.citizens.size();}
 
+    /**
+     * A lakók elégedettségének lekérése.
+     */
     public double getSatisfaction() {
         double avgSatisfaction = 0.0;
-        for(int i = 0; i < this.citizens.size();i++){
-            avgSatisfaction += citizens.get(i).getSatisfaction();
+        for (Citizen citizen : this.citizens) {
+            avgSatisfaction += citizen.getSatisfaction();
         }
         return Math.round((avgSatisfaction/this.citizens.size()) * 100.0) / 100.0;
     }
 
+    /**
+     * A játékos jelenlegi egyenlegének lekérése.
+     */
     public int getMoney() {
         return this.Money;
     }
 
+    /**
+     * A mezőre minden típusú épület lerakása.
+     */
     public void placeBuilding(int i, int j, int building) {
-        MoneyLog log = new MoneyLog(0, 0, "", timetext);
+        MoneyLog log = new MoneyLog(0, 0, "", timText);
         switch (building) {
             case 1 -> {
                 Grid.get(i).set(j, new Road(Grid.get(i).get(j)));
@@ -351,6 +373,9 @@ public class Game extends JPanel {
         logs.add(log);
     }
 
+    /**
+     * Építőmódban a játékos építési funkciói.
+     */
     public void clickOnField(int building) {
 
         try {
@@ -500,6 +525,9 @@ public class Game extends JPanel {
         }
     }
 
+    /**
+     * Építői mód állítása
+     */
     public void setBuildingMode(int mode,int building) {
         buildingMode = mode;
         buildingSelected = building;
@@ -602,6 +630,9 @@ public class Game extends JPanel {
         });
     }
 
+    /**
+     * Mező törlése
+     */
     public void destroyField() {
         boolean helper = false;
         for (int i = 0; i < Grid.size(); i++) {
@@ -684,24 +715,25 @@ public class Game extends JPanel {
         }
     }
 
+    /**
+     * Zóna törlése
+     */
     public void destroyZone() { //ide
-        boolean helper = false;
         for (Zone zone : zones) {
             if (zone.getX() < Pos_x && Pos_x < (zone.getX() + CELL_SIZE) && zone.getY() < Pos_y && Pos_y < (zone.getY() + CELL_SIZE)) {
                 if(Grid.get(cordinateToNum(Pos_y)).get(cordinateToNum(Pos_x)).getClass().equals(Field.class)) {
                     zones.remove(zone);
-                    helper = true;
                     break;
                 }else {
                     JOptionPane.showMessageDialog(null, "Nem lehet olyan zónát törölni, amire már épült valami.", "Hiba!",  JOptionPane.ERROR_MESSAGE);
                 }
             }
-            if(helper) {
-                break;
-            }
         }
     }
-    
+
+    /**
+     * Különböző típusú zónák lerakása.
+     */
     public void clickOnZone(int zoneType) {
         Image mainBorder;
         ZoneType type;
@@ -784,6 +816,9 @@ public class Game extends JPanel {
         }
     }
 
+    /**
+     * Adómennyiség beállítása
+     */
     public void setTaxMultiplier(int type) {
         switch (type) {
             case 1 -> this.taxMultiplier = 0.0;
@@ -796,10 +831,16 @@ public class Game extends JPanel {
         }
     }
 
+    /**
+     * Adómennyiség lekérdezése.
+     */
     public double getTaxMultiplier() {
         return this.taxMultiplier;
     }
 
+    /**
+     * 1 év elteltével történő műveletek
+     */
     public void aYearPassed() {
         int giveOutQual2 = 0, giveOutQual3 = 0;
         if(No_schoolExists > 0) {
@@ -841,6 +882,9 @@ public class Game extends JPanel {
         }
     }
 
+    /**
+     * 1 hónap elteltével történő műveletek
+     */
     public void aMonthPassed() {
         for(Citizen citizen : citizens) {
             this.monthly_tax += this.taxMultiplier * citizen.getQualification() * 100;
@@ -848,6 +892,9 @@ public class Game extends JPanel {
         }
     }
 
+    /**
+     * 1 nap elteltével történő műveletek
+     */
     public void aDayPassed() {
         switch ((int)(taxMultiplier*2.0)) {
             case 0 -> this.satisfactionMod = 1.0;
@@ -938,7 +985,7 @@ public class Game extends JPanel {
                         int randomChance = rand.nextInt((20 - 1) + 1) + 1;
                         if((randomChance % 4) == 0) {
                             Grid.get(cordinateToNum(zone.getY())).set(cordinateToNum(zone.getX()), new Job(CELL_SIZE, CELL_SIZE, zone.getX(), zone.getY(), Factory, 2));
-                            /*if(Grid.get(cordinateToNum(zone.getY())).get(cordinateToNum(zone.getX()) + 1).getClass().equals(House.class)) {
+                            if(Grid.get(cordinateToNum(zone.getY())).get(cordinateToNum(zone.getX()) + 1).getClass().equals(House.class)) {
                                 ((House)(Grid.get(cordinateToNum(zone.getY())).get(cordinateToNum(zone.getX()) + 1))).setNearFactory(true);
                             }
                             if(Grid.get(cordinateToNum(zone.getY())).get(cordinateToNum(zone.getX()) - 1).getClass().equals(House.class)) {
@@ -949,7 +996,7 @@ public class Game extends JPanel {
                             }
                             if(Grid.get(cordinateToNum(zone.getY()) - 1).get(cordinateToNum(zone.getX())).getClass().equals(House.class)) {
                                 ((House)(Grid.get(cordinateToNum(zone.getY()) - 1).get(cordinateToNum(zone.getX())))).setNearFactory(true);
-                            }*/
+                            }
                         }
                     }
                     repaint();
@@ -1065,6 +1112,9 @@ public class Game extends JPanel {
 
     }
 
+    /**
+     * A játékbeli idő múlásának függénye.
+     */
     public void Time() {
         timer = new Timer(1000, e -> {
             if(gameSpeed == 3) {
@@ -1082,30 +1132,30 @@ public class Game extends JPanel {
                 time = time % 60;
                 aDayPassed();
                 if (time < 10) {
-                    timetext = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "00:0" + time;
+                    timText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "00:0" + time;
                 }
                 else {
-                    timetext = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "00:" + time;
+                    timText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "00:" + time;
                 }
             } else {
                 if (h == 0) {
                     if (m < 10) {
-                        timetext = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "00:0" + m;
+                        timText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "00:0" + m;
                     } else {
-                        timetext = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "00:" + m;
+                        timText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "00:" + m;
                     }
                 }
                 if (h < 10) {
                     if (m < 10) {
-                        timetext = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "0" + h + ":0" + m;
+                        timText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "0" + h + ":0" + m;
                     } else {
-                        timetext = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "0" + h + ":" + m;
+                        timText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "0" + h + ":" + m;
                     }
                 } else {
                     if (m < 10) {
-                        timetext = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + h + ":0" + m;
+                        timText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + h + ":0" + m;
                     } else {
-                        timetext = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + h + ":" + m;
+                        timText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + h + ":" + m;
                     }
                 }
             }
@@ -1113,18 +1163,30 @@ public class Game extends JPanel {
         timer.start();
     }
 
+    /**
+     * A jelenlegi idő lekérdezése.
+     */
     public String getTime() {
-        return timetext;
+        return timText;
     }
 
+    /**
+     * Egérmutató hozzáadása.
+     */
     public void addSpriteComponent(Sprite spriteComponent) {
         spriteComponents.add(spriteComponent);
     }
 
+    /**
+     * Zóna hozzáadása.
+     */
     public void addZone(Zone zone) {
         zones.add(zone);
     }
 
+    /**
+     * A grafika kirajzolása, a teljes játék kinézetének grafikai megoldásai.
+     */
     @Override
     protected void paintComponent(Graphics grphcs) {
         super.paintComponent(grphcs);
