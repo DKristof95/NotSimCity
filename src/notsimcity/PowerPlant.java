@@ -15,46 +15,51 @@ public class PowerPlant extends Field {
         int i = field.y/field.height;
         int j = field.x/field.width;
         ArrayList<Field> neighbors = new ArrayList<>();
-
-        try {
-            neighbors.add(Grid.get(i).get(j));
+        neighbors.add(Grid.get(i).get(j));
+        if(i >= 1 && i <= 12) {
             neighbors.add(Grid.get(i-1).get(j));
-            neighbors.add(Grid.get(i-1).get(j+1));
-            neighbors.add(Grid.get(i+2).get(j));
-            neighbors.add(Grid.get(i+2).get(j+1));
+            if(j < 27) {
+                neighbors.add(Grid.get(i-1).get(j+1));
+            }
+        }
+        if(j >= 1 && j <= 27) {
             neighbors.add(Grid.get(i).get(j-1));
-            neighbors.add(Grid.get(i+1).get(j-1));
+            if(i < 12) {
+                neighbors.add(Grid.get(i+1).get(j-1));
+            }
+        }
+        if(i < 11) {
+            neighbors.add(Grid.get(i+2).get(j));
+            if(j < 27) {
+                neighbors.add(Grid.get(i+2).get(j+1));
+            }
+        }
+        if(j < 26) {
             neighbors.add(Grid.get(i).get(j+2));
-            neighbors.add(Grid.get(i+1).get(j+2));
-        } catch (IndexOutOfBoundsException e) {
-
+            if(i < 12) {
+                neighbors.add(Grid.get(i+1).get(j+2));
+            }
         }
 
         while(!empty) {
             int loop = neighbors.size();
-            Field previous = neighbors.get(0);
-            for(int l = 1;l < loop;l++) {
-                if(neighbors.get(l).getPowerDemand() > 0){
+            for(int l = 0;l < loop; l++) {
+                if(neighbors.get(l).getPowerDemand() > 0) {
                     neighbors.get(l).hasPower = true;
                     System.out.println(neighbors.get(l).y + " " + neighbors.get(l).x);
                     i = neighbors.get(l).y/field.height;
                     j = neighbors.get(l).x/field.width;
-                    neighbors.add(Grid.get(i).get(j));
-                    if(i <= 12) {
-                        if(!previous.equals(Grid.get(i+2).get(j))) {neighbors.add(Grid.get(i+2).get(j));}
-                        if(!previous.equals(Grid.get(i+2).get(j+1))) {neighbors.add(Grid.get(i+2).get(j+1));}
+                    if(i >= 0 && i < 12) {
+                        if(!Grid.get(i+1).get(j).hasPower) {neighbors.add(Grid.get(i+1).get(j));}
                     }
-                    if(i > 0) {
-                        if(!previous.equals(Grid.get(i-1).get(j))) {neighbors.add(Grid.get(i-1).get(j));}
-                        if(!previous.equals(Grid.get(i-1).get(j+1))) {neighbors.add(Grid.get(i-1).get(j+1));}
+                    if(j > 0 && j <= 27) {
+                        if(!Grid.get(i).get(j-1).hasPower) {neighbors.add(Grid.get(i).get(j-1));}
                     }
-                    if(j <= 27) {
-                        if(!previous.equals(Grid.get(i).get(j+2))) {neighbors.add(Grid.get(i).get(j+2));}
-                        if(!previous.equals(Grid.get(i+1).get(j+2))) {neighbors.add(Grid.get(i+1).get(j+2));}
+                    if(j < 27 && j >= 0) {
+                        if(!Grid.get(i).get(j+1).hasPower) {neighbors.add(Grid.get(i).get(j+1));}
                     }
-                    if(j > 0) {
-                        if(!previous.equals(Grid.get(i).get(j-1))) {neighbors.add(Grid.get(i).get(j-1));}
-                        if(!previous.equals(Grid.get(i+1).get(j-1))) {neighbors.add(Grid.get(i+1).get(j-1));}
+                    if(i > 0 && i <= 12) {
+                        if(!Grid.get(i-1).get(j).hasPower) {neighbors.add(Grid.get(i-1).get(j));}
                     }
                 }
             }
@@ -67,6 +72,6 @@ public class PowerPlant extends Field {
                 }
             }
             if(neighbors.isEmpty()){empty = true;}
+            }
         }
     }
-}

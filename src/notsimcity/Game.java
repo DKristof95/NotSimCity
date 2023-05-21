@@ -388,7 +388,7 @@ public class Game extends JPanel {
      */
     public void clickOnField(int building) {
 
-        try {
+        //try {
 
             for (ArrayList<Field> rows : Grid) {
                 for (Field cell : rows) {
@@ -520,9 +520,9 @@ public class Game extends JPanel {
                     }
                 }
             }
-        } catch (IndexOutOfBoundsException e) {
+        /*} catch (IndexOutOfBoundsException e) {
             System.out.println("Indexelési hiba");
-        }
+        }*/
     }
 
     /**
