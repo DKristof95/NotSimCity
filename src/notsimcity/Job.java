@@ -4,6 +4,7 @@ import java.awt.*;
 
 public class Job extends Field {
     private int jobType;
+    private int workers;
     private boolean hasPower = false;
 
     public Job(int sizeX, int sizeY, int posX, int posY, Image img, int jobType) {
@@ -17,11 +18,14 @@ public class Job extends Field {
             this.powerDemand = 5;
         }
         this.jobType = jobType;
+        this.workers = 0;
     }
 
     public int getJobType() {
         return jobType;
-    } // 1 - Factory | 2 - Office
+    } // 1 - Office | 2 - Factory
+    public void setWorkers() { workers++;}
+    public int getWorkers() { return workers;}
     public void setHasPower() { hasPower = !hasPower;}
 
 }

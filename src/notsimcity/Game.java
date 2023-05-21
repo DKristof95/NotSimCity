@@ -997,6 +997,12 @@ public class Game extends JPanel {
                             if(Grid.get(cordinateToNum(zone.getY()) - 1).get(cordinateToNum(zone.getX())).getClass().equals(House.class)) {
                                 ((House)(Grid.get(cordinateToNum(zone.getY()) - 1).get(cordinateToNum(zone.getX())))).setNearFactory(true);
                             }
+                            for(Citizen citizen : citizens) {
+                                if(citizen.getPreferredJobType() == 2 && citizen.getJob() == null) {
+                                    citizen.setJob((Job) Grid.get(cordinateToNum(zone.getY())).get(cordinateToNum(zone.getX())));
+                                    ((Job) Grid.get(cordinateToNum(zone.getY())).get(cordinateToNum(zone.getX()))).setWorkers();
+                                }
+                            }
                         }
                     }
                     repaint();
@@ -1007,6 +1013,12 @@ public class Game extends JPanel {
                         int randomChance = rand.nextInt((20 - 1) + 1) + 1;
                         if((randomChance % 4) == 0) {
                             Grid.get(cordinateToNum(zone.getY())).set(cordinateToNum(zone.getX()), new Job(CELL_SIZE, CELL_SIZE, zone.getX(), zone.getY(), Office, 1));
+                            for(Citizen citizen : citizens) {
+                                if(citizen.getPreferredJobType() == 1 && citizen.getJob() == null) {
+                                    citizen.setJob((Job) Grid.get(cordinateToNum(zone.getY())).get(cordinateToNum(zone.getX())));
+                                    ((Job) Grid.get(cordinateToNum(zone.getY())).get(cordinateToNum(zone.getX()))).setWorkers();
+                                }
+                            }
                         }
                     }
                     repaint();
