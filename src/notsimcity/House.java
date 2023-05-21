@@ -10,6 +10,7 @@ public class House extends Field {
     private Forest nearestForest;
 
     private boolean nearPolice = false;
+    private boolean nearFactory = false;
 
     public House(int sizeX, int sizeY, int posX, int posY) {
         super(sizeX, sizeY, posX, posY, capacity, 1,false, houseImage);
@@ -28,11 +29,16 @@ public class House extends Field {
     public void setNearPolice() {
         nearPolice = !nearPolice;
     }
+    public boolean getNearFactory() {
+        return this.nearFactory;
+    }
+    public void setNearFactory(boolean b) {
+        nearFactory = b;
+    }
     public Forest getNearestForest() {
         return this.nearestForest;
     }
     public void setNearestForest(Forest newForest) {
         nearestForest = newForest;
     }
-    
 }

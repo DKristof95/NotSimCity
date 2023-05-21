@@ -11,6 +11,7 @@ public class ForestNew extends Forest {
         this.capacity = 0;
         this.powerDemand = 0;
         this.cost = 1000;
+        this.setGrowthLevel(0);
         planted[0] = year;
         planted[1] = month;
         planted[2] = day;

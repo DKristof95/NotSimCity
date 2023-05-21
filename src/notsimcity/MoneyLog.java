@@ -4,29 +4,30 @@ public class MoneyLog {
     private int type;
     private int money;
     private String text;
-    private int when;
+    private String when;
 
-    public MoneyLog(int type, int money, String text, int when) {
+    public MoneyLog(int type, int money, String text, String when) {
         this.type = type;
         this.money = money;
         this.text = text;
         this.when = when;
     }
 
-    public int getType() {
-        return type;
+    public void setText(String text) {
+        this.text = text;
     }
 
-    public int getMoney() {
-        return money;
+    public void setMoney(int money) {
+        this.money = money;
     }
 
-    public String getText() {
-        return text;
+    public String getOutput() {
+        if(this.type == 0) {
+            return "["+when+"] -" + money + " - " + text;
+        }
+        else {
+            return "["+when+"] +" + money + " - " + text;
+        }
     }
 
-    public int getWhen() {
-        return when;
-    }
-    
 }

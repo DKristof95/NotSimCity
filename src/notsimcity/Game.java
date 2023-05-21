@@ -14,14 +14,14 @@ public class Game extends JPanel {
     private static final int CELL_SIZE = 50, FPS = 240;
     private static final Random rand = new Random();
     private ArrayList<ArrayList<Field>> Grid = new ArrayList<>();
-    private ArrayList<Zone> zones;
-    private ArrayList<Citizen> citizens;
+    private ArrayList<Zone> zones = new ArrayList<>();
+    private ArrayList<Citizen> citizens = new ArrayList<>();
+    private ArrayList<MoneyLog> logs = new ArrayList<>();
     private Player player;
     private String s_day = "01", s_month = "01", timetext = "";
-    private java.util.List<Sprite> spriteComponents;
-    private int time = 0, day = 1, month = 1, year = 2023, gameSpeed = 1, Pos_y, Pos_x, Width, Height, sizeHelper = 0, Money = 50000, starter, randomRes, No_schoolExists = 0, No_universityExists = 0;
+    private java.util.List<Sprite> spriteComponents = new ArrayList<>();
+    private int time = 0, day = 1, month = 1, year = 2023, gameSpeed = 1, Pos_y, Pos_x, Width, Height, buildingMode = 0, sizeHelper = 0, Money = 50000, starter, randomRes, No_schoolExists = 0, No_universityExists = 0, monthly_tax = 0, mapNum;
     private double taxMultiplier = 1.0, satisfactionMod = 0.0, satisfactionExtra = 0.0;
-    private int zoom;
     private Timer timer;
     private boolean scrolled = false, stadiumExists = false;
     private final Image Ut1 = new ImageIcon("ut_viz.png").getImage(), Ut2 = new ImageIcon("ut_fugg.png").getImage();
@@ -39,34 +39,61 @@ public class Game extends JPanel {
     private final Image StadiumUR = new ImageIcon("stadium_upper_right.png").getImage();
     private final Image PowerPlant = new ImageIcon("power_plant.png").getImage();
     private static int buildingSelected = 0;
-    private static int buildingMode = 0;
 
-    public Game() {
+    public Game(int map_num) {
         super();
-        spriteComponents = new ArrayList<>();
-        zones = new ArrayList<>();
-        citizens = new ArrayList<>();
+        mapNum = map_num;
     }
 
     public void setGrid() {
         int a = Height/CELL_SIZE;
         int b = Width/CELL_SIZE;
         for (int col = 0; col < a; col++) {
-            ArrayList<Field> rows = new ArrayList<Field>();
+            ArrayList<Field> rows = new ArrayList<>();
             for (int row = 0; row < b; row++) {
                 Field field = new Field(CELL_SIZE, CELL_SIZE, row * CELL_SIZE, col * CELL_SIZE, 0, 0,false);
                 rows.add(field);
             }
             Grid.add(rows);
         }
-        int randomNum = ThreadLocalRandom.current().nextInt(1, a-1);
-        starter = randomNum;
-        Grid.get(randomNum).set(0, new Road(Grid.get(randomNum).get(0), Ut1));
+        if(mapNum == 0){
+            int randomNum = ThreadLocalRandom.current().nextInt(1, a-1);
+            starter = randomNum;
+            Grid.get(randomNum).set(0, new Road(Grid.get(randomNum).get(0), Ut1));
 
-        for (int i = 0; i < 10; i++) {
-            int randX = ThreadLocalRandom.current().nextInt(1, a-1);
-            int randY = ThreadLocalRandom.current().nextInt(1, b-1);
-            Grid.get(randX).set(randY, new ForestGrown(Grid.get(randX).get(randY),true));
+            for (int i = 0; i < 10; i++) {
+                int randX = ThreadLocalRandom.current().nextInt(1, a-1);
+                int randY = ThreadLocalRandom.current().nextInt(1, b-1);
+
+                Grid.get(randX).set(randY, new ForestGrown(Grid.get(randX).get(randY),true));
+            }
+        }
+        else if(mapNum == 1){
+            starter = 1;
+            Grid.get(starter).set(0, new Road(Grid.get(starter).get(0), Ut1));
+            Grid.get(4).set(5, new ForestGrown(Grid.get(4).get(5),true));
+            Grid.get(7).set(10, new ForestGrown(Grid.get(7).get(10),true));
+            Grid.get(10).set(16, new ForestGrown(Grid.get(10).get(16),true));
+            Grid.get(15).set(8, new ForestGrown(Grid.get(15).get(8),true));
+            Grid.get(9).set(15, new ForestGrown(Grid.get(9).get(15),true));
+            Grid.get(12).set(12, new ForestGrown(Grid.get(12).get(12),true));
+        }
+        else if(mapNum == 2){
+            starter = 5;
+            Grid.get(starter).set(0, new Road(Grid.get(starter).get(0), Ut1));
+            Grid.get(2).set(5, new ForestGrown(Grid.get(2).get(5),true));
+            Grid.get(7).set(15, new ForestGrown(Grid.get(7).get(15),true));
+            Grid.get(13).set(22, new ForestGrown(Grid.get(13).get(22),true));
+            Grid.get(12).set(10, new ForestGrown(Grid.get(12).get(10),true));
+            Grid.get(6).set(9, new ForestGrown(Grid.get(6).get(9),true));
+        }
+        else if(mapNum == 3){
+            starter = 10;
+            Grid.get(starter).set(0, new Road(Grid.get(starter).get(0), Ut1));
+            Grid.get(13).set(20, new ForestGrown(Grid.get(13).get(20),true));
+            Grid.get(4).set(4, new ForestGrown(Grid.get(4).get(4),true));
+            Grid.get(3).set(11, new ForestGrown(Grid.get(3).get(11),true));
+            Grid.get(15).set(5, new ForestGrown(Grid.get(15).get(5),true));
         }
     }
 
@@ -74,22 +101,6 @@ public class Game extends JPanel {
         return (int)(floor(x/CELL_SIZE));
     }
 
-    public void loadSave(int saveID) {
-        
-    }
-    
-    public void saveGame() {
-        
-    }
-    
-    public void zoomIn() {
-        
-    }
-    
-    public void zoomOut() {
-        
-    }
-    
     public void setGameSpeed(int speed) {
         this.gameSpeed = speed;
         if(speed == 0) {
@@ -112,6 +123,7 @@ public class Game extends JPanel {
     public int getGameSpeed() {
         return this.gameSpeed;
     }
+    public ArrayList<MoneyLog> getLogs() {return this.logs;}
 
     public int getCitizens() {return this.citizens.size();}
 
@@ -120,7 +132,7 @@ public class Game extends JPanel {
         for(int i = 0; i < this.citizens.size();i++){
             avgSatisfaction += citizens.get(i).getSatisfaction();
         }
-        return (avgSatisfaction/this.citizens.size());
+        return Math.round((avgSatisfaction/this.citizens.size()) * 100.0) / 100.0;
     }
 
     public int getMoney() {
@@ -128,6 +140,7 @@ public class Game extends JPanel {
     }
 
     public void placeBuilding(int i, int j, int building) {
+        MoneyLog log = new MoneyLog(0, 0, "", timetext);
         switch (building) {
             case 1 -> {
                 if (scrolled) {
@@ -135,20 +148,19 @@ public class Game extends JPanel {
                 } else {
                     Grid.get(i).set(j, new Road(Grid.get(i).get(j), Ut1));
                 }
-                this.Money -= Grid.get(i).get(j).getCost();
+                log.setText("Út építése");
             }
             case 2 -> {
                 Grid.get(i).set(j, new Police(Grid.get(i).get(j)));
-                this.Money -= Grid.get(i).get(j).getCost();
                 if(i-1 >=0 && j-1 >=0 && i+1 < Height/CELL_SIZE && j+1 < Width/CELL_SIZE && (Grid.get(i).get(j+1).hasPower || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j).hasPower || Grid.get(i-1).get(j).hasPower)) {
                     Grid.get(i).get(j).setHasPower(true);
                 }
+                log.setText("Rendőrség építése");
             }
             case 3 -> {
                 if (!scrolled) {
                     Grid.get(i).set(j, new School(Grid.get(i).get(j)));
                     Grid.get(i).set(j+1, new SchoolR(Grid.get(i).get(j+1)));
-                    this.Money -= Grid.get(i).get(j).getCost();
                     if(i-1 >=0 && j-1 >=0 && i+1 < Height/CELL_SIZE && j+2 < Width/CELL_SIZE
                             && (Grid.get(i-1).get(j).hasPower
                             || Grid.get(i-1).get(j+1).hasPower
@@ -161,7 +173,6 @@ public class Game extends JPanel {
                 } else {
                     Grid.get(i).set(j, new SchoolR(Grid.get(i).get(j), true));
                     Grid.get(i+1).set(j, new School(Grid.get(i+1).get(j), true));
-                    this.Money -= Grid.get(i+1).get(j).getCost();
                     if(i-1 >=0 && j-1 >=0 && i+2 < Height/CELL_SIZE && j+1 < Width/CELL_SIZE
                             && (Grid.get(i).get(j-1).hasPower
                             || Grid.get(i+1).get(j-1).hasPower
@@ -173,13 +184,13 @@ public class Game extends JPanel {
                     }
                 }
                 No_schoolExists++;
+                log.setText("Iskola építése");
             }
             case 4 -> {
                 Grid.get(i).set(j, new University(Grid.get(i).get(j)));
                 Grid.get(i).set(j+1, new UniversityUR(Grid.get(i).get(j+1)));
                 Grid.get(i+1).set(j, new UniversityLL(Grid.get(i+1).get(j)));
                 Grid.get(i+1).set(j+1, new UniversityLR(Grid.get(i+1).get(j+1)));
-                this.Money -= Grid.get(i).get(j).getCost();
                 if (i-1 >=0 && j-1 >=0 && i+2 < Height/CELL_SIZE && j+2 < Width/CELL_SIZE
                         && (Grid.get(i-1).get(j).hasPower || Grid.get(i-1).get(j+1).hasPower
                         || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j-1).hasPower
@@ -188,13 +199,13 @@ public class Game extends JPanel {
                     Grid.get(i).get(j).setHasPower(true);
                 }
                 No_universityExists++;
+                log.setText("Egyetem építése");
             }
             case 5 -> {
                 Grid.get(i).set(j, new Stadium(Grid.get(i).get(j)));
                 Grid.get(i).set(j+1, new StadiumUR(Grid.get(i).get(j+1)));
                 Grid.get(i+1).set(j, new StadiumLL(Grid.get(i+1).get(j)));
                 Grid.get(i+1).set(j+1, new StadiumLR(Grid.get(i+1).get(j+1)));
-                this.Money -= Grid.get(i).get(j).getCost();
                 if (i-1 >=0 && j-1 >=0 && i+2 < Height/CELL_SIZE && j+2 < Width/CELL_SIZE
                         && (Grid.get(i-1).get(j).hasPower || Grid.get(i-1).get(j+1).hasPower
                         || Grid.get(i).get(j-1).hasPower || Grid.get(i+1).get(j-1).hasPower
@@ -203,22 +214,27 @@ public class Game extends JPanel {
                     Grid.get(i).get(j).setHasPower(true);
                 }
                 stadiumExists = true;
+                log.setText("Stadion építése");
             }
             case 6 -> {
                 Grid.get(i).set(j,new PowerPlant(Grid.get(i).get(j),Grid));
                 Grid.get(i).set(j+1, new PowerPlantUR(Grid.get(i).get(j+1)));
                 Grid.get(i+1).set(j, new PowerPlantLL(Grid.get(i+1).get(j)));
                 Grid.get(i+1).set(j+1, new PowerPlantLR(Grid.get(i+1).get(j+1)));
-                this.Money -= Grid.get(i).get(j).getCost();
+                log.setText("Erőmű építése");
             }
             case 7 -> {
                 Grid.get(i).set(j, new ForestNew(Grid.get(i).get(j), year, month, day));
-                this.Money -= Grid.get(i).get(j).getCost();
+                log.setText("Erdő építése");
             }
             case 8 -> {
                 Grid.get(i).set(j, new ForestGrown(Grid.get(i).get(j),false));
+                return;
             }
         }
+        this.Money -= Grid.get(i).get(j).getCost();
+        log.setMoney(Grid.get(i).get(j).getCost());
+        logs.add(log);
     }
 
     public void clickOnField(int building) {
@@ -693,6 +709,9 @@ public class Game extends JPanel {
             citizen.addAge();
         }
 
+        this.Money += this.monthly_tax;
+        this.monthly_tax = 0;
+
         for (ArrayList<Field> rows : Grid) {
             for (Field cell : rows) {
                 if(cell.getClass().equals(ForestNew.class)) {
@@ -710,7 +729,7 @@ public class Game extends JPanel {
 
     public void aMonthPassed() {
         for(Citizen citizen : citizens) {
-            this.Money += this.taxMultiplier * citizen.getQualification() * 100;
+            this.monthly_tax += this.taxMultiplier * citizen.getQualification() * 100;
             citizen.setAmountOfTax(this.taxMultiplier);
         }
     }
@@ -725,10 +744,15 @@ public class Game extends JPanel {
             default -> {
             }
         }
-        this.satisfactionExtra = 0.0;
+        //Bugfix
         for(Citizen citizen : citizens) {
+            this.satisfactionExtra = 0.0;
             if(citizen.getHouse().getNearPark()) {
                 this.satisfactionExtra += (0.1 * citizen.getHouse().getNearestForest().getGrowthLevel());
+            }
+            System.out.println(citizen.getHouse().getNearFactory());
+            if(citizen.getHouse().getNearFactory()) {
+                this.satisfactionExtra -= 0.1;
             }
             if(citizen.getHouse().getNearPolice()) {
                 this.satisfactionExtra += 0.5;
@@ -747,40 +771,49 @@ public class Game extends JPanel {
                 if (zone.getImage().equals(GBorder)) {
                     //House
                     if(Grid.get(cordinateToNum(zone.getY())).get(cordinateToNum(zone.getX())).getClass().equals(Field.class)) {
-                        Grid.get(cordinateToNum(zone.getY())).set(cordinateToNum(zone.getX()), new House(CELL_SIZE, CELL_SIZE, zone.getX(), zone.getY()));
-                        House currentHouse = new House(zone.width,zone.height,zone.x,zone.y);
-                        for(int i = -3; i < 4;i++) {
-                            for(int j = -3; j < 4;j++) {
-                                if(!(i == 0 && j == 0) && ((cordinateToNum(zone.getY()) + i) > 0 && (cordinateToNum(zone.getY()) + i) < Height/CELL_SIZE && (cordinateToNum(zone.getX()) + j) > 0 && (cordinateToNum(zone.getX()) + j) < Width/CELL_SIZE )) {
-                                    if(Grid.get(cordinateToNum(zone.getY()) + i).get(cordinateToNum(zone.getX()) + j).getClass().getSuperclass().equals(Forest.class)) {
-                                        currentHouse.setNearPark();
-                                        currentHouse.setNearestForest((Forest)(Grid.get(cordinateToNum(zone.getY()) + i ).get(cordinateToNum(zone.getX() + j))));
-                                        break;
+                        // random lerak pár házat, nem mindet egyből
+                        int randomChance = rand.nextInt((20 - 1) + 1) + 1;
+                        if((randomChance % 4) == 0) {
+                            House currentHouse = new House(zone.getWidth(),zone.getHeight(),zone.getX(),zone.getY());
+                            Grid.get(cordinateToNum(zone.getY())).set(cordinateToNum(zone.getX()), currentHouse);
+                            randomRes = (int)(Math.random() * 5) + 1;
+                            for(int i = 0; i < randomRes; i++) {
+                                citizens.add(new Citizen(currentHouse));
+                            }
+
+                            for(int i = -3; i < 4;i++) {
+                                for(int j = -3; j < 4;j++) {
+                                    if(!(i == 0 && j == 0) && ((cordinateToNum(zone.getY()) + i) > 0 && (cordinateToNum(zone.getY()) + i) < Height/CELL_SIZE && (cordinateToNum(zone.getX()) + j) > 0 && (cordinateToNum(zone.getX()) + j) < Width/CELL_SIZE )) {
+                                        if(Grid.get(cordinateToNum(zone.getY()) + i).get(cordinateToNum(zone.getX()) + j).getClass().getSuperclass().equals(Forest.class)) {
+                                            currentHouse.setNearPark();
+                                            currentHouse.setNearestForest((Forest)(Grid.get(cordinateToNum(zone.getY()) + i ).get(cordinateToNum(zone.getX() + j))));
+                                            break;
+                                        }
                                     }
                                 }
-                            }
-                            if(currentHouse.getNearPark()){
-                                break;
-                            }
-                        }
-
-                        for(int i = -5; i < 6;i++) {
-                            for(int j = -5; j < 6;j++) {
-                                if(!(i == 0 && j == 0) && ((cordinateToNum(zone.getY()) + i) > 0 && (cordinateToNum(zone.getY()) + i) < Height/CELL_SIZE && (cordinateToNum(zone.getX()) + j) > 0 && (cordinateToNum(zone.getX()) + j) < Width/CELL_SIZE )) {
-                                    if(Grid.get(cordinateToNum(zone.getY()) + i).get(cordinateToNum(zone.getX()) + j).getClass().equals(Police.class)) {
-                                        currentHouse.setNearPolice();
-                                        break;
-                                    }
+                                if(currentHouse.getNearPark()){
+                                    break;
                                 }
                             }
-                            if(currentHouse.getNearPolice()){
-                                break;
-                            }
-                        }
 
-                        randomRes = (int)(Math.random() * 5) + 1;
-                        for(int i = 0; i < randomRes; i++) {
-                            citizens.add(new Citizen(currentHouse));
+                            for(int i = -5; i < 6;i++) {
+                                for(int j = -5; j < 6;j++) {
+                                    if(!(i == 0 && j == 0) && ((cordinateToNum(zone.getY()) + i) > 0 && (cordinateToNum(zone.getY()) + i) < Height/CELL_SIZE && (cordinateToNum(zone.getX()) + j) > 0 && (cordinateToNum(zone.getX()) + j) < Width/CELL_SIZE )) {
+                                        if(Grid.get(cordinateToNum(zone.getY()) + i).get(cordinateToNum(zone.getX()) + j).getClass().equals(Police.class)) {
+                                            currentHouse.setNearPolice();
+                                            break;
+                                        }
+                                    }
+                                }
+                                if(currentHouse.getNearPolice()){
+                                    break;
+                                }
+                            }
+
+                            randomRes = (int)(Math.random() * 5) + 1;
+                            for(int i = 0; i < randomRes; i++) {
+                                citizens.add(new Citizen(currentHouse));
+                            }
                         }
                     }
                     repaint();
@@ -791,6 +824,18 @@ public class Game extends JPanel {
                         int randomChance = rand.nextInt((20 - 1) + 1) + 1;
                         if((randomChance % 4) == 0) {
                             Grid.get(cordinateToNum(zone.getY())).set(cordinateToNum(zone.getX()), new Job(CELL_SIZE, CELL_SIZE, zone.getX(), zone.getY(), Factory, 2));
+                            /*if(Grid.get(cordinateToNum(zone.getY())).get(cordinateToNum(zone.getX()) + 1).getClass().equals(House.class)) {
+                                ((House)(Grid.get(cordinateToNum(zone.getY())).get(cordinateToNum(zone.getX()) + 1))).setNearFactory(true);
+                            }
+                            if(Grid.get(cordinateToNum(zone.getY())).get(cordinateToNum(zone.getX()) - 1).getClass().equals(House.class)) {
+                                ((House)(Grid.get(cordinateToNum(zone.getY())).get(cordinateToNum(zone.getX()) - 1))).setNearFactory(true);
+                            }
+                            if(Grid.get(cordinateToNum(zone.getY()) + 1).get(cordinateToNum(zone.getX())).getClass().equals(House.class)) {
+                                ((House)(Grid.get(cordinateToNum(zone.getY()) + 1).get(cordinateToNum(zone.getX())))).setNearFactory(true);
+                            }
+                            if(Grid.get(cordinateToNum(zone.getY()) - 1).get(cordinateToNum(zone.getX())).getClass().equals(House.class)) {
+                                ((House)(Grid.get(cordinateToNum(zone.getY()) - 1).get(cordinateToNum(zone.getX())))).setNearFactory(true);
+                            }*/
                         }
                     }
                     repaint();
@@ -909,7 +954,10 @@ public class Game extends JPanel {
     public void Time() {
         timer = new Timer(1000, e -> {
             if(gameSpeed == 3) {
-                time = time + 11;
+                time = time + 55;
+            }
+            else if(gameSpeed == 2) {
+                time = time + 10;
             }
             else {
                 time++;

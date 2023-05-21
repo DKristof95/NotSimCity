@@ -12,32 +12,32 @@ public class Player {
         this.taxRate = 0.0;
         this.moneyLogs = new ArrayList<MoneyLog>();
     }
-    
+
     public void build() {
-        
+
     }
-    
+
     public void demolish() {
-        
+
     }
-    
+
     public int getMoney() {
         return money;
     }
-    
+
     public double getTaxRate() {
         return taxRate;
     }
-    
+
     public void addMoneyLog(MoneyLog log) {
-        
+
     }
-    
+
     public ArrayList<MoneyLog> getMoneyLogs() {
         return moneyLogs;
     }
-    
+
     public void requireTaxes() {
-        
+
     }
 }

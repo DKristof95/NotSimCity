@@ -4,7 +4,7 @@ import java.awt.*;
 
 public class Job extends Field {
     private int jobType;
-    
+
     public Job(int sizeX, int sizeY, int posX, int posY, Image img, int jobType) {
         super(sizeX, sizeY, posX, posY, 0, 0, false, img);
         int capacity = 0;
