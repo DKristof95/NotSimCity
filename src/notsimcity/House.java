@@ -21,12 +21,18 @@ public class House extends Field {
     public void setNearPark() {
         nearPark = !nearPark;
     }
+    public void setNearPark(boolean value) {
+        nearPark = value;
+    }
 
     public boolean getNearPolice() {
         return this.nearPolice;
     }
     public void setNearPolice() {
         nearPolice = !nearPolice;
+    }
+    public void setNearPolice(boolean value) {
+        nearPolice = value;
     }
     public boolean getNearFactory() {
         return this.nearFactory;

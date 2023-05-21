@@ -17,6 +17,10 @@ public class MoneyLog {
         this.text = text;
     }
 
+    public String getText() {
+        return text;
+    }
+
     public void setMoney(int money) {
         this.money = money;
     }

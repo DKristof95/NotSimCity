@@ -22,9 +22,9 @@ public class Game extends JPanel {
     private final ArrayList<Citizen> citizens = new ArrayList<>();
     private final ArrayList<MoneyLog> logs = new ArrayList<>();
     private Player player;
-    private String s_day = "01", s_month = "01", timText = "";
+    private String s_day = "01", s_month = "01", timeText = "";
     private final java.util.List<Sprite> spriteComponents = new ArrayList<>();
-    private int time = 0, day = 1, month = 1, year = 2023, gameSpeed = 1, Pos_y, Pos_x, Width, Height, buildingMode = 0, sizeHelper = 0, Money = 50000, starter, randomRes, No_schoolExists = 0, No_universityExists = 0, monthly_tax = 0;
+    private int time = 0, day = 1, month = 1, year = 2023, gameSpeed = 1, Pos_y, Pos_x, Width, Height, buildingMode = 0, sizeHelper = 0, Money = 50000, starter, randomRes, No_schoolExists = 0, No_universityExists = 0, monthly_tax = 0, unsatistiedMonths = 6;
     private final int mapNum;
     private double taxMultiplier = 1.0, satisfactionMod = 0.0, satisfactionExtra = 0.0;
     private Timer timer;
@@ -290,7 +290,7 @@ public class Game extends JPanel {
      * A mezőre minden típusú épület lerakása.
      */
     public void placeBuilding(int i, int j, int building) {
-        MoneyLog log = new MoneyLog(0, 0, "", timText);
+        MoneyLog log = new MoneyLog(0, 0, "", timeText);
         switch (building) {
             case 1 -> {
                 Grid.get(i).set(j, new Road(Grid.get(i).get(j)));
@@ -639,62 +639,126 @@ public class Game extends JPanel {
             for (int j = 0; j < Grid.get(i).size(); j++) {
                 if (Grid.get(i).get(j).getPosX() < Pos_x && Pos_x < (Grid.get(i).get(j).getPosX() + CELL_SIZE) && Grid.get(i).get(j).getPosY() < Pos_y && Pos_y < (Grid.get(i).get(j).getPosY() + CELL_SIZE)) {
                     if(i != starter || j != 0) {
+                        if((Grid.get(i).get(j).getClass().equals(Field.class)) || (Grid.get(i).get(j).getClass().equals(House.class)) || (Grid.get(i).get(j).getClass().equals(Job.class))) {
+                            return;
+                        }
+
+                        MoneyLog log = new MoneyLog(1, 0, "", timeText);
                         if (Grid.get(i).get(j).getClass().equals(School.class) && !((School)Grid.get(i).get(j)).rotated){
                             this.Money += (Grid.get(i).get(j).getCost()/2);
+                            log.setMoney((Grid.get(i).get(j).getCost()/2));
+                            log.setText("Iskola lebontás");
                             Grid.get(i).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
                             Grid.get(i).set(j+1,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j+1).getPosX(), Grid.get(i).get(j+1).getPosY(), 0, 0, false));
                         } else if (Grid.get(i).get(j).getClass().equals(School.class) && ((School)Grid.get(i).get(j)).rotated) {
                             this.Money += (Grid.get(i).get(j).getCost() / 2);
+                            log.setMoney((Grid.get(i).get(j).getCost() / 2));
+                            log.setText("Iskola lebontás");
                             Grid.get(i).set(j, new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
                             Grid.get(i-1).set(j, new Field(CELL_SIZE, CELL_SIZE, Grid.get(i-1).get(j).getPosX(), Grid.get(i-1).get(j).getPosY(), 0, 0, false));
-                        } else if (Grid.get(i).get(j).getClass().equals(SchoolR.class) && !((SchoolR)Grid.get(i).get(j)).rotated){
+                        } else if (Grid.get(i).get(j).getClass().equals(Police.class)) {
+                            this.Money += (Grid.get(i).get(j).getCost() / 2);
+                            log.setMoney((Grid.get(i).get(j).getCost() / 2));
+                            log.setText("Rendőrség lebontás");
+                            Grid.get(i).set(j, new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
+                        }
+                        else if (Grid.get(i).get(j).getClass().equals(SchoolR.class) && !((SchoolR)Grid.get(i).get(j)).rotated){
                             this.Money += (Grid.get(i).get(j-1).getCost()/2);
+                            log.setMoney((Grid.get(i).get(j-1).getCost()/2));
+                            log.setText("Iskola lebontás");
                             Grid.get(i).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
                             Grid.get(i).set(j-1,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j-1).getPosX(), Grid.get(i).get(j-1).getPosY(), 0, 0, false));
                         } else if (Grid.get(i).get(j).getClass().equals(SchoolR.class) && ((SchoolR)Grid.get(i).get(j)).rotated){
                             this.Money += (Grid.get(i+1).get(j).getCost()/2);
+                            log.setMoney((Grid.get(i+1).get(j).getCost()/2));
+                            log.setText("Iskola lebontás");
                             Grid.get(i).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
                             Grid.get(i+1).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i+1).get(j).getPosX(), Grid.get(i+1).get(j).getPosY(), 0, 0, false));
                         } else if (Grid.get(i).get(j).getClass().equals(University.class) || Grid.get(i).get(j).getClass().equals(Stadium.class) || Grid.get(i).get(j).getClass().equals(PowerPlant.class)) {
                             this.Money += (Grid.get(i).get(j).getCost()/2);
+                            log.setMoney((Grid.get(i).get(j).getCost()/2));
+                            if(Grid.get(i).get(j).getClass().equals(University.class)) {
+                                log.setText("Egyetem lebontás");
+                            }
+                            else if(Grid.get(i).get(j).getClass().equals(Stadium.class)){
+                                log.setText("Stadion lebontás");
+                            }
+                            else {
+                                log.setText("Erőmű lebontás");
+                            }
                             Grid.get(i).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
                             Grid.get(i).set(j+1,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j+1).getPosX(), Grid.get(i).get(j+1).getPosY(), 0, 0, false));
                             Grid.get(i+1).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i+1).get(j).getPosX(), Grid.get(i+1).get(j).getPosY(), 0, 0, false));
                             Grid.get(i+1).set(j+1,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i+1).get(j+1).getPosX(), Grid.get(i+1).get(j+1).getPosY(), 0, 0, false));
                         } else if (Grid.get(i).get(j).getClass().equals(UniversityUR.class) || Grid.get(i).get(j).getClass().equals(StadiumUR.class) || Grid.get(i).get(j).getClass().equals(PowerPlantUR.class)) {
                             this.Money += (Grid.get(i).get(j-1).getCost()/2);
+                            log.setMoney((Grid.get(i).get(j-1).getCost()/2));
+                            if(Grid.get(i).get(j).getClass().equals(UniversityUR.class)) {
+                                log.setText("Egyetem lebontás");
+                            }
+                            else if(Grid.get(i).get(j).getClass().equals(StadiumUR.class)){
+                                log.setText("Stadion lebontás");
+                            }
+                            else {
+                                log.setText("Erőmű lebontás");
+                            }
                             Grid.get(i).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
                             Grid.get(i).set(j-1,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j-1).getPosX(), Grid.get(i).get(j-1).getPosY(), 0, 0, false));
                             Grid.get(i+1).set(j-1,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i+1).get(j-1).getPosX(), Grid.get(i+1).get(j-1).getPosY(), 0, 0, false));
                             Grid.get(i+1).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i+1).get(j).getPosX(), Grid.get(i+1).get(j).getPosY(), 0, 0, false));
                         } else if (Grid.get(i).get(j).getClass().equals(UniversityLL.class) || Grid.get(i).get(j).getClass().equals(StadiumLL.class) || Grid.get(i).get(j).getClass().equals(PowerPlantLL.class)) {
                             this.Money += (Grid.get(i-1).get(j).getCost()/2);
+                            log.setMoney((Grid.get(i-1).get(j).getCost()/2));
+                            if(Grid.get(i).get(j).getClass().equals(UniversityLL.class)) {
+                                log.setText("Egyetem lebontás");
+                            }
+                            else if(Grid.get(i).get(j).getClass().equals(StadiumLL.class)){
+                                log.setText("Stadion lebontás");
+                            }
+                            else {
+                                log.setText("Erőmű lebontás");
+                            }
                             Grid.get(i).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
                             Grid.get(i-1).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i-1).get(j).getPosX(), Grid.get(i-1).get(j).getPosY(), 0, 0, false));
                             Grid.get(i-1).set(j+1,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i-1).get(j+1).getPosX(), Grid.get(i-1).get(j+1).getPosY(), 0, 0, false));
                             Grid.get(i).set(j+1,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j+1).getPosX(), Grid.get(i).get(j+1).getPosY(), 0, 0, false));
                         } else if (Grid.get(i).get(j).getClass().equals(UniversityLR.class) || Grid.get(i).get(j).getClass().equals(StadiumLR.class) || Grid.get(i).get(j).getClass().equals(PowerPlantLR.class)) {
                             this.Money += (Grid.get(i-1).get(j-1).getCost()/2);
+                            log.setMoney((Grid.get(i-1).get(j-1).getCost()/2));
+                            if(Grid.get(i).get(j).getClass().equals(UniversityLR.class)) {
+                                log.setText("Egyetem lebontás");
+                            }
+                            else if(Grid.get(i).get(j).getClass().equals(StadiumLR.class)){
+                                log.setText("Stadion lebontás");
+                            }
+                            else {
+                                log.setText("Erőmű lebontás");
+                            }
                             Grid.get(i).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
                             Grid.get(i-1).set(j-1,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i-1).get(j-1).getPosX(), Grid.get(i-1).get(j-1).getPosY(), 0, 0, false));
                             Grid.get(i-1).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i-1).get(j).getPosX(), Grid.get(i-1).get(j).getPosY(), 0, 0, false));
                             Grid.get(i).set(j-1,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j-1).getPosX(), Grid.get(i).get(j-1).getPosY(), 0, 0, false));
                         } else {
-                            if(Grid.get(i).get(j).getClass().equals(ForestGrown.class)) {
-                                if(!(((ForestGrown)(Grid.get(i).get(j))).isStarted())) {
+                            if (Grid.get(i).get(j).getClass().equals(ForestGrown.class)) {
+                                if (!(((ForestGrown) (Grid.get(i).get(j))).isStarted())) {
                                     this.Money += (Grid.get(i).get(j).getCost() / 2);
+                                    log.setMoney((Grid.get(i).get(j).getCost() / 2));
+                                    log.setText("Erdő lebontás");
                                 }
-                            }
-                            else{
+                            } else {
                                 this.Money += (Grid.get(i).get(j).getCost() / 2);
+                                log.setMoney((Grid.get(i).get(j).getCost() / 2));
+                                log.setText("Erdő lebontás");
                             }
                             Grid.get(i).set(j, new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
-                            if(Grid.get(i).get(j).getClass().equals(School.class)) {
+                            if (Grid.get(i).get(j).getClass().equals(School.class)) {
                                 No_schoolExists--;
-                            }
-                            else if(Grid.get(i).get(j).getClass().equals(University.class)) {
+                            } else if (Grid.get(i).get(j).getClass().equals(University.class)) {
                                 No_universityExists--;
                             }
+                        }
+                        if(log.getText() != "") {
+                            logs.add(log);
                         }
                     }
                     return;
@@ -871,6 +935,20 @@ public class Game extends JPanel {
     }
 
     /**
+     * A játék elbukását lejátszó függvény
+     */
+    void gameOver() {
+        JOptionPane.showMessageDialog(null, "Mivel a népesség 6 hónapon át elégedetlen volt, ezért szavazást indítottak, és leváltottak téged!\n" +
+                "A játék véget ért!\n\n" +
+                "Néhány információ:\n" +
+                "Lakosok száma: "+citizens.size() + "\n" +
+                "Dátum: "+ timeText +"\n"+
+                "STB"+
+                "stb...", "Leváltottak!",  JOptionPane.ERROR_MESSAGE);
+        System.exit(1);
+    }
+
+    /**
      * 1 hónap elteltével történő műveletek
      */
     public void aMonthPassed() {
@@ -912,6 +990,22 @@ public class Game extends JPanel {
                 }
             }
         }
+
+        double satisfaction = getSatisfaction();
+        if(satisfaction <= 20.0) {
+            unsatistiedMonths++;
+            if(unsatistiedMonths >= 6) {
+                gameOver();
+            }
+        }
+        else {
+            if(unsatistiedMonths >= 4) {
+                unsatistiedMonths = 2;
+            }
+            else {
+                unsatistiedMonths = 0;
+            }
+        }
     }
 
     public double distance(int x1,int y1,int x2,int y2) {
@@ -923,33 +1017,86 @@ public class Game extends JPanel {
      */
     public void aDayPassed() {
         switch ((int)(taxMultiplier*2.0)) {
-            case 0 -> this.satisfactionMod = 1.0;
-            case 1 -> this.satisfactionMod = 0.5;
+            case 0 -> this.satisfactionMod = 2.0;
+            case 1 -> this.satisfactionMod = 1.0;
             case 2 -> this.satisfactionMod = 0.0;
-            case 3 -> this.satisfactionMod = -0.5;
-            case 4 -> this.satisfactionMod = -1.0;
+            case 3 -> this.satisfactionMod = -1.0;
+            case 4 -> this.satisfactionMod = -2.0;
             default -> {
             }
         }
         //Bugfix
         for(Citizen citizen : citizens) {
+            /* Nézzük meg, hogy még mindig ott van-e az a mező */
+            for(int i = -3; i < 4;i++) {
+                for(int j = -3; j < 4;j++) {
+                    if(!(i == 0 && j == 0) && ((cordinateToNum(citizen.getHouse().getY()) + i) > 0 && (cordinateToNum(citizen.getHouse().getY()) + i) < Height/CELL_SIZE && (cordinateToNum(citizen.getHouse().getX()) + j) > 0 && (cordinateToNum(citizen.getHouse().getX()) + j) < Width/CELL_SIZE )) {
+                        if(Grid.get(cordinateToNum(citizen.getHouse().getY()) + i).get(cordinateToNum(citizen.getHouse().getX()) + j).getClass().equals(ForestGrown.class) || Grid.get(cordinateToNum(citizen.getHouse().getY()) + i).get(cordinateToNum(citizen.getHouse().getX()) + j).getClass().equals(ForestNew.class)) {
+                            citizen.getHouse().setNearPark(true);
+                            citizen.getHouse().setNearestForest((Forest)(Grid.get(cordinateToNum(citizen.getHouse().getY()) + i).get(cordinateToNum(citizen.getHouse().getX()) + j)));
+                            break;
+                        }
+                        else {
+                            citizen.getHouse().setNearPark(false);
+                        }
+
+                        if((Grid.get(cordinateToNum(citizen.getHouse().getY()) + i).get(cordinateToNum(citizen.getHouse().getX()) + j).getClass().equals(Job.class)) && ((Job)Grid.get(cordinateToNum(citizen.getHouse().getY()) + i).get(cordinateToNum(citizen.getHouse().getX()) + j)).getJobType() == 2) {
+                            citizen.getHouse().setNearFactory(true);
+                            break;
+                        }
+                        else {
+                            citizen.getHouse().setNearFactory(false);
+                        }
+                    }
+                }
+                if(citizen.getHouse().getNearPark()){
+                    break;
+                }
+            }
+
+            for(int i = -5; i < 6;i++) {
+                for(int j = -5; j < 6;j++) {
+                    if(!(i == 0 && j == 0) && ((cordinateToNum(citizen.getHouse().getY()) + i) > 0 && (cordinateToNum(citizen.getHouse().getY()) + i) < Height/CELL_SIZE && (cordinateToNum(citizen.getHouse().getX()) + j) > 0 && (cordinateToNum(citizen.getHouse().getX()) + j) < Width/CELL_SIZE )) {
+                        if(Grid.get(cordinateToNum(citizen.getHouse().getY()) + i).get(cordinateToNum(citizen.getHouse().getX()) + j).getClass().equals(Police.class)) {
+                            citizen.getHouse().setNearPolice(true);
+                            break;
+                        }
+                        else {
+                            citizen.getHouse().setNearPolice(false);
+                        }
+                    }
+                }
+                if(citizen.getHouse().getNearPolice()){
+                    break;
+                }
+            }
+
             this.satisfactionExtra = 0.0;
             if(citizen.getHouse().getNearPark()) {
                 this.satisfactionExtra += (0.1 * citizen.getHouse().getNearestForest().getGrowthLevel());
             }
+
             System.out.println(citizen.getHouse().getNearFactory());
+
             if(citizen.getHouse().getNearFactory()) {
                 this.satisfactionExtra -= 0.1;
             }
+
             if(citizen.getHouse().getNearPolice()) {
                 this.satisfactionExtra += 0.5;
             }
             else {
                 this.satisfactionExtra -= 0.5;
             }
+
             if(stadiumExists) {
                 this.satisfactionExtra += 1.0;
             }
+
+            if(!citizen.getHouse().hasPower) {
+                this.satisfactionExtra -= 0.5; // ha nincs áram a házába
+            }
+
             citizen.setSatisfaction(citizen.getSatisfaction() + this.satisfactionMod + this.satisfactionExtra);
         }
 
@@ -1153,30 +1300,30 @@ public class Game extends JPanel {
                 time = time % 60;
                 aDayPassed();
                 if (time < 10) {
-                    timText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "00:0" + time;
+                    timeText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "00:0" + time;
                 }
                 else {
-                    timText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "00:" + time;
+                    timeText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "00:" + time;
                 }
             } else {
                 if (h == 0) {
                     if (m < 10) {
-                        timText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "00:0" + m;
+                        timeText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "00:0" + m;
                     } else {
-                        timText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "00:" + m;
+                        timeText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "00:" + m;
                     }
                 }
                 if (h < 10) {
                     if (m < 10) {
-                        timText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "0" + h + ":0" + m;
+                        timeText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "0" + h + ":0" + m;
                     } else {
-                        timText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "0" + h + ":" + m;
+                        timeText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + "0" + h + ":" + m;
                     }
                 } else {
                     if (m < 10) {
-                        timText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + h + ":0" + m;
+                        timeText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + h + ":0" + m;
                     } else {
-                        timText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + h + ":" + m;
+                        timeText = String.valueOf(year) + '.' + s_month + '.' + s_day + ". " + h + ":" + m;
                     }
                 }
             }
@@ -1188,7 +1335,7 @@ public class Game extends JPanel {
      * A jelenlegi idő lekérdezése.
      */
     public String getTime() {
-        return timText;
+        return timeText;
     }
 
     /**

@@ -505,6 +505,7 @@ public class NotSimCityGUI {
                         ArrayList<MoneyLog> Logs = gameArea.getLogs();
                         for(MoneyLog log : Logs) {
                             final JLabel newLabel = new JLabel(log.getOutput());
+                            newLabel.setFont(new Font("Courier", Font.PLAIN, 14));
                             panel2.add(newLabel);
                         }
                         frame5.setVisible(true);
