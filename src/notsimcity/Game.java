@@ -942,9 +942,7 @@ public class Game extends JPanel {
                 "A játék véget ért!\n\n" +
                 "Néhány információ:\n" +
                 "Lakosok száma: "+citizens.size() + "\n" +
-                "Dátum: "+ timeText +"\n"+
-                "STB"+
-                "stb...", "Leváltottak!",  JOptionPane.ERROR_MESSAGE);
+                "Dátum: "+ timeText +"\n", "Leváltottak!",  JOptionPane.ERROR_MESSAGE);
         System.exit(1);
     }
 
