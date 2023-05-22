@@ -3,9 +3,9 @@ package notsimcity;
 import java.awt.*;
 
 public class Job extends Field {
-    private int jobType;
+    private final int jobType;
     private int workers;
-    private boolean hasPower = false;
+    protected boolean hasPower = false;
 
     public Job(int sizeX, int sizeY, int posX, int posY, Image img, int jobType) {
         super(sizeX, sizeY, posX, posY, 0, 0, false, img);
@@ -16,7 +16,7 @@ public class Job extends Field {
         else {
             this.capacity = 40;
         }
-        this.powerDemand = 0;
+        this.powerDemand = 1;
         this.jobType = jobType;
     }
 

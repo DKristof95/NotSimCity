@@ -9,7 +9,6 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import static java.lang.Math.floor;
-import static java.lang.Math.round;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import static notsimcity.ZoneType.*;
 
@@ -24,9 +23,26 @@ public class Game extends JPanel {
     private Player player;
     private String s_day = "01", s_month = "01", timeText = "";
     private final java.util.List<Sprite> spriteComponents = new ArrayList<>();
-    private int time = 0, day = 1, month = 1, year = 2023, gameSpeed = 1, Pos_y, Pos_x, Width, Height, buildingMode = 0, sizeHelper = 0, Money = 50000, starter, randomRes, No_schoolExists = 0, No_universityExists = 0, monthly_tax = 0, unsatistiedMonths = 6;
+    private int time = 0;
+    private int day = 1;
+    private int month = 1;
+    private int year = 2023;
+    private int gameSpeed = 1;
+    private int Pos_y;
+    private int Pos_x;
+    private int Width;
+    private int Height;
+    private int buildingMode = 0;
+    private int sizeHelper = 0;
+    private int Money = 50000;
+    private int starter;
+    private int No_schoolExists = 0;
+    private int No_universityExists = 0;
+    private int monthly_tax = 0;
+    private int unsatistiedMonths = 6;
     private final int mapNum;
-    private double taxMultiplier = 1.0, satisfactionMod = 0.0, satisfactionExtra = 0.0;
+    private double taxMultiplier = 1.0;
+    private double satisfactionMod = 0.0;
     private Timer timer;
     private MouseListener ml;
     private boolean scrolled = false, stadiumExists = false;
@@ -419,6 +435,7 @@ public class Game extends JPanel {
             }
             case 9 -> {
                 Grid.get(i).set(j, new Pole(Grid.get(i).get(j)));
+                log.setText("Vezeték építése");
             }
         }
         this.Money -= Grid.get(i).get(j).getCost();
@@ -821,7 +838,7 @@ public class Game extends JPanel {
                                 No_universityExists--;
                             }
                         }
-                        if(log.getText() != "") {
+                        if(log.getText().equals("")) {
                             logs.add(log);
                         }
                     }
@@ -959,15 +976,26 @@ public class Game extends JPanel {
      */
     public void aYearPassed() {
         int giveOutQual2 = 0, giveOutQual3 = 0;
-        if(No_schoolExists > 0) {
-            giveOutQual2 = citizens.size()/10;
-        }
         if(No_universityExists > 0) {
             giveOutQual3 = citizens.size()/20;
+            for(Citizen citizen : citizens) {
+                if(citizen.getQualification() == 3) {
+                    giveOutQual3--;
+                }
+            }
+        }
+        if(No_schoolExists > 0) {
+            giveOutQual2 = citizens.size()/10 + giveOutQual3;
+            for(Citizen citizen : citizens) {
+                if(citizen.getQualification() == 2) {
+                    giveOutQual2--;
+                }
+            }
         }
         for(Citizen citizen : citizens) {
             if(citizen.isRetired()){
                 this.Money -= citizen.getRetirementMoney();
+                logs.add(new MoneyLog(0,citizen.getRetirementMoney(),"Nyugdíj kifizetés",timeText));
                 if(citizen.getJob() != null) {
                     citizen.setJob(null);
                 }
@@ -1004,6 +1032,7 @@ public class Game extends JPanel {
         }
 
         this.Money += this.monthly_tax;
+        logs.add(new MoneyLog(1,this.monthly_tax,"Adók beszedése", timeText));
         this.monthly_tax = 0;
 
         for (ArrayList<Field> rows : Grid) {
@@ -1076,6 +1105,17 @@ public class Game extends JPanel {
                     ((Job) Grid.get(cordinateToNum(the_zone.getY())).get(cordinateToNum(the_zone.getX()))).setWorkers();
                 }
             }
+            if(No_schoolExists != 0) {
+                this.Money -= No_schoolExists * 200;
+                MoneyLog log = new MoneyLog(0, No_schoolExists * 200, "Iskola fenntartási költsége", timeText);
+                logs.add(log);
+            }
+            if(No_universityExists != 0) {
+                this.Money -= No_universityExists * 500;
+                MoneyLog log = new MoneyLog(0, No_universityExists * 500, "Egyetem fenntartási költsége", timeText);
+                logs.add(log);
+            }
+
         }
 
         double satisfaction = getSatisfaction();
@@ -1158,39 +1198,45 @@ public class Game extends JPanel {
                 }
             }
 
-            this.satisfactionExtra = 0.0;
+            double satisfactionExtra = 0.0;
             if(citizen.getHouse().getNearPark()) {
-                this.satisfactionExtra += (0.1 * citizen.getHouse().getNearestForest().getGrowthLevel());
+                satisfactionExtra += (0.1 * citizen.getHouse().getNearestForest().getGrowthLevel());
             }
 
             if(citizen.getHouse().getNearFactory()) {
                 if(citizen.getHouse().getNearPark()) {
-                    this.satisfactionExtra -= 0.1;
+                    satisfactionExtra -= 0.1;
                 }
                 else {
-                    this.satisfactionExtra -= 0.2;
+                    satisfactionExtra -= 0.2;
                 }
             }
 
             if(citizen.getHouse().getNearPolice()) {
-                this.satisfactionExtra += 0.5;
+                satisfactionExtra += 0.5;
             }
             else {
-                this.satisfactionExtra -= 0.5;
+                satisfactionExtra -= 0.5;
             }
 
             if(stadiumExists) {
-                this.satisfactionExtra += 1.0;
+                satisfactionExtra += 1.0;
+            }
+            if(this.Money < 0) {
+                satisfactionExtra -= Math.round((this.Money/100000.0) * 100) / 100.0;
             }
 
             if(!citizen.getHouse().hasPower) {
-                this.satisfactionExtra -= 0.5; // ha nincs áram a házába
+                satisfactionExtra -= 0.5; // ha nincs áram a házába
+            }
+            if(!citizen.getJob().hasPower) {
+                satisfactionExtra -= 0.2; // ha nincs áram a házába
             }
             if(citizen.isRetired()) {
-                citizen.setSatisfaction(citizen.getSatisfaction() + this.satisfactionExtra);
+                citizen.setSatisfaction(citizen.getSatisfaction() + satisfactionExtra);
             }
             else {
-                citizen.setSatisfaction(citizen.getSatisfaction() + this.satisfactionMod + this.satisfactionExtra);
+                citizen.setSatisfaction(citizen.getSatisfaction() + this.satisfactionMod + satisfactionExtra);
             }
         }
 
@@ -1202,7 +1248,7 @@ public class Game extends JPanel {
                         // random lerak pár házat, nem mindet egyből
                         int randomChance = rand.nextInt((20 - 1) + 1) + 1;
                         if((randomChance % 4) == 0) {
-                            randomRes = (int)(Math.random() * 5) + 1;
+                            int randomRes = (int) (Math.random() * 5) + 1;
                             House currentHouse = new House(zone.getWidth(), zone.getHeight(), zone.getX(), zone.getY(), randomRes);
                             Grid.get(cordinateToNum(zone.getY())).set(cordinateToNum(zone.getX()), currentHouse);
                             for(int i = 0; i < randomRes; i++) {
@@ -1237,8 +1283,6 @@ public class Game extends JPanel {
                                     break;
                                 }
                             }
-                            int i = cordinateToNum(zone.getY())/zone.height;
-                            int j = cordinateToNum(zone.getX()/zone.width);
                         }
                     }
                     repaint();
