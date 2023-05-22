@@ -27,7 +27,7 @@ public class Field extends Sprite{
         super(sizeX, sizeY, posX, posY, img);
         this.capacity = capacity;
         this.powerDemand = powerDemand;
-        this.citizens = new ArrayList<Citizen>();
+        this.citizens = new ArrayList<>();
         this.isRoad = road;
         this.hasPower = false;
         this.cost = 0;
@@ -38,7 +38,7 @@ public class Field extends Sprite{
     }
     
     public void setPowerSource(PowerPlant pp) {
-        this.powerSource = pp;
+        this.powerSource = new PowerPlant(pp);
     }
     
     public PowerPlant getPowerSource() {
@@ -79,6 +79,9 @@ public class Field extends Sprite{
     }
     public void setCapacity(int cap) {
         this.capacity = cap;
+    }
+    public void setInitCapacity(int cap) {
+        this.capacity += cap;
     }
 
     public int getPowerDemand() {
