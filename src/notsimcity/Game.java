@@ -97,7 +97,7 @@ public class Game extends JPanel {
                                 }
                                 label1.setBorder(new EmptyBorder(0, 0, 0, 50));
                                 panel.add(label1);
-                                JLabel label2 = new JLabel("Lakók: " + field.getCapacity());
+                                JLabel label2 = new JLabel("Lakók: " + field.getCapacity() + "/5");
                                 label2.setBorder(new EmptyBorder(0, 0, 0, 50));
                                 panel.add(label2);
                                 double ctrInHouse = 0.0;
@@ -729,12 +729,14 @@ public class Game extends JPanel {
                             this.Money += (Grid.get(i).get(j).getCost()/2);
                             log.setMoney((Grid.get(i).get(j).getCost()/2));
                             log.setText("Iskola lebontás");
+                            No_schoolExists--;
                             Grid.get(i).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
                             Grid.get(i).set(j+1,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j+1).getPosX(), Grid.get(i).get(j+1).getPosY(), 0, 0, false));
                         } else if (Grid.get(i).get(j).getClass().equals(School.class) && ((School)Grid.get(i).get(j)).rotated) {
                             this.Money += (Grid.get(i).get(j).getCost() / 2);
                             log.setMoney((Grid.get(i).get(j).getCost() / 2));
                             log.setText("Iskola lebontás");
+                            No_schoolExists--;
                             Grid.get(i).set(j, new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
                             Grid.get(i-1).set(j, new Field(CELL_SIZE, CELL_SIZE, Grid.get(i-1).get(j).getPosX(), Grid.get(i-1).get(j).getPosY(), 0, 0, false));
                         } else if (Grid.get(i).get(j).getClass().equals(Police.class)) {
@@ -747,12 +749,14 @@ public class Game extends JPanel {
                             this.Money += (Grid.get(i).get(j-1).getCost()/2);
                             log.setMoney((Grid.get(i).get(j-1).getCost()/2));
                             log.setText("Iskola lebontás");
+                            No_schoolExists--;
                             Grid.get(i).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
                             Grid.get(i).set(j-1,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j-1).getPosX(), Grid.get(i).get(j-1).getPosY(), 0, 0, false));
                         } else if (Grid.get(i).get(j).getClass().equals(SchoolR.class) && ((SchoolR)Grid.get(i).get(j)).rotated){
                             this.Money += (Grid.get(i+1).get(j).getCost()/2);
                             log.setMoney((Grid.get(i+1).get(j).getCost()/2));
                             log.setText("Iskola lebontás");
+                            No_schoolExists--;
                             Grid.get(i).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
                             Grid.get(i+1).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i+1).get(j).getPosX(), Grid.get(i+1).get(j).getPosY(), 0, 0, false));
                         } else if (Grid.get(i).get(j).getClass().equals(University.class) || Grid.get(i).get(j).getClass().equals(Stadium.class) || Grid.get(i).get(j).getClass().equals(PowerPlant.class)) {
@@ -760,6 +764,7 @@ public class Game extends JPanel {
                             log.setMoney((Grid.get(i).get(j).getCost()/2));
                             if(Grid.get(i).get(j).getClass().equals(University.class)) {
                                 log.setText("Egyetem lebontás");
+                                No_universityExists--;
                             }
                             else if(Grid.get(i).get(j).getClass().equals(Stadium.class)){
                                 log.setText("Stadion lebontás");
@@ -776,6 +781,7 @@ public class Game extends JPanel {
                             log.setMoney((Grid.get(i).get(j-1).getCost()/2));
                             if(Grid.get(i).get(j).getClass().equals(UniversityUR.class)) {
                                 log.setText("Egyetem lebontás");
+                                No_universityExists--;
                             }
                             else if(Grid.get(i).get(j).getClass().equals(StadiumUR.class)){
                                 log.setText("Stadion lebontás");
@@ -792,6 +798,7 @@ public class Game extends JPanel {
                             log.setMoney((Grid.get(i-1).get(j).getCost()/2));
                             if(Grid.get(i).get(j).getClass().equals(UniversityLL.class)) {
                                 log.setText("Egyetem lebontás");
+                                No_universityExists--;
                             }
                             else if(Grid.get(i).get(j).getClass().equals(StadiumLL.class)){
                                 log.setText("Stadion lebontás");
@@ -808,6 +815,7 @@ public class Game extends JPanel {
                             log.setMoney((Grid.get(i-1).get(j-1).getCost()/2));
                             if(Grid.get(i).get(j).getClass().equals(UniversityLR.class)) {
                                 log.setText("Egyetem lebontás");
+                                No_universityExists--;
                             }
                             else if(Grid.get(i).get(j).getClass().equals(StadiumLR.class)){
                                 log.setText("Stadion lebontás");
@@ -1048,6 +1056,47 @@ public class Game extends JPanel {
                 }
             }
         }
+        if(No_schoolExists != 0) {
+            this.Money -= No_schoolExists * 400;
+            MoneyLog log = new MoneyLog(0, No_schoolExists * 200, "Iskola fenntartási költsége", timeText);
+            logs.add(log);
+        }
+        if(No_universityExists != 0) {
+            this.Money -= No_universityExists * 800;
+            MoneyLog log = new MoneyLog(0, No_universityExists * 500, "Egyetem fenntartási költsége", timeText);
+            logs.add(log);
+        }
+        int roads = 0;
+        int police_C = 0;
+        int stadium_C = 0;
+        for(ArrayList<Field> arr : Grid) {
+            for(Field f : arr) {
+                if(f.isFieldRoad()) {
+                    roads++;
+                }
+                else if(f.getClass().equals(Police.class)) {
+                    police_C++;
+                }
+                else if(f.getClass().equals(Stadium.class)) {
+                    stadium_C++;
+                }
+            }
+        }
+        if(roads > 0) {
+            this.Money -= roads * 20;
+            MoneyLog log = new MoneyLog(0, roads * 20, "Utak fenntartási költsége", timeText);
+            logs.add(log);
+        }
+        if(police_C > 0) {
+            this.Money -= police_C * 100;
+            MoneyLog log = new MoneyLog(0, police_C * 100, "Rendőrség fenntartási költsége", timeText);
+            logs.add(log);
+        }
+        if(stadium_C > 0) {
+            this.Money -= stadium_C * 2000;
+            MoneyLog log = new MoneyLog(0, stadium_C * 2000, "Stadion fenntartási költsége", timeText);
+            logs.add(log);
+        }
     }
 
     /**
@@ -1104,16 +1153,6 @@ public class Game extends JPanel {
                     citizen.setJob((Job) Grid.get(cordinateToNum(the_zone.getY())).get(cordinateToNum(the_zone.getX())));
                     ((Job) Grid.get(cordinateToNum(the_zone.getY())).get(cordinateToNum(the_zone.getX()))).setWorkers();
                 }
-            }
-            if(No_schoolExists != 0) {
-                this.Money -= No_schoolExists * 200;
-                MoneyLog log = new MoneyLog(0, No_schoolExists * 200, "Iskola fenntartási költsége", timeText);
-                logs.add(log);
-            }
-            if(No_universityExists != 0) {
-                this.Money -= No_universityExists * 500;
-                MoneyLog log = new MoneyLog(0, No_universityExists * 500, "Egyetem fenntartási költsége", timeText);
-                logs.add(log);
             }
 
         }
