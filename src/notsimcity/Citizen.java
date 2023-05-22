@@ -42,14 +42,26 @@ public class Citizen {
         return satisfaction;
     }
 
-    public void addAge() {
+    public boolean addAge() {
+        boolean isDead = false;
+        if(isRetired()) {
+            if(isProbablyDead()) {
+                isDead = true;
+            }
+        }
         age++;
+        return isDead;
     }
 
     public int getPreferredJobType() {
         return preferredJobType;
     }
-
+    public boolean isProbablyDead() {
+        if(Math.random()*this.age < 50) {
+            return true;
+        }
+        return false;
+    }
     public boolean isRetired() {
         return this.age>=65;
     }
@@ -83,17 +95,6 @@ public class Citizen {
         return this.amountOfTax / 40;
     }
 
-    public void build() {
-
-    }
-
-    public void resetCitizen() {
-
-    }
-
-    public void deleteCitizen() {
-
-    }
 
     public Job getNearestJob() {
         return null; // még nem tudjuk

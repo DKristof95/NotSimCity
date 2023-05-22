@@ -968,6 +968,9 @@ public class Game extends JPanel {
         for(Citizen citizen : citizens) {
             if(citizen.isRetired()){
                 this.Money -= citizen.getRetirementMoney();
+                if(citizen.getJob() != null) {
+                    citizen.setJob(null);
+                }
             }
             if(giveOutQual2 > 0 && citizen.getQualification() == 1) {
                 giveOutQual2--;
@@ -977,7 +980,27 @@ public class Game extends JPanel {
                 giveOutQual3--;
                 citizen.setQualification(3);
             }
-            citizen.addAge();
+            if(citizen.addAge()) {
+                if(citizen.getHouse().capacity == 1) {
+                    Citizen newCitizen = new Citizen(citizen.getHouse());
+                    citizens.add(newCitizen);
+                }
+                else {
+                    int randomHouse = -1;
+                    while (randomHouse == -1) {
+                        randomHouse = (int) (Math.random() * citizens.size());
+                        if (citizens.get(randomHouse).getHouse().capacity != 5) {
+                            Citizen newCitizen = new Citizen(citizens.get(randomHouse).getHouse());
+                            citizens.get(randomHouse).getHouse().capacity++;
+                            citizens.add(newCitizen);
+                        } else {
+                            randomHouse = -1;
+                        }
+                    }
+                    citizen.getHouse().capacity--;
+                }
+                citizens.remove(citizen);
+            }
         }
 
         this.Money += this.monthly_tax;
@@ -1015,9 +1038,11 @@ public class Game extends JPanel {
      */
     public void aMonthPassed() {
         for(Citizen citizen : citizens) {
-            this.monthly_tax += this.taxMultiplier * citizen.getQualification() * 100;
-            citizen.setAmountOfTax(this.taxMultiplier);
-            if(citizen.getPreferredJobType() == 1 && citizen.getJob() == null) {
+            if(!citizen.isRetired()) {
+                this.monthly_tax += this.taxMultiplier * citizen.getQualification() * 100;
+                citizen.setAmountOfTax(this.taxMultiplier);
+            }
+            if(citizen.getPreferredJobType() == 1 && citizen.getJob() == null && !citizen.isRetired()) {
                 double closest = 1000.0;
                 Zone the_zone = new Zone(0,0,0,0,null, ServiceArea);
                 for (Zone zone : zones) {
@@ -1034,7 +1059,7 @@ public class Game extends JPanel {
                     ((Job) Grid.get(cordinateToNum(the_zone.getY())).get(cordinateToNum(the_zone.getX()))).setWorkers();
                 }
             }
-            else if (citizen.getPreferredJobType() == 2 && citizen.getJob() == null) {
+            else if (citizen.getPreferredJobType() == 2 && citizen.getJob() == null && !citizen.isRetired()) {
                 double closest = 1000.0;
                 Zone the_zone = new Zone(0,0,0,0,null,IndustrialArea);
                 for (Zone zone : zones) {
@@ -1138,10 +1163,13 @@ public class Game extends JPanel {
                 this.satisfactionExtra += (0.1 * citizen.getHouse().getNearestForest().getGrowthLevel());
             }
 
-            //System.out.println(citizen.getHouse().getNearFactory());
-
             if(citizen.getHouse().getNearFactory()) {
-                this.satisfactionExtra -= 0.1;
+                if(citizen.getHouse().getNearPark()) {
+                    this.satisfactionExtra -= 0.1;
+                }
+                else {
+                    this.satisfactionExtra -= 0.2;
+                }
             }
 
             if(citizen.getHouse().getNearPolice()) {
@@ -1158,8 +1186,12 @@ public class Game extends JPanel {
             if(!citizen.getHouse().hasPower) {
                 this.satisfactionExtra -= 0.5; // ha nincs áram a házába
             }
-
-            citizen.setSatisfaction(citizen.getSatisfaction() + this.satisfactionMod + this.satisfactionExtra);
+            if(citizen.isRetired()) {
+                citizen.setSatisfaction(citizen.getSatisfaction() + this.satisfactionExtra);
+            }
+            else {
+                citizen.setSatisfaction(citizen.getSatisfaction() + this.satisfactionMod + this.satisfactionExtra);
+            }
         }
 
         if (day % 2 == 0) {
