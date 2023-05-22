@@ -10,7 +10,7 @@ public class School extends Service {
     public School(Field field) {
         super(10, field, School_im);
         this.capacity = 1000;
-        this.powerDemand = 4;
+        this.powerDemand = 2;
         this.cost = 10000;
         this.rotated = false;
     }
@@ -18,7 +18,7 @@ public class School extends Service {
     public School(Field field, boolean rotated) {
         super(10, field, School_im_rot);
         this.capacity = 1000;
-        this.powerDemand = 4;
+        this.powerDemand = 2;
         this.cost = 10000;
         this.rotated = rotated;
     }

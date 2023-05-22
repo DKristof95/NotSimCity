@@ -8,7 +8,7 @@ public class StadiumLL extends Service {
     public StadiumLL(Field field) {
         super(25, field, Stadium_im);
         this.capacity = 0;
-        this.powerDemand = 0;
+        this.powerDemand = 20;
         this.cost = 0;
     }
 

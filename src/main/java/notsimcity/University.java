@@ -8,7 +8,7 @@ public class University extends Service {
     public University(Field field) {
         super(25, field, University_im);
         this.capacity = 10000;
-        this.powerDemand = 8;
+        this.powerDemand = 2;
         this.cost = 25000;
     }
 

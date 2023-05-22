@@ -6,9 +6,9 @@ public class Citizen {
     private int qualification;
     private double satisfaction;
     private int age;
-    private int preferredJobType;
-    private double randomNum;
+    private final int preferredJobType;
     private int amountOfTax;
+    private int jobDistance;
 
     public Citizen(House house) {
         this.job = null;
@@ -16,7 +16,7 @@ public class Citizen {
         this.qualification = 1;
         this.satisfaction = 75.0;
         this.age = (int)(Math.random() * 42 + 18);
-        this.randomNum = Math.random();
+        double randomNum = Math.random();
         if (randomNum >= 0.5) {
             this.preferredJobType = 1; //Ipar
         }
@@ -24,6 +24,7 @@ public class Citizen {
             this.preferredJobType = 2; //Szolgáltatás
         }
         this.amountOfTax = 0;
+        this.jobDistance = -1;
     }
 
     public Job getJob() {
@@ -42,14 +43,23 @@ public class Citizen {
         return satisfaction;
     }
 
-    public void addAge() {
+    public boolean addAge() {
+        boolean isDead = false;
+        if(isRetired()) {
+            if(isProbablyDead()) {
+                isDead = true;
+            }
+        }
         age++;
+        return isDead;
     }
 
     public int getPreferredJobType() {
         return preferredJobType;
     }
-
+    public boolean isProbablyDead() {
+        return Math.random() * this.age < 50;
+    }
     public boolean isRetired() {
         return this.age>=65;
     }
@@ -68,6 +78,9 @@ public class Citizen {
 
     public void setSatisfaction(double satisfaction) {
         this.satisfaction = satisfaction;
+        if(this.satisfaction > 100) {
+            this.satisfaction = 100;
+        }
     }
 
     public void setAmountOfTax(double modifier) {
@@ -80,24 +93,16 @@ public class Citizen {
         return this.amountOfTax / 40;
     }
 
-    public void build() {
-
-    }
-
-    public void resetCitizen() {
-
-    }
-
-    public void deleteCitizen() {
-
-    }
 
     public Job getNearestJob() {
         return null; // még nem tudjuk
     }
 
-    public int getNearestJobDistance() {
-        return 0; // még nem tudjuk
+    public int getJobDistance() {
+        return jobDistance;
+    }
+    public void setJobDistance(int dis) {
+        this.jobDistance = dis;
     }
 
     public boolean isNearPolice() {
