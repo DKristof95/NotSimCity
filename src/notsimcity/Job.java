@@ -26,7 +26,6 @@ public class Job extends Field {
     } // 1 - Office | 2 - Factory
     public void setWorkers() { workers++;}
     public int getWorkers() { return workers;}
-    public void setHasPower() { hasPower = !hasPower;}
 
 }
 

@@ -256,6 +256,15 @@ public class NotSimCityGUI {
                 });
                 subMenu.add(menuItem);
 
+                menuItem = new JMenuItem("Vezeték");
+                menuItem.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                menuItem.addActionListener(e116 -> {
+                    gameArea.setBuildingMode(1,9);
+                    timetext.setBorder(new EmptyBorder(0, 284, 0, 566));
+                    stopBuild.setVisible(true);
+                });
+                subMenu.add(menuItem);
+
                 menu.add(subMenu);
 
                 menu.addSeparator();

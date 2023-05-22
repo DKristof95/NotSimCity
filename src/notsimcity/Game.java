@@ -146,6 +146,46 @@ public class Game extends JPanel {
                                 frame6.setSize(new Dimension(300, 150));
                                 showPack = true;
                             }
+                            else if (field.getClass().equals(PowerPlant.class)) {
+                                frame6 = new JFrame("Energiakapacitás");
+                                JLabel label1 = new JLabel("Hátralévő energia: " + field.getCapacity());
+                                panel.add(label1);
+                                panel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
+                                frame6.setLayout(new BoxLayout(frame6.getContentPane(), BoxLayout.Y_AXIS));
+                                frame6.add(Box.createVerticalGlue());
+                                frame6.setSize(new Dimension(300, 150));
+                                showPack = true;
+                            }
+                            else if (field.getClass().equals(PowerPlantLL.class)) {
+                                frame6 = new JFrame("Energiakapacitás");
+                                JLabel label1 = new JLabel("Hátralévő energia: " + Grid.get((field.getPosY()-1)/field.height).get(field.getPosX()/field.width).getCapacity());
+                                panel.add(label1);
+                                panel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
+                                frame6.setLayout(new BoxLayout(frame6.getContentPane(), BoxLayout.Y_AXIS));
+                                frame6.add(Box.createVerticalGlue());
+                                frame6.setSize(new Dimension(300, 150));
+                                showPack = true;
+                            }
+                            else if (field.getClass().equals(PowerPlantLR.class)) {
+                                frame6 = new JFrame("Energiakapacitás");
+                                JLabel label1 = new JLabel("Hátralévő energia: " + Grid.get((field.getPosY()-1)/field.height).get((field.getPosX()-1)/field.width).getCapacity());
+                                panel.add(label1);
+                                panel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
+                                frame6.setLayout(new BoxLayout(frame6.getContentPane(), BoxLayout.Y_AXIS));
+                                frame6.add(Box.createVerticalGlue());
+                                frame6.setSize(new Dimension(300, 150));
+                                showPack = true;
+                            }
+                            else if (field.getClass().equals(PowerPlantUR.class)) {
+                                frame6 = new JFrame("Energiakapacitás");
+                                JLabel label1 = new JLabel("Hátralévő energia: " + Grid.get(field.getPosY()/field.height).get((field.getPosX()-1)/field.width).getCapacity());
+                                panel.add(label1);
+                                panel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
+                                frame6.setLayout(new BoxLayout(frame6.getContentPane(), BoxLayout.Y_AXIS));
+                                frame6.add(Box.createVerticalGlue());
+                                frame6.setSize(new Dimension(300, 150));
+                                showPack = true;
+                            }
 
                             if(show || showPack) {
                                 frame6.add(panel);
@@ -377,6 +417,9 @@ public class Game extends JPanel {
                 Grid.get(i).set(j, new ForestGrown(Grid.get(i).get(j),false));
                 return;
             }
+            case 9 -> {
+                Grid.get(i).set(j, new Pole(Grid.get(i).get(j)));
+            }
         }
         this.Money -= Grid.get(i).get(j).getCost();
         log.setMoney(Grid.get(i).get(j).getCost());
@@ -384,11 +427,32 @@ public class Game extends JPanel {
     }
 
     /**
+     * A jelenlegi idő lekérdezése.
+     */
+    public String getTime() {
+        return timeText;
+    }
+
+    /**
+     * Egérmutató hozzáadása.
+     */
+    public void addSpriteComponent(Sprite spriteComponent) {
+        spriteComponents.add(spriteComponent);
+    }
+
+    /**
+     * Zóna hozzáadása.
+     */
+    public void addZone(Zone zone) {
+        zones.add(zone);
+    }
+
+    /**
      * Építőmódban a játékos építési funkciói.
      */
     public void clickOnField(int building) {
 
-        //try {
+        try {
 
             for (ArrayList<Field> rows : Grid) {
                 for (Field cell : rows) {
@@ -410,7 +474,7 @@ public class Game extends JPanel {
                 for (int j = 0; j < Grid.get(i).size(); j++) {
                     if (Grid.get(i).get(j).getPosX() <= Pos_x && Pos_x <= (Grid.get(i).get(j).getPosX() + CELL_SIZE) && Grid.get(i).get(j).getPosY() <= Pos_y && Pos_y <= (Grid.get(i).get(j).getPosY() + CELL_SIZE)) {
                         //erdőnél szerintem nem kéne, hogy csak út mellé lehessen építeni
-                        if (building == 7) {
+                        if (building == 7 || building == 9) {
                             placeBuilding(i, j, building);
                         }
                         //iskola
@@ -520,9 +584,9 @@ public class Game extends JPanel {
                     }
                 }
             }
-        /*} catch (IndexOutOfBoundsException e) {
+        } catch (IndexOutOfBoundsException e) {
             System.out.println("Indexelési hiba");
-        }*/
+        }
     }
 
     /**
@@ -1074,7 +1138,7 @@ public class Game extends JPanel {
                 this.satisfactionExtra += (0.1 * citizen.getHouse().getNearestForest().getGrowthLevel());
             }
 
-            System.out.println(citizen.getHouse().getNearFactory());
+            //System.out.println(citizen.getHouse().getNearFactory());
 
             if(citizen.getHouse().getNearFactory()) {
                 this.satisfactionExtra -= 0.1;
@@ -1141,6 +1205,8 @@ public class Game extends JPanel {
                                     break;
                                 }
                             }
+                            int i = cordinateToNum(zone.getY())/zone.height;
+                            int j = cordinateToNum(zone.getX()/zone.width);
                         }
                     }
                     repaint();
@@ -1276,10 +1342,19 @@ public class Game extends JPanel {
             }
         }
 
+        for(ArrayList<Field> arr : Grid) {
+            for(Field f : arr) {
+                if(f.getClass().equals(PowerPlant.class)) {
+                    int i = f.getPosY()/f.height;
+                    int j = f.getPosX()/f.width;
+                    ((PowerPlant) f).checkPowerNeed(i,j,Grid);
+                }
+            }
+        }
     }
 
     /**
-     * A játékbeli idő múlásának függénye.
+     * A játékbeli idő múlásának függvénye.
      */
     public void Time() {
         timer = new Timer(1000, e -> {
@@ -1330,29 +1405,9 @@ public class Game extends JPanel {
     }
 
     /**
-     * A jelenlegi idő lekérdezése.
-     */
-    public String getTime() {
-        return timeText;
-    }
-
-    /**
-     * Egérmutató hozzáadása.
-     */
-    public void addSpriteComponent(Sprite spriteComponent) {
-        spriteComponents.add(spriteComponent);
-    }
-
-    /**
-     * Zóna hozzáadása.
-     */
-    public void addZone(Zone zone) {
-        zones.add(zone);
-    }
-
-    /**
      * A grafika kirajzolása, a teljes játék kinézetének grafikai megoldásai.
      */
+
     @Override
     protected void paintComponent(Graphics grphcs) {
         super.paintComponent(grphcs);

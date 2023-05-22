@@ -11,6 +11,7 @@ public class Field extends Sprite{
     protected int cost;
     private boolean isRoad;
     protected boolean hasPower;
+    private PowerPlant powerSource = null;
 
     public Field(int sizeX, int sizeY, int posX, int posY, int capacity, int powerDemand, boolean road) {
         super(sizeX, sizeY, posX, posY, new ImageIcon("grass.png").getImage());
@@ -36,12 +37,12 @@ public class Field extends Sprite{
         return 0;
     }
     
-    public void makeField() {
-        
+    public void setPowerSource(PowerPlant pp) {
+        this.powerSource = pp;
     }
     
-    public void deleteField() {
-        
+    public PowerPlant getPowerSource() {
+        return powerSource;
     }
 
     public boolean setHasPower(boolean on) {return this.hasPower = on;}
@@ -75,6 +76,9 @@ public class Field extends Sprite{
 
     public int getCapacity() {
         return capacity;
+    }
+    public void setCapacity(int cap) {
+        this.capacity = cap;
     }
 
     public int getPowerDemand() {
