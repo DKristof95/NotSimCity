@@ -39,6 +39,7 @@ public class Game extends JPanel {
     private int No_universityExists = 0;
     private int numberOfOffices = 0;
     private int numberOfFactorys = 0;
+    private int numberOfStadiums = 0;
     private int monthly_tax = 0;
     private int unsatistiedMonths = 0;
     private final int mapNum;
@@ -46,7 +47,7 @@ public class Game extends JPanel {
     private double satisfactionMod = 0.0;
     private Timer timer;
     private MouseListener ml;
-    private boolean scrolled = false, stadiumExists = false;
+    private boolean scrolled = false;
     private final Image Border = new ImageIcon("yellow_border.png").getImage();
     private final Image GBorder = new ImageIcon("green_border.png").getImage();
     private final Image OBorder = new ImageIcon("orange_border.png").getImage();
@@ -416,7 +417,7 @@ public class Game extends JPanel {
                         || Grid.get(i).get(j+2).hasPower || Grid.get(i+1).get(j+2).hasPower)) {
                     Grid.get(i).get(j).setHasPower(true);
                 }*/
-                stadiumExists = true;
+                numberOfStadiums++;
                 log.setText("Stadion építése");
             }
             case 6 -> {
@@ -773,6 +774,7 @@ public class Game extends JPanel {
                             }
                             else if(Grid.get(i).get(j).getClass().equals(Stadium.class)){
                                 log.setText("Stadion lebontás");
+                                numberOfStadiums--;
                             }
                             else {
                                 log.setText("Erőmű lebontás");
@@ -790,6 +792,7 @@ public class Game extends JPanel {
                             }
                             else if(Grid.get(i).get(j).getClass().equals(StadiumUR.class)){
                                 log.setText("Stadion lebontás");
+                                numberOfStadiums--;
                             }
                             else {
                                 log.setText("Erőmű lebontás");
@@ -807,6 +810,7 @@ public class Game extends JPanel {
                             }
                             else if(Grid.get(i).get(j).getClass().equals(StadiumLL.class)){
                                 log.setText("Stadion lebontás");
+                                numberOfStadiums--;
                             }
                             else {
                                 log.setText("Erőmű lebontás");
@@ -824,6 +828,7 @@ public class Game extends JPanel {
                             }
                             else if(Grid.get(i).get(j).getClass().equals(StadiumLR.class)){
                                 log.setText("Stadion lebontás");
+                                numberOfStadiums--;
                             }
                             else {
                                 log.setText("Erőmű lebontás");
@@ -1273,9 +1278,10 @@ public class Game extends JPanel {
                 satisfactionExtra -= 0.5;
             }
 
-            if(stadiumExists) {
+            if(numberOfStadiums > 0) {
                 satisfactionExtra += 1.0;
             }
+
             if(this.Money < 0) {
                 satisfactionExtra -= Math.round((this.Money/100000.0) * 100) / 100.0;
             }
