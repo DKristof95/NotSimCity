@@ -842,7 +842,16 @@ public class Game extends JPanel {
                             if(Grid.get(i+1).get(j).getCapacity() > 0 || Grid.get(i-1).get(j).getCapacity() > 0 || Grid.get(i).get(j+1).getCapacity() > 0|| Grid.get(i).get(j-1).getCapacity() > 0) {
                                 JOptionPane.showMessageDialog(null, "Nem lehet olyan utat elbontani ami összeköt más épületet.", "Hiba!",  JOptionPane.ERROR_MESSAGE);
                             }
+                            else if((Grid.get(i+1).get(j).isFieldRoad() && Grid.get(i).get(j+1).isFieldRoad()) || (Grid.get(i+1).get(j).isFieldRoad() && Grid.get(i).get(j-1).isFieldRoad()) || (Grid.get(i+1).get(j).isFieldRoad() && Grid.get(i-1).get(j).isFieldRoad()) ||
+                                    (Grid.get(i-1).get(j).isFieldRoad() && Grid.get(i).get(j+1).isFieldRoad()) || (Grid.get(i-1).get(j).isFieldRoad() && Grid.get(i).get(j-1).isFieldRoad()) || (Grid.get(i).get(j+1).isFieldRoad() && Grid.get(i).get(j-1).isFieldRoad())) {
+                                JOptionPane.showMessageDialog(null, "Az út nem a végén van.", "Hiba!",  JOptionPane.ERROR_MESSAGE);
+                            }
                             else {
+                                Grid.get(i).set(j, new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
+                            }
+
+
+                            /*else {
                                 int index = j+1;
                                 boolean hasNext = true;
                                 while(hasNext) {
@@ -858,7 +867,8 @@ public class Game extends JPanel {
                                         Grid.get(i).set(j, new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
                                     }
                                 }
-                            }
+
+                            }*/
                         } else {
                             if (Grid.get(i).get(j).getClass().equals(ForestGrown.class)) {
                                 if (!(((ForestGrown) (Grid.get(i).get(j))).isStarted())) {
