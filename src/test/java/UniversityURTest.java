@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class UniversityURTest {
     @Test
     void TestConstructor(){
-        final UniversityUR u = new UniversityUR(new Field(0,0,0,0,0,0,false));
+        final UniversityUR u = new UniversityUR(new Field(1,1,1,1,1,1,false));
         assertNotNull(u);
     }
 }

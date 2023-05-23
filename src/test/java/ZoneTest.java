@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class ZoneTest {
     @Test
     void TestConstructor(){
-        final Zone z = new Zone(0,0,0,0,new ImageIcon("grass.jpg").getImage(), ZoneType.ResidentalArea);
+        final Zone z = new Zone(1,1,1,1,new ImageIcon("grass.jpg").getImage(), ZoneType.ResidentalArea);
         assertNotNull(z);
     }
 }

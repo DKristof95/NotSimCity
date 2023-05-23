@@ -7,12 +7,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class SchoolTest {
     @Test
     void TestConstructor(){
-        final School s = new School(new Field(0,0,0,0,0,0,false));
+        final School s = new School(new Field(1,1,1,1,1,1,false));
         assertNotNull(s);
     }
     @Test
     void TestConstructorRotated(){
-        final School s = new School(new Field(0,0,0,0,0,0,false),true);
+        final School s = new School(new Field(1,1,1,1,1,1,false),true);
         assertNotNull(s);
     }
 }

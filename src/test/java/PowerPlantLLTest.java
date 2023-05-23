@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class PowerPlantLLTest {
     @Test
     void TestConstructor(){
-        final PowerPlantLL pp = new PowerPlantLL(new Field(0,0,0,0,0,0,false));
+        final PowerPlantLL pp = new PowerPlantLL(new Field(1,1,1,1,1,1,false));
         assertNotNull(pp);
     }
 }

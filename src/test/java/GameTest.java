@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class GameTest {
     @Test
     void TestConstructor(){
-        final Game game = new Game();
+        final Game game = new Game(0);
         assertNotNull(game);
     }
 }

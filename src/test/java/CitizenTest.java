@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class CitizenTest {
     @Test
     void TestConstructor(){
-        final Citizen citizen = new Citizen(new House(0,0,0,0));
+        final Citizen citizen = new Citizen(new House(1,1,1,1,1));
         assertNotNull(citizen);
     }
 }

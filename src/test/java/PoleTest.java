@@ -1,15 +1,12 @@
 import notsimcity.Field;
-import notsimcity.Road;
+import notsimcity.Pole;
 import org.junit.jupiter.api.Test;
-
-import javax.swing.*;
-
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class RoadTest {
+public class PoleTest {
     @Test
     void TestConstructor(){
-        final Road road = new Road(new Field(1,1,1,1,1,1,true));
-        assertNotNull(road);
+        final Pole pole = new Pole(new Field(1,1,1,1,1,1,false));
+        assertNotNull(pole);
     }
 }

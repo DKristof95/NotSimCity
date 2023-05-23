@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class SpriteTest {
     @Test
     void TestConstructor(){
-        final Sprite sprite = new Sprite(0,0,0,0,new ImageIcon("grass.jpg").getImage());
+        final Sprite sprite = new Sprite(1,1,1,1,new ImageIcon("grass.jpg").getImage());
         assertNotNull(sprite);
     }
 }

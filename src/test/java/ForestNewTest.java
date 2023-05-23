@@ -10,7 +10,7 @@ public class ForestNewTest {
 
     @Test
     void TestConstructor(){
-        final ForestNew forest = new ForestNew(new Field(0,0,0,0,0,0,false), 0, 0, 0);
+        final ForestNew forest = new ForestNew(new Field(1,1,1,1,1,1,false), 2023, 1, 1);
         assertNotNull(forest);
     }
 

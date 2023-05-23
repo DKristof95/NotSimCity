@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class StadiumTest {
     @Test
     void TestConstructor(){
-        final Stadium s = new Stadium(new Field(0,0,0,0,0,0,false));
+        final Stadium s = new Stadium(new Field(1,1,1,1,1,1,false));
         assertNotNull(s);
     }
 }

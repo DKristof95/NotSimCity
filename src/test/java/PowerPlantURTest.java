@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class PowerPlantURTest {
     @Test
     void TestConstructor(){
-        final PowerPlantUR pp = new PowerPlantUR(new Field(0,0,0,0,0,0,false));
+        final PowerPlantUR pp = new PowerPlantUR(new Field(1,1,1,1,1,1,false));
         assertNotNull(pp);
     }
 }
