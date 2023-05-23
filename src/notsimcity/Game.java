@@ -20,7 +20,6 @@ public class Game extends JPanel {
     private final ArrayList<Zone> zones = new ArrayList<>();
     private final ArrayList<Citizen> citizens = new ArrayList<>();
     private final ArrayList<MoneyLog> logs = new ArrayList<>();
-    private Player player;
     private String s_day = "01", s_month = "01", timeText = "";
     private final java.util.List<Sprite> spriteComponents = new ArrayList<>();
     private int time = 0;

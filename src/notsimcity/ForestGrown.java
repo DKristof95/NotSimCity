@@ -4,7 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 public class ForestGrown extends Forest  {
     private static final Image grownForestImage = new ImageIcon("forest.png").getImage();
-    private boolean started;
+    private final boolean started;
+
     public ForestGrown(Field field, boolean startedOnField) {
         super(field);
         this.setImage(grownForestImage);
@@ -15,6 +16,9 @@ public class ForestGrown extends Forest  {
         this.started = startedOnField;
     }
 
+    /**
+     * Játék kezdésekori, alapértelmezett erő-e?
+     */
     public boolean isStarted() {
         return started;
     }

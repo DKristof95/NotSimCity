@@ -6,6 +6,9 @@ import java.awt.Image;
 public class Police extends Service {
     private static final Image Police_im = new ImageIcon("police.png").getImage();
 
+    /**
+     * Rendőrség konstruktora
+     */
     public Police(Field field) {
         super(5, field, Police_im);
         this.capacity = 50;
