@@ -9,7 +9,7 @@ public class SchoolR extends Service {
     protected final boolean rotated;
     public SchoolR(Field field) {
         super(10, field, School_im);
-        this.capacity = 0;
+        this.capacity = 1;
         this.powerDemand = 2;
         this.cost = 0;
         this.rotated = false;
