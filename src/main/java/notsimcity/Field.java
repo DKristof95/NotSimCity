@@ -1,100 +1,99 @@
 package notsimcity;
 
 import java.awt.*;
-import java.util.ArrayList;
 import javax.swing.ImageIcon;
 
 public class Field extends Sprite{
-    private ArrayList<Citizen> citizens;
     protected int capacity;
     protected int powerDemand;
     protected int cost;
-    private boolean isRoad;
+    private final boolean isRoad;
     protected boolean hasPower;
     private PowerPlant powerSource = null;
 
+    /**
+     * Mező konstruktora
+     */
     public Field(int sizeX, int sizeY, int posX, int posY, int capacity, int powerDemand, boolean road) {
         super(sizeX, sizeY, posX, posY, new ImageIcon("grass.png").getImage());
         this.capacity = capacity;
         this.powerDemand = powerDemand;
-        this.citizens = new ArrayList<Citizen>();
         this.isRoad = road;
         this.hasPower = false;
         this.cost = 0;
     }
 
+    /**
+     * Mező konstruktora kép megadással
+     */
     public Field(int sizeX, int sizeY, int posX, int posY, int capacity, int powerDemand, boolean road, Image img) {
         super(sizeX, sizeY, posX, posY, img);
         this.capacity = capacity;
         this.powerDemand = powerDemand;
-        this.citizens = new ArrayList<Citizen>();
         this.isRoad = road;
         this.hasPower = false;
         this.cost = 0;
     }
 
-    public int distanceToPowerPlant() {
-        return 0;
-    }
-    
+    /**
+     * Mező áramforrási helyének beállítása
+     */
     public void setPowerSource(PowerPlant pp) {
-        this.powerSource = pp;
-    }
-    
-    public PowerPlant getPowerSource() {
-        return powerSource;
+        this.powerSource = new PowerPlant(pp);
     }
 
-    public boolean setHasPower(boolean on) {return this.hasPower = on;}
+    /**
+     * Mező áramállapotának lekérdezése
+     */
+    public void setHasPower(boolean on) { this.hasPower = on;}
 
-    public int getSizeX() {
-        return this.width;
-    }
-
-    public int getSizeY() {
-        return this.height;
-    }
-
+    /**
+     * Mező X helyének lekérdezése
+     */
     public int getPosX() {
         return this.x;
     }
 
+    /**
+     * Mező Y helyének lekérdezése
+     */
     public int getPosY() {
         return this.y;
     }
 
-    public boolean equals(Field field){
-        if(this.x == field.x && this.y == field.y) {
-            return true;
-        }
-        else {return false;}
-    }
-
-    public ArrayList<Citizen> getCitizens() {
-        return new ArrayList<>(citizens);
-    }
-
+    /**
+     * Mező befogadóképességének lekérdezése
+     */
     public int getCapacity() {
         return capacity;
     }
+
+    /**
+     * Mező befogadóképességének beállítása
+     */
     public void setCapacity(int cap) {
         this.capacity = cap;
     }
 
+    /**
+     * Kezdeti befogadóképesség beállítása
+     */
+    public void setInitCapacity(int cap) {
+        this.capacity += cap;
+    }
+
+    /**
+     * Energiahasználat lekérdezése
+     */
     public int getPowerDemand() {
         return powerDemand;
     }
 
+    /**
+     * Fenntartási költség lekérdezése
+     */
     public int getCost() {
         return cost;
-    }
-    
-    public ArrayList<Citizen> getSiblings() {
-        return null; // még nem tudjuk
-    }
-
-    public boolean isRoadNextToField(boolean way) {
-        return false;
     }
 
     public boolean isFieldRoad() {
