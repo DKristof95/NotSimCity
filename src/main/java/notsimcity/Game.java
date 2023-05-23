@@ -837,6 +837,28 @@ public class Game extends JPanel {
                             Grid.get(i-1).set(j-1,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i-1).get(j-1).getPosX(), Grid.get(i-1).get(j-1).getPosY(), 0, 0, false));
                             Grid.get(i-1).set(j,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i-1).get(j).getPosX(), Grid.get(i-1).get(j).getPosY(), 0, 0, false));
                             Grid.get(i).set(j-1,new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j-1).getPosX(), Grid.get(i).get(j-1).getPosY(), 0, 0, false));
+                        }
+                        else if(Grid.get(i).get(j).getClass().equals(Road.class)) {
+                            if(Grid.get(i+1).get(j).getCapacity() > 0 || Grid.get(i-1).get(j).getCapacity() > 0 || Grid.get(i).get(j+1).getCapacity() > 0|| Grid.get(i).get(j-1).getCapacity() > 0) {
+                                JOptionPane.showMessageDialog(null, "Nem lehet olyan utat elbontani ami összeköt más épületet.", "Hiba!",  JOptionPane.ERROR_MESSAGE);
+                            }
+                            else {
+                                int index = j+1;
+                                boolean hasNext = true;
+                                while(hasNext) {
+                                    if(Grid.get(i).get(index).getClass().equals(Road.class)) {
+                                        index++;
+                                        if(Grid.get(i+1).get(index).getCapacity() > 0 || Grid.get(i-1).get(index).getCapacity() > 0 || Grid.get(i).get(index+1).getCapacity() > 0|| Grid.get(i).get(index-1).getCapacity() > 0) {
+                                            JOptionPane.showMessageDialog(null, "Nem lehet olyan utat elbontani ami összeköt más épületet.", "Hiba!",  JOptionPane.ERROR_MESSAGE);
+                                            break;
+                                        }
+                                    }
+                                    else {
+                                        hasNext = false;
+                                        Grid.get(i).set(j, new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
+                                    }
+                                }
+                            }
                         } else {
                             if (Grid.get(i).get(j).getClass().equals(ForestGrown.class)) {
                                 if (!(((ForestGrown) (Grid.get(i).get(j))).isStarted())) {
@@ -844,10 +866,15 @@ public class Game extends JPanel {
                                     log.setMoney((Grid.get(i).get(j).getCost() / 2));
                                     log.setText("Erdő lebontás");
                                 }
-                            } else {
+                            } else if(Grid.get(i).get(j).getClass().equals(ForestNew.class)) {
                                 this.Money += (Grid.get(i).get(j).getCost() / 2);
                                 log.setMoney((Grid.get(i).get(j).getCost() / 2));
                                 log.setText("Erdő lebontás");
+                            }
+                            else if(Grid.get(i).get(j).getClass().equals(Pole.class)) {
+                                this.Money += (Grid.get(i).get(j).getCost() / 2);
+                                log.setMoney((Grid.get(i).get(j).getCost() / 2));
+                                log.setText("Vezeték lebontás");
                             }
                             Grid.get(i).set(j, new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
                             if (Grid.get(i).get(j).getClass().equals(School.class)) {
