@@ -600,4 +600,10 @@ public class NotSimCityGUI {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
+    /**
+     * Teszteléshez kell.
+     */
+    public Game getGameArea(){
+        return gameArea;
+    }
 }

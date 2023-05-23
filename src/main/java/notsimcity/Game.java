@@ -1607,4 +1607,24 @@ public class Game extends JPanel {
         }
 
     }
+
+    /**
+     * Teszteléshez kell.
+     */
+    public void setWidth(int width){
+        this.Width = width;
+    }
+    public void setHeight(int height){
+        this.Height = height;
+    }
+    public ArrayList<ArrayList<Field>> getGrid() {
+        return this.Grid;
+    }
+    public void setPos(int x, int y) {
+        this.Pos_x = x;
+        this.Pos_y = y;
+    }
+    public ArrayList<Zone> getZones() {
+        return zones;
+    }
 }
