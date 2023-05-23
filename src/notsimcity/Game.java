@@ -38,8 +38,10 @@ public class Game extends JPanel {
     private int starter;
     private int No_schoolExists = 0;
     private int No_universityExists = 0;
+    private int numberOfOffices = 0;
+    private int numberOfFactorys = 0;
     private int monthly_tax = 0;
-    private int unsatistiedMonths = 6;
+    private int unsatistiedMonths = 0;
     private final int mapNum;
     private double taxMultiplier = 1.0;
     private double satisfactionMod = 0.0;
@@ -1282,11 +1284,18 @@ public class Game extends JPanel {
             if(!citizen.getHouse().hasPower) {
                 satisfactionExtra -= 0.5; // ha nincs áram a házába
             }
+
             if(citizen.getJob() != null) {
-                if(citizen.getJob().hasPower) {
+                if(!citizen.getJob().hasPower) {
                     satisfactionExtra -= 0.2;
                 }
             }
+
+            int averageOfJobPlaces = (numberOfFactorys+numberOfOffices)/2;
+            if(numberOfFactorys<averageOfJobPlaces || numberOfOffices<averageOfJobPlaces) {
+                satisfactionExtra -= 0.1;
+            }
+
             if(citizen.isRetired()) {
                 citizen.setSatisfaction(citizen.getSatisfaction() + satisfactionExtra);
             }
@@ -1363,15 +1372,22 @@ public class Game extends JPanel {
                             if(Grid.get(cordinateToNum(zone.getY())).get(cordinateToNum(zone.getX()) + 1).getClass().equals(House.class)) {
                                 ((House)(Grid.get(cordinateToNum(zone.getY())).get(cordinateToNum(zone.getX()) + 1))).setNearFactory(true);
                             }
-                            if(Grid.get(cordinateToNum(zone.getY())).get(cordinateToNum(zone.getX()) - 1).getClass().equals(House.class)) {
-                                ((House)(Grid.get(cordinateToNum(zone.getY())).get(cordinateToNum(zone.getX()) - 1))).setNearFactory(true);
+                            if(cordinateToNum(zone.getX())-1 >= 0) {
+                                if(Grid.get(cordinateToNum(zone.getY())).get(cordinateToNum(zone.getX()) - 1).getClass().equals(House.class)) {
+                                    ((House)(Grid.get(cordinateToNum(zone.getY())).get(cordinateToNum(zone.getX()) - 1))).setNearFactory(true);
+                                }
                             }
-                            if(Grid.get(cordinateToNum(zone.getY()) + 1).get(cordinateToNum(zone.getX())).getClass().equals(House.class)) {
-                                ((House)(Grid.get(cordinateToNum(zone.getY()) + 1).get(cordinateToNum(zone.getX())))).setNearFactory(true);
+                            if(cordinateToNum(zone.getY()) + 1 >= 0) {
+                                if(Grid.get(cordinateToNum(zone.getY()) + 1).get(cordinateToNum(zone.getX())).getClass().equals(House.class)) {
+                                    ((House)(Grid.get(cordinateToNum(zone.getY()) + 1).get(cordinateToNum(zone.getX())))).setNearFactory(true);
+                                }
                             }
-                            if(Grid.get(cordinateToNum(zone.getY()) - 1).get(cordinateToNum(zone.getX())).getClass().equals(House.class)) {
-                                ((House)(Grid.get(cordinateToNum(zone.getY()) - 1).get(cordinateToNum(zone.getX())))).setNearFactory(true);
+                            if(cordinateToNum(zone.getY()) - 1 >= 0) {
+                                if(Grid.get(cordinateToNum(zone.getY()) - 1).get(cordinateToNum(zone.getX())).getClass().equals(House.class)) {
+                                    ((House)(Grid.get(cordinateToNum(zone.getY()) - 1).get(cordinateToNum(zone.getX())))).setNearFactory(true);
+                                }
                             }
+                            numberOfFactorys++;
                         }
                     }
                     repaint();
@@ -1382,6 +1398,7 @@ public class Game extends JPanel {
                         int randomChance = rand.nextInt((20 - 1) + 1) + 1;
                         if((randomChance % 4) == 0) {
                             Grid.get(cordinateToNum(zone.getY())).set(cordinateToNum(zone.getX()), new Job(CELL_SIZE, CELL_SIZE, zone.getX(), zone.getY(), Office, 1));
+                            numberOfOffices++;
                         }
                     }
                     repaint();

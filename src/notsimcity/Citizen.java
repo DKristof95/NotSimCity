@@ -81,6 +81,9 @@ public class Citizen {
         if(this.satisfaction > 100) {
             this.satisfaction = 100;
         }
+        if(this.satisfaction < 0) {
+            this.satisfaction = 0;
+        }
     }
 
     public void setAmountOfTax(double modifier) {
