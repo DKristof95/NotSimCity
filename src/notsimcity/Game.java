@@ -1286,7 +1286,7 @@ public class Game extends JPanel {
 
             double satisfactionExtra = 0.0;
             if(citizen.getHouse().getNearPark()) {
-                satisfactionExtra += (0.1 * citizen.getHouse().getNearestForest().getGrowthLevel());
+                satisfactionExtra += (0.05 * citizen.getHouse().getNearestForest().getGrowthLevel());
             }
 
             if(citizen.getHouse().getNearFactory()) {
@@ -1299,7 +1299,7 @@ public class Game extends JPanel {
             }
 
             if(citizen.getHouse().getNearPolice()) {
-                satisfactionExtra += 0.5;
+                satisfactionExtra += 0.3;
             }
             else {
                 satisfactionExtra -= 0.5;
@@ -1536,7 +1536,14 @@ public class Game extends JPanel {
 
         for(ArrayList<Field> arr : Grid) {
             for(Field f : arr) {
+                f.setHasPower(false);
+            }
+        }
+
+        for(ArrayList<Field> arr : Grid) {
+            for(Field f : arr) {
                 if(f.getClass().equals(PowerPlant.class)) {
+                    f.setCapacity(100);
                     int i = f.getPosY()/f.height;
                     int j = f.getPosX()/f.width;
                     ((PowerPlant) f).checkPowerNeed(i,j,Grid);
