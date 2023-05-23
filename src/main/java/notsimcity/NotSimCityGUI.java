@@ -153,7 +153,7 @@ public class NotSimCityGUI {
                 stopBuild.addActionListener(e1113 -> {
                     gameArea.setBuildingMode(0,0);
                     stopBuild.setVisible(false);
-                    timetext.setBorder(new EmptyBorder(0, 450, 0, 566));
+                    timetext.setBorder(new EmptyBorder(0, 450, 0, 630));
                     for (MouseListener l : gameArea.getMouseListeners()) {
                         gameArea.removeMouseListener(l);
                     }
@@ -206,7 +206,7 @@ public class NotSimCityGUI {
                 menuItem.addActionListener(e11 -> {
                     //gameArea.clickOnField(1);
                     gameArea.setBuildingMode(1,1);
-                    timetext.setBorder(new EmptyBorder(0, 284, 0, 566));
+                    timetext.setBorder(new EmptyBorder(0, 284, 0, 630));
                     stopBuild.setVisible(true);
                 });
                 subMenu.add(menuItem);
@@ -215,7 +215,7 @@ public class NotSimCityGUI {
                 menuItem.addActionListener(e112 -> {
                     //gameArea.clickOnField(1);
                     gameArea.setBuildingMode(1,2);
-                    timetext.setBorder(new EmptyBorder(0, 284, 0, 566));
+                    timetext.setBorder(new EmptyBorder(0, 284, 0, 630));
                     stopBuild.setVisible(true);
                 });
                 subMenu.add(menuItem);
@@ -224,7 +224,7 @@ public class NotSimCityGUI {
                 menuItem.addActionListener(e113 -> {
                     //gameArea.clickOnField(1);
                     gameArea.setBuildingMode(1,3);
-                    timetext.setBorder(new EmptyBorder(0, 284, 0, 566));
+                    timetext.setBorder(new EmptyBorder(0, 284, 0, 630));
                     stopBuild.setVisible(true);
                 });
                 subMenu.add(menuItem);
@@ -233,7 +233,7 @@ public class NotSimCityGUI {
                 menuItem.addActionListener(e114 -> {
                     //gameArea.clickOnField(1);
                     gameArea.setBuildingMode(1,4);
-                    timetext.setBorder(new EmptyBorder(0, 284, 0, 566));
+                    timetext.setBorder(new EmptyBorder(0, 284, 0, 630));
                     stopBuild.setVisible(true);
                 });
                 subMenu.add(menuItem);
@@ -242,7 +242,7 @@ public class NotSimCityGUI {
                 menuItem.addActionListener(e115 -> {
                     //gameArea.clickOnField(1);
                     gameArea.setBuildingMode(1,5);
-                    timetext.setBorder(new EmptyBorder(0, 284, 0, 566));
+                    timetext.setBorder(new EmptyBorder(0, 284, 0, 630));
                     stopBuild.setVisible(true);
                 });
                 subMenu.add(menuItem);
@@ -251,7 +251,7 @@ public class NotSimCityGUI {
                 menuItem.addActionListener(e116 -> {
                     //gameArea.clickOnField(1);
                     gameArea.setBuildingMode(1,6);
-                    timetext.setBorder(new EmptyBorder(0, 284, 0, 566));
+                    timetext.setBorder(new EmptyBorder(0, 284, 0, 630));
                     stopBuild.setVisible(true);
                 });
                 subMenu.add(menuItem);
@@ -260,7 +260,7 @@ public class NotSimCityGUI {
                 menuItem.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 menuItem.addActionListener(e116 -> {
                     gameArea.setBuildingMode(1,9);
-                    timetext.setBorder(new EmptyBorder(0, 284, 0, 566));
+                    timetext.setBorder(new EmptyBorder(0, 284, 0, 630));
                     stopBuild.setVisible(true);
                 });
                 subMenu.add(menuItem);
@@ -273,7 +273,7 @@ public class NotSimCityGUI {
                 menuItem.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 menuItem.addActionListener(e117 -> {
                     gameArea.setBuildingMode(2,0);
-                    timetext.setBorder(new EmptyBorder(0, 284, 0, 566));
+                    timetext.setBorder(new EmptyBorder(0, 284, 0, 630));
                     stopBuild.setVisible(true);
                 });
                 menu.add(menuItem);
@@ -282,7 +282,7 @@ public class NotSimCityGUI {
                 menuItem.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 menuItem.addActionListener(e1000 -> {
                     gameArea.setBuildingMode(4,0);
-                    timetext.setBorder(new EmptyBorder(0, 284, 0, 566));
+                    timetext.setBorder(new EmptyBorder(0, 284, 0, 630));
                     stopBuild.setVisible(true);
                 });
                 menu.add(menuItem);
@@ -293,14 +293,14 @@ public class NotSimCityGUI {
                 menuItem.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 menuItem.addActionListener(e118 -> {
                     gameArea.setBuildingMode(1,7);
-                    timetext.setBorder(new EmptyBorder(0, 284, 0, 566));
+                    timetext.setBorder(new EmptyBorder(0, 284, 0, 630));
                     stopBuild.setVisible(true);
                 });
                 menu.add(menuItem);
 
                 timetext = new JLabel("2023.01.01. 00:00");
                 timetext.setFont(timetext.getFont().deriveFont(24.0f));
-                timetext.setBorder(new EmptyBorder(0, 450, 0, 566));
+                timetext.setBorder(new EmptyBorder(0, 450, 0, 630));
 
                 JButton exitButton = new JButton("Kilépés");
                 exitButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));

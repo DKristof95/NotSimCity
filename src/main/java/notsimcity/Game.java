@@ -842,7 +842,16 @@ public class Game extends JPanel {
                             if(Grid.get(i+1).get(j).getCapacity() > 0 || Grid.get(i-1).get(j).getCapacity() > 0 || Grid.get(i).get(j+1).getCapacity() > 0|| Grid.get(i).get(j-1).getCapacity() > 0) {
                                 JOptionPane.showMessageDialog(null, "Nem lehet olyan utat elbontani ami összeköt más épületet.", "Hiba!",  JOptionPane.ERROR_MESSAGE);
                             }
+                            else if((Grid.get(i+1).get(j).isFieldRoad() && Grid.get(i).get(j+1).isFieldRoad()) || (Grid.get(i+1).get(j).isFieldRoad() && Grid.get(i).get(j-1).isFieldRoad()) || (Grid.get(i+1).get(j).isFieldRoad() && Grid.get(i-1).get(j).isFieldRoad()) ||
+                                    (Grid.get(i-1).get(j).isFieldRoad() && Grid.get(i).get(j+1).isFieldRoad()) || (Grid.get(i-1).get(j).isFieldRoad() && Grid.get(i).get(j-1).isFieldRoad()) || (Grid.get(i).get(j+1).isFieldRoad() && Grid.get(i).get(j-1).isFieldRoad())) {
+                                JOptionPane.showMessageDialog(null, "Az út nem a végén van.", "Hiba!",  JOptionPane.ERROR_MESSAGE);
+                            }
                             else {
+                                Grid.get(i).set(j, new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
+                            }
+
+
+                            /*else {
                                 int index = j+1;
                                 boolean hasNext = true;
                                 while(hasNext) {
@@ -858,7 +867,8 @@ public class Game extends JPanel {
                                         Grid.get(i).set(j, new Field(CELL_SIZE, CELL_SIZE, Grid.get(i).get(j).getPosX(), Grid.get(i).get(j).getPosY(), 0, 0, false));
                                     }
                                 }
-                            }
+
+                            }*/
                         } else {
                             if (Grid.get(i).get(j).getClass().equals(ForestGrown.class)) {
                                 if (!(((ForestGrown) (Grid.get(i).get(j))).isStarted())) {
@@ -1286,7 +1296,7 @@ public class Game extends JPanel {
 
             double satisfactionExtra = 0.0;
             if(citizen.getHouse().getNearPark()) {
-                satisfactionExtra += (0.1 * citizen.getHouse().getNearestForest().getGrowthLevel());
+                satisfactionExtra += (0.05 * citizen.getHouse().getNearestForest().getGrowthLevel());
             }
 
             if(citizen.getHouse().getNearFactory()) {
@@ -1299,7 +1309,7 @@ public class Game extends JPanel {
             }
 
             if(citizen.getHouse().getNearPolice()) {
-                satisfactionExtra += 0.5;
+                satisfactionExtra += 0.3;
             }
             else {
                 satisfactionExtra -= 0.5;
@@ -1536,7 +1546,14 @@ public class Game extends JPanel {
 
         for(ArrayList<Field> arr : Grid) {
             for(Field f : arr) {
+                f.setHasPower(false);
+            }
+        }
+
+        for(ArrayList<Field> arr : Grid) {
+            for(Field f : arr) {
                 if(f.getClass().equals(PowerPlant.class)) {
+                    f.setCapacity(100);
                     int i = f.getPosY()/f.height;
                     int j = f.getPosX()/f.width;
                     ((PowerPlant) f).checkPowerNeed(i,j,Grid);
